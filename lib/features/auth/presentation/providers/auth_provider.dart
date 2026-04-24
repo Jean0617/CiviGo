@@ -1,7 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../shared/domain/failures/app_failure.dart';
-import '../../data/models/base_state.dart';
+import '../../data/models/auth_state.dart';
 import '../../domain/repository/auth_repository.dart';
 import 'auth_repository.dart';
 
@@ -11,7 +11,7 @@ part 'auth_provider.g.dart';
 class Auth extends _$Auth {
 
   @override
-  BaseState build() => BaseState();
+  AuthState build() => AuthState();
 
   // Llamar al repositorio para obtener los datos
   AuthRepository get _repository => ref.read(authRepositoryProvider);

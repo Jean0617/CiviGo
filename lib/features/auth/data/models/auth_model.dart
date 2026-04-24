@@ -1,23 +1,23 @@
 import '../../domain/entities/auth_entity.dart';
 
-class BaseModel {
+class AuthModel {
 
   final String id;
   final DateTime createdAt;
   final DateTime updatedAt;
 
-  BaseModel({
+  AuthModel({
     required this.id,
     required this.createdAt,
     required this.updatedAt,
   });
 
-  BaseModel copyWith({
+  AuthModel copyWith({
     String? id,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
-    return BaseModel(
+    return AuthModel(
       id: id ?? this.id,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,

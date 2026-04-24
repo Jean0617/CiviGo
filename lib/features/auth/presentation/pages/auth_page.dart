@@ -1,4 +1,7 @@
+
 import 'package:flutter/material.dart';
+
+import '../../../shared/widgets/buttons/ui_button.dart';
 
 import '../widgets/card_report.dart';
 
@@ -156,4 +159,3 @@ class AuthPage extends StatelessWidget {
     );
   }
 }
-
