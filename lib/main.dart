@@ -3,6 +3,7 @@ import 'package:civigo/config/app_config/app_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'config/app_config/theme/theme.dart';
 import 'core/router/router_provider.dart';
 
 void main() {
@@ -24,7 +25,8 @@ class CiviGo extends ConsumerWidget {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: AppConfig.appName,
-      routerConfig: router
+      routerConfig: router,
+      theme: AppTheme.theme,
     );
   }
 }
