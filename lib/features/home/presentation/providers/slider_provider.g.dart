@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'auth_provider.dart';
+part of 'slider_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,50 +9,50 @@ part of 'auth_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(Auth)
-final authProvider = AuthProvider._();
+@ProviderFor(Slider)
+final sliderProvider = SliderProvider._();
 
-final class AuthProvider extends $NotifierProvider<Auth, AuthState> {
-  AuthProvider._()
+final class SliderProvider extends $NotifierProvider<Slider, SliderState> {
+  SliderProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'authProvider',
+        name: r'sliderProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$authHash();
+  String debugGetCreateSourceHash() => _$sliderHash();
 
   @$internal
   @override
-  Auth create() => Auth();
+  Slider create() => Slider();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(AuthState value) {
+  Override overrideWithValue(SliderState value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<AuthState>(value),
+      providerOverride: $SyncValueProvider<SliderState>(value),
     );
   }
 }
 
-String _$authHash() => r'4cc09bbabe2d5068512cc441622d7e9696968d27';
+String _$sliderHash() => r'98787814f6920dff47b32bc34597fd79ab4c3536';
 
-abstract class _$Auth extends $Notifier<AuthState> {
-  AuthState build();
+abstract class _$Slider extends $Notifier<SliderState> {
+  SliderState build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<AuthState, AuthState>;
+    final ref = this.ref as $Ref<SliderState, SliderState>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AuthState, AuthState>,
-              AuthState,
+              AnyNotifier<SliderState, SliderState>,
+              SliderState,
               Object?,
               Object?
             >;

@@ -1,18 +1,18 @@
-class BaseState {
+class AuthState {
 
   final List data;
   final bool isSearching; 
 
-  BaseState({
+  AuthState({
     this.data = const [],
     this.isSearching = false,
   });
 
-  BaseState copyWith({
+  AuthState copyWith({
     List? data,
     bool? isSearching,
   }) {
-    return BaseState(
+    return AuthState(
       data: data ?? this.data,
       isSearching: isSearching ?? this.isSearching,
     );

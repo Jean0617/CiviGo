@@ -1,3 +1,4 @@
+import 'package:civigo/features/home/presentation/pages/home_page.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -10,15 +11,22 @@ part 'router_provider.g.dart';
 GoRouter appRouter(Ref ref) {
 
   return GoRouter(
-    initialLocation: RoutePaths.login,
+    initialLocation: RoutePaths.homePath,
     redirect: (context, state) {
       return null;
     },
     routes: [
       
       GoRoute(
-        path: RoutePaths.login,
+        name: RoutePaths.login,
+        path: RoutePaths.loginPath,
         builder: (_, __) => AuthPage(),
+      ),
+
+      GoRoute(
+        name: RoutePaths.home,
+        path: RoutePaths.homePath,
+        builder: (_, __) => HomePage(),
       ),
 
     ]
