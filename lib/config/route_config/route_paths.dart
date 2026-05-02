@@ -1,10 +1,41 @@
 class RoutePaths {
 
+  static const home = '/';
+  static const homePath = '/';
+
   static const login    = 'login';
   static const loginPath = '/login';
 
-  static const home = 'home';
-  static const homePath = '/home';
+  static const register    = 'register';
+  static const registerPath = '/register';
+
+  static const dashboard = 'dashboard';
+  static const dashboardPath = '/dashboard';
+
+  static const profile = 'profile';
+  static const profilePath = '/profile';
+
+  static const users = 'users';
+  static const usersPath = '/users';
+
+  static const entities = 'entities';
+  static const entitiesPath = '/entities';
+
+  static const incidents = 'incidents';
+  static const incidentsPath = '/incidents';
+
+  static const mapIncidents = 'map_incidents';
+  static const mapIncidentsPath = '/map_incidents';
+
+  static const modelsIa = 'models_ia';
+  static const modelsIaPath = '/models_ia';
+
+  static const reports = 'reports';
+  static const reportsPath = '/reports';
+
+  static const configuration = 'configuration';
+  static const configurationPath = '/configuration';
+
 
   static const report = 'report';
   static const reportPath = '/report';

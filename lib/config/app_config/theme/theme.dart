@@ -17,7 +17,7 @@ class AppTheme {
       surfaceTintColor: Colors.white,
       shadowColor: Colors.black87,
       toolbarHeight: 80,
-      
+      scrolledUnderElevation: 0,
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
      style: ButtonStyle(
