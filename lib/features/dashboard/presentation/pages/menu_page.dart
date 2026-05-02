@@ -19,18 +19,20 @@ class MenuPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
       
-          buildHeaderUser(),
+          buildHeaderUser(context),
 
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),
             child: Divider(color: Colors.grey.shade300,),
           ),
 
-          ...buildMenuItems(),
-
-          const Spacer(),
-      
-          buttonLogout(context),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: buildMenuItems(),
+              ),
+            ),
+          ),
 
           SizedBox(height: 35)
         ],
@@ -39,7 +41,7 @@ class MenuPage extends StatelessWidget {
   }
 
 
-  Widget buildHeaderUser() {
+  Widget buildHeaderUser(BuildContext context) {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -73,42 +75,78 @@ class MenuPage extends StatelessWidget {
               color: Colors.black45,
               size: 12,
             ),
-                
-            // Container(
-            //   margin: EdgeInsets.only(top: 10),
-            //   padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-            //   decoration: BoxDecoration(
-            //     color: Colors.white.withAlpha(70),
-            //     borderRadius: BorderRadius.circular(10)
-            //   ),
-            //   child: Row(
-            //     mainAxisSize: MainAxisSize.min,
-            //     spacing: 5,
-            //     children: [
-            //       Icon(Icons.verified_outlined, color: Colors.white, size: 15,),
-            //       UIText(title: 'Ciudadano', size: 10, color: Colors.white, bold: true,),
-            //     ],
-            //   ),
-            // ),
 
             Container(
               margin: EdgeInsets.only(top: 10),
-              padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
               decoration: BoxDecoration(
-                color: Colors.blue.withAlpha(70),
+                color: Colors.green.withAlpha(30),
                 borderRadius: BorderRadius.circular(10)
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 spacing: 5,
                 children: [
-                  Icon(Icons.verified_outlined, color: Colors.blue, size: 15,),
-                  UIText(title: 'Administrador', size: 10, color: Colors.blue, bold: true,),
+                  UIText(title: true? 'Administrador' : 'Ciudadano', size: 10, color: Colors.green, bold: true,),
+                  Icon(Icons.verified_outlined, color: Colors.green, size: 15,),
                 ],
               ),
             ),
 
-            SizedBox(height: 15,)
+            SizedBox(height: 15,),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Row(
+                spacing: 10,
+                children: [
+              
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.only(top: 10),
+                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: Colors.blueGrey.withAlpha(30),
+                        borderRadius: BorderRadius.circular(10)
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        spacing: 5,
+                        children: [
+                          UIText(title: 'Editar perfil', size: 13, color: Colors.black54, bold: true,),
+                          Icon(Icons.manage_accounts_outlined, color: Colors.black54, size: 18,),
+                        ],
+                      ),
+                    ),
+                  ),
+              
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => context.go(RoutePaths.homePath),
+                      child: Container(
+                        margin: EdgeInsets.only(top: 10),
+                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(10)
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          spacing: 5,
+                          children: [
+                            UIText(title: 'Cerrar sesión', size: 13, color: Colors.white, bold: true,),
+                            Icon(Icons.logout, color: Colors.white, size: 15,),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+              
+                ],
+              ),
+            )
                     
           ],
         ),

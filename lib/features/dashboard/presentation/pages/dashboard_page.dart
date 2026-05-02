@@ -110,6 +110,7 @@ class DashboardPage extends ConsumerWidget {
             icon: Icon(iconMap[item.iconKey] ?? Icons.help_outline),
             title: Text(item.label),
             selectedColor: Colors.blue,
+            unselectedColor: Colors.grey.shade500
           );
         }).toList(),
       ),

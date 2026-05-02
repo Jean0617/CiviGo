@@ -27,47 +27,52 @@ GoRouter appRouter(Ref ref) {
       GoRoute(
         name: RoutePaths.home,
         path: RoutePaths.homePath,
-        builder: (_, __) => HomePage(),
+        pageBuilder: (context, state) => fadePage(HomePage())
       ),
       
       GoRoute(
         name: RoutePaths.login,
         path: RoutePaths.loginPath,
-        builder: (_, __) => AuthPage(),
+        pageBuilder: (context, state) => fadePage(AuthPage())
       ),
 
       GoRoute(
         name: RoutePaths.register,
         path: RoutePaths.registerPath,
-        builder: (_, __) => RegisterPage(),
+        pageBuilder: (context, state) => fadePage(RegisterPage())
       ),
 
-
       ShellRoute(
-        builder: (context, state, child) {
-          return DashboardPage(child: child);
-        },
+        pageBuilder: (context, state, child) => fadePage(DashboardPage(child: child)),
         routes: [
           GoRoute(
             path: RoutePaths.dashboardPath,
-            builder: (context, state) => DashboardBody(),
+            pageBuilder: (context, state) => fadePage(DashboardBody())
           ),
           GoRoute(
             path: RoutePaths.incidentsPath,
-            builder: (context, state) => Center(child: Text('Incidencias')),
+            pageBuilder: (context, state) => fadePage(Center(child: Text('Incidencias')))
           ),
           GoRoute(
             path: RoutePaths.mapIncidentsPath,
-            builder: (context, state) => MapIncidents(),
+            pageBuilder: (context, state) => fadePage(MapIncidents())
           ),
           GoRoute(
             path: RoutePaths.profilePath,
-            builder: (context, state) => MenuPage(),
+            pageBuilder: (context, state) => fadePage(MenuPage())
           ),
         ],
       ),
 
     ]
   );
+}
 
+CustomTransitionPage fadePage(Widget child) {
+  return CustomTransitionPage(
+    child: child,
+    transitionsBuilder: (_, animation, __, child) {
+      return FadeTransition(opacity: animation,child: child);
+    },
+  );
 }
