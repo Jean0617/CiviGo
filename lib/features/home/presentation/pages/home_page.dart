@@ -48,6 +48,7 @@ class HomePage extends StatelessWidget {
                     background: Colors.blue,
                     fontColor: Colors.white,
                     icon: Icon(Icons.report_gmailerrorred, color: Colors.white, size: 25,),
+                    onPressed: () => context.pushNamed(RoutePaths.report),
                   ),
                     
                   UIButton(

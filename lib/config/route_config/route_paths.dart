@@ -37,4 +37,10 @@ class RoutePaths {
   static const configurationPath = '/configuration';
 
 
+  static const report = 'report';
+  static const reportPath = '/report';
+
+  static const reportSteps = 'stepsReports';
+  static const reportStepPath = '/stepsReports';
+
 }
