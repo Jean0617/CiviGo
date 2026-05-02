@@ -6,4 +6,10 @@ class RoutePaths {
   static const home = 'home';
   static const homePath = '/home';
 
+  static const report = 'report';
+  static const reportPath = '/report';
+
+  static const reportSteps = 'stepsReports';
+  static const reportStepPath = '/stepsReports';
+
 }
