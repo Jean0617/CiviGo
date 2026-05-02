@@ -1,9 +1,13 @@
 
+import 'package:civigo/features/shared/widgets/textformfield/ui_text_form_field.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../config/route_config/route_paths.dart';
+import '../../../shared/utils/utils.dart';
 import '../../../shared/widgets/buttons/ui_button.dart';
-
-import '../widgets/card_report.dart';
+import '../../../shared/widgets/text/ui_text.dart';
+import '../../../shared/widgets/toggle/ui_switch.dart';
 
 class AuthPage extends StatelessWidget {
   
@@ -13,149 +17,138 @@ class AuthPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey.shade100,
-      appBar: AppBar(
-        foregroundColor: Colors.white,
-        shadowColor: Colors.white,
-        elevation: 0,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                const Icon(Icons.shield_outlined, color: Color(0xFF0A214D),),
-
-                const SizedBox(width: 10,),
-
-                const Text("civic guard", style: TextStyle(fontWeight: FontWeight.w800, color: Color(0xFF0A214D)),),
-              ],
-            ),
-
-           const Icon(Icons.person, color : Color(0xFF0A214D))
-          ],
-        ),
-      ),
-
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            children: [
-
-              const SizedBox(height: 30,),
-
-              const Text("Good morning, Alex.", 
-               style: TextStyle(
-                fontSize: 56, 
-                fontWeight: FontWeight.w600, 
-                color: Color(0xFF051838)
-               ),
-              ),
-        
-              const Text("stay informet and keep you comiunity safe, here is the lsated activity en you area", 
-               style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey
-               ),
-              ),
-        
-              const SizedBox(height: 20,),
-        
-              SizedBox(height: 55,width: 400,
-              child: ElevatedButton(
-                onPressed: (){},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF051838),
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadiusGeometry.circular(14)
-                  )
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.add_circle_outline_outlined),
-                    SizedBox(width: 10,),
-                    Text("Report Incident", style: TextStyle(
-                      fontSize: 23
+    return UnFocusKeyboard(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return SingleChildScrollView(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: constraints.maxHeight,
+                  ),
+                  child: IntrinsicHeight(
+                    child: Column(
+                      children: [
+                          
+                        const SizedBox(height: 30,),
+                          
+                        ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          minTileHeight: 0,
+                          minVerticalPadding: 0,
+                          dense: true,
+                          title: const UIText(
+                            title: "Bienvenido", 
+                            size: 40, bold: true, color: Colors.blueGrey
+                          ),
+                          subtitle: const UIText(
+                            title: "Ingresa tus datos para iniciar sesión.", 
+                            size: 13, color: Colors.black
+                          ),
+                        ),
+                          
+                        const SizedBox(height: 50),
+                          
+                        UITextFormField(
+                          fillColor: Colors.black.withAlpha(15),
+                          hintText: 'Usuario',
+                          textColor: Colors.black,
+                          showBorder: false,
+                          focusBorder: Colors.black12,
+                          prefixIcon: const Icon(Icons.person_outline, color: Colors.black),
+                        ),
+                          
+                        const SizedBox(height: 15),
+                          
+                        UITextFormField(
+                          fillColor: Colors.black.withAlpha(15),
+                          hintText: 'Contraseña',
+                          textColor: Colors.black,
+                          showBorder: false,
+                          isPassword: true,
+                          focusBorder: Colors.black12,
+                          prefixIcon: const Icon(Icons.lock_outline, color: Colors.black),
+                        ),
+                          
+                        const SizedBox(height: 5),
+                          
+                        Row(
+                          children: [
+                          
+                            const UIText(
+                              title: "Recordar datos", 
+                              size: 14, color: Colors.black
+                            ),
+                          
+                            ValueListenableBuilder(
+                              valueListenable: valueToggle,
+                              builder: (context, value, child) {
+                                return UISwitch(
+                                  scale: 0.7,
+                                  activeTrackColor: Colors.blueGrey,
+                                  inactiveThumbColor: Colors.black54,
+                                  inactiveTrackColor: Colors.white,
+                                  active: value,
+                                  onChanged: (val) => valueToggle.value = val,
+                                );
+                              }
+                            ),
+                          ],
+                        ),
+                          
+                        const SizedBox(height: 30),
+                          
+                        UIButton(
+                          title: 'Ingresar',
+                          expand: true,
+                          bold: true,
+                          background: Colors.blue,
+                          fontColor: Colors.white,
+                          padding: EdgeInsets.symmetric(vertical: 20),
+                          iconAlignmentStart: false,
+                          icon: Icon(Icons.login, color: Colors.white, size: 18,),
+                          onPressed: () => context.go(RoutePaths.dashboardPath),
+                        ),
+                          
+                        UIButton(
+                          textRich: [
+                            {'text': '¿No tienes cuenta? ', 'color': Colors.black54},
+                            {'text': 'Registrate.', 'color': Colors.blueGrey, 'bold': true}
+                          ],
+                          expand: true,
+                          bold: true,
+                          background: Colors.transparent,
+                          fontColor: Colors.white,
+                          padding: EdgeInsets.symmetric(vertical: 20),
+                          onPressed: () => context.pushReplacementNamed(RoutePaths.register),
+                        ),
+                    
+                        const Spacer(), // empuja hacia abajo
+                    
+                        GestureDetector(
+                          onTap: () => context.pop(),
+                          child: const Padding(
+                            padding: EdgeInsets.only(bottom: 20),
+                            child: UIText(
+                              title: 'Regresar',
+                              bold: true,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                          
+                      ],
                     ),
-                   ),
-                  ],
-                ),
-               ),
-              ),
-        
-              const SizedBox(height: 30,),
-        
-        
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-                  child: Row(
-                    children: [
-                      Icon(Icons.shield_outlined),
-                      SizedBox(width: 10,),
-                      
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Neighborhood Status:\nNormal", style: TextStyle(fontSize: 20),),
-                          Text("no severe alerts in a 5-mile radius", style: TextStyle(color: Colors.grey)),
-                        ],
-                      ),
-                    ],
                   ),
                 ),
-              ),
-        
-              const SizedBox(height: 25,),
-        
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(" Recent Activity", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),),
-                  Row(
-                    children: [
-                      Text("VIEW MAP ", style: TextStyle(fontSize: 15, color: const Color.fromARGB(255, 4, 82, 82), fontWeight: FontWeight.w500),),
-                      Icon(Icons.arrow_forward, size: 18,)
-                    ],
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 20,),
-            
-              CardReport(
-               typeReport: 'traffic', 
-               title: 'traffic light malfunction', 
-               subtitle: 'mian  st & 4ht ave intersection signals are flashing red in all direccions proceed with...', 
-               timePublication: '2th hago', 
-               await: '0.5 mi away',
-               colorIconReport: Colors.yellow
-              ),
-
-              CardReport(
-               typeReport: 'utility', 
-               title: 'Water Main Break', 
-               subtitle: 'Flooding reported on the eastbound lane of Cedar Lane. City crews have been dispatched.', 
-               timePublication: '1th ago', 
-               await: '1.2 mi away',
-               colorIconReport: Colors.blue,
-                ),
-
-              CardReport(
-               typeReport: 'noise', 
-               title: 'construccion noise', 
-               subtitle: 'loud jack hammering reported outside of permitted hors near the new library', 
-               timePublication: '3h ago', 
-               await: '0.8 mi away',
-               colorIconReport: Colors.blueGrey,
-                ),   
-            ],
+              );
+            }
           ),
-        ),
-      )
+        )
+      ),
     );
   }
 }

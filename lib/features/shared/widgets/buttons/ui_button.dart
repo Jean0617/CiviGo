@@ -17,6 +17,7 @@ class UIButton extends StatelessWidget {
   final EdgeInsets padding;
   final Widget? icon;
   final bool iconAlignmentStart;
+  final List<dynamic>? textRich;
   final Function()? onPressed;
 
   const UIButton({
@@ -35,7 +36,8 @@ class UIButton extends StatelessWidget {
     this.padding = const EdgeInsets.symmetric(vertical: 15),
     this.onPressed,
     this.icon,
-    this.iconAlignmentStart = true
+    this.iconAlignmentStart = true,
+    this.textRich
   });
 
   @override
@@ -69,6 +71,7 @@ class UIButton extends StatelessWidget {
       iconAlignment: iconAlignmentStart? IconAlignment.start : IconAlignment.end,
       icon: icon,
       label: UIText(
+        textRich: textRich,
         title: title,
         bold: bold,
         color: fontColor,

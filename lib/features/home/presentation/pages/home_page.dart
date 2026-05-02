@@ -4,6 +4,7 @@ import 'package:civigo/features/shared/widgets/text/ui_text.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../config/app_config/app_config.dart';
 import '../../../shared/widgets/buttons/ui_button.dart';
 import 'slider.dart';
 
@@ -34,9 +35,8 @@ class HomePage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        UIText( title: 'CiviGo', color: Colors.black, size: 28, bold: true),
-
-                        UIText( title: 'Cuando tú actúas, la ciudad progresa.', color: Colors.black54, size: 14),
+                        UIText( title: AppConfig.appName, color: Colors.blueGrey, size: 28, bold: true),
+                        UIText( title: AppConfig.appLema, color: Colors.black54, size: 14),
                       ],
                     ),
                   ),
@@ -45,7 +45,7 @@ class HomePage extends StatelessWidget {
                     title: 'Reportar caso',
                     expand: true,
                     bold: true,
-                    background: Colors.black,
+                    background: Colors.blue,
                     fontColor: Colors.white,
                     icon: Icon(Icons.report_gmailerrorred, color: Colors.white, size: 25,),
                   ),
