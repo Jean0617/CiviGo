@@ -13,6 +13,7 @@ import '../../features/dashboard/presentation/pages/dashboard_page.dart';
 import '../../features/dashboard/presentation/pages/menu_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/map/presentation/pages/map_page.dart';
+import '../../features/users/presentation/pages/users_page.dart';
 part 'router_provider.g.dart';
 
 @riverpod
@@ -73,6 +74,10 @@ GoRouter appRouter(Ref ref) {
           GoRoute(
             path: RoutePaths.profilePath,
             pageBuilder: (context, state) => fadePage(MenuPage())
+          ),
+          GoRoute(
+            path: RoutePaths.usersPath,
+            pageBuilder: (context, state) => fadePage(UsersPage())
           ),
         ],
       ),

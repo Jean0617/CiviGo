@@ -85,25 +85,43 @@ class _UIDropdownButtonState<T> extends State<UIDropdownButton<T>> {
       
       value: widget.value,
       decoration: _buildInputDecoration(),
+      style: TextStyle(
+        color: Colors.black54,
+        fontSize: 14
+      ),
       
       hint: _buildHint(),
       
       items: _buildMenuItems(),
       
       onChanged: widget.isEnabled ? widget.onChanged : null,
+
+      selectedItemBuilder: (context) {
+        return widget.items.map((item) {
+          final displayText = _getDisplayText(item);
+
+          return Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              displayText,
+              style: const TextStyle(fontSize: 14),
+              overflow: TextOverflow.ellipsis,
+            ),
+          );
+        }).toList();
+      },
       
       // Dropdown Style (v2.5+ optimizado)
       dropdownStyleData: DropdownStyleData(
         maxHeight: widget.maxDropdownHeight,
-        width: null, // Auto-width
-        padding: null,
+        width: null,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(widget.borderRadius),
           color: Colors.white,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 8,
+              color: Colors.black26,
+              blurRadius: 2,
               offset: const Offset(0, 2),
             ),
           ],
@@ -118,8 +136,8 @@ class _UIDropdownButtonState<T> extends State<UIDropdownButton<T>> {
       // Button Style optimizado
       buttonStyleData: ButtonStyleData(
         padding: widget.contentPadding ?? 
-            const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-        height: 48,
+            const EdgeInsets.symmetric(horizontal: 7, vertical: 0),
+        height: 40,
         width: double.infinity,
       ),
       
@@ -134,7 +152,7 @@ class _UIDropdownButtonState<T> extends State<UIDropdownButton<T>> {
       
       // Menu Item Style
       menuItemStyleData: MenuItemStyleData(
-        height: 44,
+        height: 40,
         padding: EdgeInsets.zero,
       ),
     );
@@ -165,15 +183,15 @@ class _UIDropdownButtonState<T> extends State<UIDropdownButton<T>> {
       enabledBorder: enabledBorder,
       focusedBorder: OutlineInputBorder(
         borderRadius: radius,
-        borderSide: const BorderSide(color: Colors.black, width: 1.5),
+        borderSide: BorderSide(color: Colors.grey.shade400, width: 1),
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: radius,
-        borderSide: const BorderSide(color: Colors.red, width: 1.5),
+        borderSide: const BorderSide(color: Colors.red, width: 1),
       ),
       focusedErrorBorder: OutlineInputBorder(
         borderRadius: radius,
-        borderSide: const BorderSide(color: Colors.red, width: 1.5),
+        borderSide: const BorderSide(color: Colors.red, width: 1),
       ),
       alignLabelWithHint: true,
     );
@@ -219,7 +237,7 @@ class _UIDropdownButtonState<T> extends State<UIDropdownButton<T>> {
         key: ValueKey(itemValue?.hashCode ?? item.hashCode),
         value: itemValue ?? item,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
           child: Text(
             displayText,
             style: const TextStyle(fontSize: 14),
