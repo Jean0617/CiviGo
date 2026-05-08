@@ -21,7 +21,7 @@ class DashboardPage extends ConsumerWidget {
     final currentIndex = getIndexFromLocation(location);
 
     return Scaffold(
-      backgroundColor: Colors.blue,
+      backgroundColor: AppConfig.primaryColor,
       appBar: buildAppBar(context),
       body: buildBody(),
       bottomNavigationBar: buildBottonNavigationBar(currentIndex, context),
@@ -30,7 +30,7 @@ class DashboardPage extends ConsumerWidget {
 
   AppBar buildAppBar(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.blue,
+      backgroundColor: Colors.transparent,
       title: ListTile(
         minLeadingWidth: 0,
         minTileHeight: 0,
@@ -65,8 +65,8 @@ class DashboardPage extends ConsumerWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20)
+            topLeft: Radius.circular(30),
+            topRight: Radius.circular(30)
           ),
           boxShadow: [
             BoxShadow(
@@ -79,8 +79,8 @@ class DashboardPage extends ConsumerWidget {
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20)
+            topLeft: Radius.circular(30),
+            topRight: Radius.circular(30)
           ),
           child: child
         )
@@ -109,7 +109,7 @@ class DashboardPage extends ConsumerWidget {
           return SalomonBottomBarItem(
             icon: Icon(iconMap[item.iconKey] ?? Icons.help_outline),
             title: Text(item.label),
-            selectedColor: Colors.blue,
+            selectedColor: AppConfig.primaryColor,
             unselectedColor: Colors.grey.shade500
           );
         }).toList(),

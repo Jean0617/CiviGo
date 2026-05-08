@@ -1,4 +1,5 @@
 
+import 'package:civigo/config/app_config/app_config.dart';
 import 'package:civigo/features/shared/widgets/textformfield/ui_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -42,7 +43,7 @@ class AuthPage extends StatelessWidget {
                           dense: true,
                           title: const UIText(
                             title: "Bienvenido", 
-                            size: 40, bold: true, color: Colors.blueGrey
+                            size: 40, bold: true, color: AppConfig.primaryColor
                           ),
                           subtitle: const UIText(
                             title: "Ingresa tus datos para iniciar sesión.", 
@@ -105,7 +106,7 @@ class AuthPage extends StatelessWidget {
                           title: 'Ingresar',
                           expand: true,
                           bold: true,
-                          background: Colors.blue,
+                          background: AppConfig.primaryColor,
                           fontColor: Colors.white,
                           padding: EdgeInsets.symmetric(vertical: 20),
                           iconAlignmentStart: false,
@@ -116,7 +117,7 @@ class AuthPage extends StatelessWidget {
                         UIButton(
                           textRich: [
                             {'text': '¿No tienes cuenta? ', 'color': Colors.black54},
-                            {'text': 'Registrate.', 'color': Colors.blueGrey, 'bold': true}
+                            {'text': 'Registrate.', 'color': AppConfig.primaryColor, 'bold': true}
                           ],
                           expand: true,
                           bold: true,
@@ -135,7 +136,7 @@ class AuthPage extends StatelessWidget {
                             child: UIText(
                               title: 'Regresar',
                               bold: true,
-                              color: Colors.grey,
+                              color: Colors.black54,
                             ),
                           ),
                         ),

@@ -32,9 +32,6 @@ class Step3 extends StatelessWidget {
               
               CardDescription(),
           
-              Spacer(),
-                
-              ButtonNextStep()
             ],
           ),
         )

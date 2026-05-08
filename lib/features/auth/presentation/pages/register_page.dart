@@ -3,6 +3,7 @@ import 'package:civigo/features/shared/widgets/textformfield/ui_text_form_field.
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../config/app_config/app_config.dart';
 import '../../../../config/route_config/route_paths.dart';
 import '../../../shared/utils/utils.dart';
 import '../../../shared/widgets/buttons/ui_button.dart';
@@ -34,7 +35,7 @@ class RegisterPage extends StatelessWidget {
                   dense: true,
                   title: const UIText(
                     title: "Crear cuenta", 
-                    size: 40, bold: true, color: Colors.blueGrey
+                    size: 40, bold: true, color: AppConfig.primaryColor
                   ),
                   subtitle: const UIText(
                     title: "Completa los campos para registrar tus datos en CiviGo.", 
@@ -94,7 +95,7 @@ class RegisterPage extends StatelessWidget {
                   title: 'Registrame',
                   expand: true,
                   bold: true,
-                  background: Colors.blue,
+                  background: AppConfig.primaryColor,
                   fontColor: Colors.white,
                   padding: EdgeInsets.symmetric(vertical: 20),
                   iconAlignmentStart: false,
@@ -104,7 +105,7 @@ class RegisterPage extends StatelessWidget {
                 UIButton(
                   textRich: [
                     {'text': '¿Ya tienes cuenta? ', 'color': Colors.black54},
-                    {'text': 'Ingresa.', 'color': Colors.blueGrey, 'bold': true}
+                    {'text': 'Ingresa.', 'color': AppConfig.primaryColor, 'bold': true}
                   ],
                   expand: true,
                   bold: true,

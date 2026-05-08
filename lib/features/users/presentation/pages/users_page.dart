@@ -1,14 +1,18 @@
-import 'package:civigo/features/shared/widgets/buttons/ui_button.dart';
-import 'package:civigo/features/shared/widgets/textformfield/ui_text_form_field.dart';
+import 'package:civigo/config/route_config/route_paths.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../config/app_config/app_config.dart';
 import '../../../shared/utils/utils.dart';
+import '../../../shared/widgets/buttons/ui_button.dart';
+import '../../../shared/widgets/container/form_no_data.dart';
 import '../../../shared/widgets/data_table/action_button.dart';
 import '../../../shared/widgets/data_table/column_config.dart';
 import '../../../shared/widgets/data_table/ui_data_table.dart';
-import '../../../shared/widgets/dropdown/ui_dropdown_button.dart';
+import '../../../shared/widgets/popup/ui_popup.dart';
 import '../../../shared/widgets/text/ui_text.dart';
+import '../../../shared/widgets/textformfield/ui_text_form_field.dart';
 import '../../data/models/user_model.dart';
 
 class UsersPage extends ConsumerStatefulWidget {
@@ -25,17 +29,19 @@ class _UsersPageState extends ConsumerState<UsersPage> {
   bool isLoading = false;
 
   List<ColumnConfig<User>> userColumns = [
-    ColumnConfig<User>(
-      name: 'id',
-      label: 'ID',
-      builder: (u) => Text('${u.id}'),
-    ),
-
+    
     ColumnConfig<User>(
       width: 120,
       name: 'name',
       label: 'Nombre',
       builder: (u) => Text(u.name),
+    ),
+
+    ColumnConfig<User>(
+      width: 130,
+      name: 'id',
+      label: 'Identificación',
+      builder: (u) => Text('CC-${u.id*356}'),
     ),
 
     ColumnConfig<User>(
@@ -105,9 +111,25 @@ class _UsersPageState extends ConsumerState<UsersPage> {
   Widget build(BuildContext context) {
     return UnFocusKeyboard(
       child: Scaffold(
-        backgroundColor: Colors.white60,
+        appBar: AppBar(
+          leadingWidth: 20,
+          automaticallyImplyLeading: false,
+          actionsPadding: EdgeInsets.only(right: 10),
+          title: UIButton(
+            title: 'Volver',
+            fontColor: Colors.black54, 
+            fontSize: 14.0,
+            icon: Icon(Icons.arrow_back_ios_new_rounded, size: 15, color: Colors.black45,),
+            bold: true,
+            borderRadius: 10,
+            padding: EdgeInsets.symmetric(horizontal: 3, vertical: 5),
+            onPressed: () => context.pop(),
+          ),
+          toolbarHeight: 60,
+        ),
+        backgroundColor: Colors.white,
         body: Padding(
-          padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 15),
+          padding: const EdgeInsets.only(left: 10.0, right: 10.0),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -115,82 +137,43 @@ class _UsersPageState extends ConsumerState<UsersPage> {
               children: [
 
                 ListTile(
-                  minTileHeight: 4,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 2),
-                  title: const UIText( 
-                    title: 'GESTIÓN DE USUARIOS', color: Colors.blueGrey, size: 18.0,
+                  visualDensity: VisualDensity.compact,
+                  dense: true,
+                  minTileHeight: 0,
+                  contentPadding: EdgeInsets.symmetric(horizontal: 5),
+                  title: UIText( 
+                    title: 'GESTIÓN \nDE USUARIOS', color: Colors.black87, size: 25.0,
                     bold: true,
                   ),
-                  subtitle: const UIText( 
-                    title: 'Administra información, accesos y roles en para los usuarios.', color: Colors.black54, size: 13.0,
+                  subtitle: UIText(title: 'Administración de información, roles y permisos.', size: 12, color: Colors.black87,),
+                  trailing: 
+                  IconButton(
+                    style: ButtonStyle(
+                      shape: WidgetStatePropertyAll(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadiusGeometry.circular(10)
+                        )
+                      ),
+                      padding: WidgetStatePropertyAll(EdgeInsets.only(bottom: 5, top: 5, left: 10, right: 10)),
+                      alignment: Alignment.center,
+                      backgroundColor: WidgetStatePropertyAll(AppConfig.primaryColor)
+                    ),
+                    tooltip: 'Nuevo usuario',
+                    icon: Icon(Icons.person_add_alt_1_outlined, color: Colors.white, size: 20),
+                    onPressed: () => context.pushNamed(RoutePaths.newUser),
                   ),
                 ),
+
+                SizedBox(height: 5),
 
                 Row(
+                  spacing: 5,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+
                     Expanded(
-                      child: UIButton(
-                        bold: true,
-                        expand: true,
-                        borderRadius: 10,
-                        title: 'Crear usuario',
-                        fontColor: Colors.white,
-                        background: Colors.blue,
-                        icon: Icon(Icons.person_add_alt, color: Colors.white,),
-                      ),
-                    ),
-                    Expanded(child: SizedBox.shrink())
-                  ],
-                ),
-
-                SizedBox(height: 20),
-            
-                Container(
-                  margin: EdgeInsets.only(left: 2, right: 2),
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 5
-                      )
-                    ]
-                  ),
-                  child: Column(
-                    children: [
-
-                      Row(
-                        spacing: 5,
-                        children: [
-                          const UIText( 
-                            title: 'Filtros', color: Colors.blueGrey, bold: true, size: 15.0,
-                          ),
-                          IconButton(
-                            style: ButtonStyle(
-                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              visualDensity: VisualDensity.compact,
-                              shape: WidgetStatePropertyAll(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadiusGeometry.circular(5)
-                                )
-                              ),
-                              minimumSize: WidgetStatePropertyAll(Size(20,35)),
-                              padding: WidgetStatePropertyAll(EdgeInsets.all(5)),
-                              backgroundColor: WidgetStatePropertyAll(Colors.blueGrey.withAlpha(30))
-                            ),
-                            icon: Icon(Icons.filter_alt_outlined, color: Colors.grey, size: 20,),
-                            onPressed: (){},
-                          )
-                            
-                        ],
-                      ),
-
-                      SizedBox(height: 10),
-            
-                      UITextFormField(
-                        hintText: 'Buscar por identificación, nombre, etc...',
+                      child: UITextFormField(
+                        hintText: 'Buscar por identificación o nombre...',
                         borderRadius: 30,
                         focusBorder: Colors.grey.shade400,
                         suffixIcon: IconButton(
@@ -198,16 +181,31 @@ class _UsersPageState extends ConsumerState<UsersPage> {
                           onPressed: (){}, 
                         ),
                       ),
+                    ),
 
-                      SizedBox(height: 20),
-            
-                      buildDataTableUsers(),
-
-                      SizedBox(height: 10),
-
-                    ],
-                  ),
+                    IconButton(
+                      style: ButtonStyle(
+                        shape: WidgetStatePropertyAll(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadiusGeometry.circular(10)
+                          )
+                        ),
+                        padding: WidgetStatePropertyAll(EdgeInsets.all(13)),
+                        backgroundColor: WidgetStatePropertyAll(Colors.black.withAlpha(20))
+                      ),
+                      tooltip: 'Filtros',
+                      icon: Icon(Icons.filter_alt_outlined, color: Colors.black54, size: 22,),
+                      onPressed: () => uIDialog(context, title: 'Filtros', message: 'Seleciione los filtros para realizar las busquedas mas precisas.'),
+                    ),
+                  ],
                 ),
+
+                SizedBox(height: 20),
+            
+                users.isNotEmpty?
+                  FormNoData()
+                :
+                  buildDataTableUsers(),
       
                 SizedBox(height: 40),
               ],

@@ -1,3 +1,4 @@
+import 'package:civigo/config/app_config/app_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
@@ -57,10 +58,10 @@ class UIDataTable<T> extends ConsumerWidget {
         Container(
           padding: EdgeInsets.symmetric(vertical: 5),
           decoration: BoxDecoration(
-            color: Colors.grey.withAlpha(20),
+            color: Colors.white,
             borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(5),
-              topRight: Radius.circular(5)
+              topLeft: Radius.circular(10),
+              topRight: Radius.circular(10)
             ),
           ),
           child: Row(
@@ -69,16 +70,16 @@ class UIDataTable<T> extends ConsumerWidget {
             children: [
 
               Padding(
-                padding: const EdgeInsets.only(left: 10.0),
+                padding: const EdgeInsets.only(left: 5.0),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   spacing: 5,
                   children: [
-                    Icon(Icons.list, color: Colors.blueGrey, size: 18,),
                     UIText(
                       title: 'Resultados',
-                      color: Colors.blueGrey, bold: true, size: 15.0,
+                      color: Colors.black87, bold: true, size: 18.0,
                     ),
+                    Icon(Icons.filter_list, color: Colors.blueGrey, size: 18,),
                   ],
                 ),
               ),
@@ -97,7 +98,7 @@ class UIDataTable<T> extends ConsumerWidget {
                     },
                   ),
 
-                  UIText(title: 'Página $currentPage de $totalPages', size: 12,),
+                  UIText(title: 'Página $currentPage de $totalPages', size: 11,),
 
                   IconButton(
                     style: ButtonStyle(
@@ -120,8 +121,8 @@ class UIDataTable<T> extends ConsumerWidget {
 
         ClipRRect(
           borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(10),
-            bottomRight: Radius.circular(10)
+            bottomLeft: Radius.circular(2),
+            bottomRight: Radius.circular(2)
           ),
           child: SfDataGrid(
             source: dataSource,
@@ -136,9 +137,9 @@ class UIDataTable<T> extends ConsumerWidget {
                 columnName: col.name,
                 width: col.width ?? double.nan,
                 label: Container(
-                  alignment: Alignment.center,
+                  alignment: Alignment.centerLeft,
                   padding: const EdgeInsets.all(10),
-                  color: Colors.blueGrey,
+                  color: AppConfig.primaryColor,
                   child: Text(
                     col.label,
                     style: const TextStyle(color: Colors.white),

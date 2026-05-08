@@ -72,7 +72,7 @@ class GenericDataSource<T> extends DataGridSource {
     return DataGridRowAdapter(
       cells: row.getCells().map((cell) {
         return Container(
-          alignment: Alignment.center,
+          alignment: Alignment.centerLeft,
           padding: const EdgeInsets.symmetric(horizontal: 5),
           child: cell.value as Widget,
         );

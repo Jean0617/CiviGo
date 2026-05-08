@@ -18,11 +18,17 @@ class RoutePaths {
   static const users = 'users';
   static const usersPath = '/users';
 
+  static const newUser = 'new_user';
+  static const newUserPath = '/new_user';
+
   static const entities = 'entities';
   static const entitiesPath = '/entities';
 
   static const incidents = 'incidents';
   static const incidentsPath = '/incidents';
+
+  static const newIncident = 'new_incident';
+  static const newIncidentPath = '/new_incident';
 
   static const mapIncidents = 'map_incidents';
   static const mapIncidentsPath = '/map_incidents';

@@ -79,7 +79,7 @@ class _UIDropdownButtonState<T> extends State<UIDropdownButton<T>> {
       validator: _validator,
       
       // Layout optimizado
-      isDense: true,
+      // isDense: true,
       isExpanded: true,
       alignment: AlignmentDirectional.centerStart,
       
@@ -137,7 +137,7 @@ class _UIDropdownButtonState<T> extends State<UIDropdownButton<T>> {
       buttonStyleData: ButtonStyleData(
         padding: widget.contentPadding ?? 
             const EdgeInsets.symmetric(horizontal: 7, vertical: 0),
-        height: 40,
+        height: 47,
         width: double.infinity,
       ),
       

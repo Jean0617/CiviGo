@@ -1,5 +1,6 @@
 
 
+import 'package:civigo/config/app_config/app_config.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../config/route_config/route_paths.dart';
@@ -45,8 +46,8 @@ class DashboardBody extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    const UIText(title: "Ver todo", size: 12, color: Colors.blue, bold: true),
-                    const Icon(Icons.arrow_forward_ios_rounded, size: 10, color: Colors.blue),
+                    const UIText(title: "Ver todo", size: 12, color: AppConfig.primaryColor, bold: true),
+                    const Icon(Icons.arrow_forward_ios_rounded, size: 10, color: AppConfig.primaryColor),
                     const SizedBox(width: 5)
                   ],
                 ),
@@ -116,25 +117,15 @@ class DashboardBody extends StatelessWidget {
   Widget buildWelcome() {
     return Padding(
       padding: const EdgeInsets.only(top: 20.0),
-      child: Column(
-        spacing: 5,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-      
-          UIText(
-            textRich: [
-              {'text': '${getGreeting()},', 'color': Colors.black87, 'size': 22.0, },
-              {'text': 'Jean 👋', 'color': Colors.blue, 'bold': true, 'size': 22.0},
-            ],
-            size: 30,
-            bold: true,
-            color: Colors.blueGrey,
-          ),
-      
-          const UIText( 
-            title: 'Aquí tienes un resumen de tu actividad hoy.', color: Colors.black54, size: 14.0,
-          ),
+      child: UIText(
+        textRich: [
+          {'text': '${getGreeting()},', 'color': Colors.black87, 'bold': true, 'size': 22.0, },
+          {'text': 'Jean 👋', 'color': AppConfig.primaryColor, 'bold': true, 'size': 22.0},
+          {'text': '\nAquí tienes un resumen de tu actividad hoy.', 'color': Colors.black87,'size': 13.0},
         ],
+        size: 30,
+        bold: true,
+        color: Colors.blueGrey,
       ),
     );
   }
@@ -163,8 +154,8 @@ class DashboardBody extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    const UIText(title: "Ver mapa", size: 12, color: Colors.blue, bold: true),
-                    const Icon(Icons.arrow_forward_ios_rounded, size: 10, color: Colors.blue),
+                    const UIText(title: "Ver mapa", size: 12, color: AppConfig.primaryColor, bold: true),
+                    const Icon(Icons.arrow_forward_ios_rounded, size: 10, color: AppConfig.primaryColor),
                     const SizedBox(width: 5)
                   ],
                 ),

@@ -169,7 +169,7 @@ class MenuPage extends StatelessWidget {
 
   Widget _menuItem(BuildContext context, String route ,{IconData? icon, String title = '', Color color = Colors.black54}) {
     return ListTile(
-      onTap: () => context.go(route),
+      onTap: () => context.push(route),
       selected: true,
       contentPadding: EdgeInsets.only(left: 20, right: 20),
       leading: Icon(icon, color: color),

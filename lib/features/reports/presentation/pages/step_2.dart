@@ -33,9 +33,6 @@ class Step2 extends StatelessWidget {
               
               CardMediaEvidence(),
           
-              Spacer(),
-                
-              ButtonNextStep()
             ],
           ),
         )
