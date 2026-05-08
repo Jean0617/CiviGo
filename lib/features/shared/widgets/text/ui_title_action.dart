@@ -33,7 +33,7 @@ class UITitleAction extends StatelessWidget {
         title: title, color: Colors.black87, size: 25.0,
         bold: true,
       ),
-      subtitle: UIText(title: subTitle, size: 12, color: Colors.black87,),
+      subtitle: UIText(title: subTitle, size: 12, color: Colors.black87),
       trailing: icon != null?
         IconButton(
           style: ButtonStyle(

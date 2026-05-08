@@ -10,6 +10,7 @@ import 'data_source.dart';
 import 'table_controller.dart';
 
 class UIDataTable<T> extends ConsumerWidget {
+  
   final List<T> data;
   final int totalPages;
   final bool isLoading;
