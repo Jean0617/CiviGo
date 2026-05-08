@@ -35,7 +35,7 @@ class HomePage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        UIText( title: AppConfig.appName, color: Colors.blueGrey, size: 28, bold: true),
+                        UIText( title: AppConfig.appName, color: AppConfig.primaryColor, size: 28, bold: true),
                         UIText( title: AppConfig.appLema, color: Colors.black54, size: 14),
                       ],
                     ),
@@ -45,7 +45,7 @@ class HomePage extends StatelessWidget {
                     title: 'Reportar caso',
                     expand: true,
                     bold: true,
-                    background: Colors.blue,
+                    background: AppConfig.primaryColor,
                     fontColor: Colors.white,
                     icon: Icon(Icons.report_gmailerrorred, color: Colors.white, size: 25,),
                     onPressed: () => context.pushNamed(RoutePaths.report),

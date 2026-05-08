@@ -94,13 +94,13 @@ class _UITextFormFieldState extends State<UITextFormField> {
     return ValueListenableBuilder<bool>(
       valueListenable: _isPasswordVisible,
       builder: (context, isVisible, child) {
-        return ListTile(
-          dense: true,
-          contentPadding: EdgeInsets.zero,
-          minVerticalPadding: 0,
-          visualDensity: VisualDensity.compact,
-          title: _buildTitle(),
-          subtitle: _buildTextFormField(isVisible),
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildTitle(),
+            _buildTextFormField(isVisible),
+          ],
         );
       },
     );
@@ -110,11 +110,11 @@ class _UITextFormFieldState extends State<UITextFormField> {
     if (widget.title == null) return const SizedBox.shrink();
     
     return Padding(
-      padding: const EdgeInsets.only(bottom: 4.0),
+      padding: const EdgeInsets.only(left: 5,bottom: 0.0),
       child: Text(
         widget.title!,
         style: TextStyle(
-          fontSize: 13,
+          fontSize: 14,
           color: widget.titleColor,
           fontWeight: widget.boldTitle ? FontWeight.w600 : FontWeight.normal,
         ),
@@ -160,6 +160,11 @@ class _UITextFormFieldState extends State<UITextFormField> {
         : BorderSide.none;
 
     return InputDecoration(
+      suffixIconConstraints: const BoxConstraints(
+        minHeight: 30,
+        minWidth: 30,
+      ),
+      // isDense: true, 
       contentPadding: widget.contentPadding ?? 
           EdgeInsets.symmetric(horizontal: 12, vertical: widget.maxLines != null ? 12 : 8),
       hintText: widget.hintText,
@@ -202,8 +207,14 @@ class _UITextFormFieldState extends State<UITextFormField> {
   Widget? _buildSuffixIcon(bool isPasswordVisible) {
     if (widget.isPassword) {
       return IconButton(
+        style: ButtonStyle(
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          visualDensity: VisualDensity.compact,
+          padding: WidgetStatePropertyAll(EdgeInsets.zero),
+        ),
         onPressed: _togglePasswordVisibility,
         icon: Icon(
+          size: 18,
           isPasswordVisible ? Icons.visibility : Icons.visibility_off,
           color: isPasswordVisible ? Colors.grey : Colors.blueGrey,
         ),

@@ -29,7 +29,7 @@ class MenuPage extends StatelessWidget {
           Expanded(
             child: SingleChildScrollView(
               child: Column(
-                children: buildMenuItems(),
+                children: buildMenuItems(context),
               ),
             ),
           ),
@@ -154,10 +154,12 @@ class MenuPage extends StatelessWidget {
     );
   }
 
-  List<Widget> buildMenuItems() {
+  List<Widget> buildMenuItems(BuildContext context) {
     return [
       ...menuDashboardItems.map((item) {
         return _menuItem(
+          context,
+          item.route,
           icon: iconMap[item.iconKey] ?? Icons.help_outline,
           title: item.label,
         );
@@ -165,9 +167,9 @@ class MenuPage extends StatelessWidget {
     ];
   }
 
-  Widget _menuItem({IconData? icon, String title = '', Color color = Colors.black54}) {
+  Widget _menuItem(BuildContext context, String route ,{IconData? icon, String title = '', Color color = Colors.black54}) {
     return ListTile(
-      onTap: () {},
+      onTap: () => context.push(route),
       selected: true,
       contentPadding: EdgeInsets.only(left: 20, right: 20),
       leading: Icon(icon, color: color),

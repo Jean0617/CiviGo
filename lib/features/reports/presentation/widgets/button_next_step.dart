@@ -1,3 +1,4 @@
+import 'package:civigo/config/app_config/app_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -15,15 +16,17 @@ class ButtonNextStep extends ConsumerWidget {
     return Padding(
       padding: EdgeInsets.all(16),
       child: UIButton(
-                title: "siguiente",
-                expand: true,
-                background: const Color.fromARGB(255, 12, 4, 90),
-                fontSize: 15,
-                fontColor: Colors.white,
-                onPressed: () {
-                  notifier.nextStep();
-                },
-              ),
-      );
+        title: "siguiente",
+        expand: true,
+        padding: EdgeInsets.symmetric(vertical: 20),
+        background: AppConfig.primaryColor,
+        bold: true,
+        fontSize: 18,
+        fontColor: Colors.white,
+        onPressed: () {
+          notifier.nextStep();
+        },
+      ),
+    );
   }
 }

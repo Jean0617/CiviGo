@@ -1,3 +1,4 @@
+import 'package:civigo/config/app_config/app_config.dart';
 import 'package:flutter/material.dart';
 
 import '../../../shared/widgets/text/ui_text.dart';
@@ -22,9 +23,9 @@ class CardActivities extends StatelessWidget {
       margin: EdgeInsets.only(top: 20),
       padding: EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 20),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.black12),
+        color: AppConfig.primaryColor.withAlpha(20),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppConfig.primaryColor.withAlpha(40)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,13 +36,13 @@ class CardActivities extends StatelessWidget {
             children: [
 
               UIText(
-                title: title, color: Colors.black87, size: 15.0, bold: true,
+                title: title, color: Colors.black, size: 15.0, bold: true,
               ),
 
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
                 decoration: BoxDecoration(
-                  color: Colors.blueGrey.withAlpha(20),
+                  color: AppConfig.primaryColor.withAlpha(20),
                   borderRadius: BorderRadius.circular(5)
                 ),
                 child: Icon(Icons.report_gmailerrorred, color: Colors.blueGrey, size: 20,)
@@ -51,7 +52,7 @@ class CardActivities extends StatelessWidget {
           ),
     
           UIText(
-            title: '$amount', color: Colors.blueGrey, size: 35.0,
+            title: '$amount', color: AppConfig.primaryColor, size: 35.0,
           ),
     
           const SizedBox(height: 5),
@@ -64,13 +65,13 @@ class CardActivities extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   decoration: BoxDecoration(
-                    color: Colors.blueGrey.withAlpha(20),
+                    color: AppConfig.primaryColor.withAlpha(20),
                     borderRadius: BorderRadius.circular(5)
                   ),
                   child: Row(
                     spacing: 5,
                     children: [
-                      const Icon(Icons.circle, color: Colors.blue, size: 15,),
+                      const Icon(Icons.circle, color: Colors.green, size: 15,),
                       UIText(title: '$inProgress En progreso', color: Colors.black87, size: 11.0, bold: true),
                     ],
                   )
@@ -81,7 +82,7 @@ class CardActivities extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   decoration: BoxDecoration(
-                    color: Colors.blueGrey.withAlpha(20),
+                    color: AppConfig.primaryColor.withAlpha(20),
                     borderRadius: BorderRadius.circular(5)
                   ),
                   child: Row(

@@ -5,7 +5,7 @@ class ReportState {
 
   ReportState({
     this.currentStep = 0,
-    this.fullStep = 4,
+    this.fullStep = 3,
 
   });
 

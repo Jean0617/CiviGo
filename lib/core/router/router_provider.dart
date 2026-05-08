@@ -1,6 +1,5 @@
 
 import 'package:flutter/material.dart';
-import 'package:civigo/features/reports/presentation/pages/screens.dart';
 
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -13,6 +12,9 @@ import '../../features/dashboard/presentation/pages/dashboard_page.dart';
 import '../../features/dashboard/presentation/pages/menu_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/map/presentation/pages/map_page.dart';
+import '../../features/reports/presentation/pages/screens.dart';
+import '../../features/users/presentation/pages/new_user_page.dart';
+import '../../features/users/presentation/pages/users_page.dart';
 part 'router_provider.g.dart';
 
 @riverpod
@@ -43,38 +45,50 @@ GoRouter appRouter(Ref ref) {
         pageBuilder: (context, state) => fadePage(RegisterPage())
       ),
 
-      GoRoute(
-        name: RoutePaths.report,
-        path: RoutePaths.reportPath,
-        builder: (_, __) => ReportPage(),//entra no me deja
-      ),
-
-      GoRoute(
-        name: RoutePaths.reportSteps,
-        path: RoutePaths.reportStepPath,
-        builder: (_,__) => FlujoCrearReporte()
-      ),
-
       ShellRoute(
         pageBuilder: (context, state, child) => fadePage(DashboardPage(child: child)),
         routes: [
+
           GoRoute(
             path: RoutePaths.dashboardPath,
             pageBuilder: (context, state) => fadePage(DashboardBody())
           ),
+
           GoRoute(
+            name: RoutePaths.incidents,
             path: RoutePaths.incidentsPath,
-            pageBuilder: (context, state) => fadePage(Center(child: Text('Incidencias')))
+            pageBuilder: (context, state) => fadePage(IncidentsPage()),
           ),
+
           GoRoute(
             path: RoutePaths.mapIncidentsPath,
             pageBuilder: (context, state) => fadePage(MapIncidents())
           ),
+
           GoRoute(
             path: RoutePaths.profilePath,
             pageBuilder: (context, state) => fadePage(MenuPage())
           ),
+
+          GoRoute(
+            path: RoutePaths.usersPath,
+            pageBuilder: (context, state) => fadePage(UsersPage()),
+            routes: [
+              GoRoute(
+                name: RoutePaths.newUser,
+                path: RoutePaths.newUserPath,
+                pageBuilder: (context, state) => fadePage(NewUserPage())
+              ),
+            ]
+          ),
+          
         ],
+      ),
+
+      GoRoute(
+        name: RoutePaths.newIncident,
+        path: RoutePaths.newIncidentPath,
+        builder: (_,__) => NewIncidentPage()
       ),
     ]
   );

@@ -1,5 +1,8 @@
 
+import 'package:civigo/config/app_config/app_config.dart';
 import 'package:flutter/material.dart';
+
+import '../../../shared/widgets/text/ui_text.dart';
 
 class StepBar extends StatelessWidget {
   final int currentStep; // Recibe 1, 2, 3...
@@ -9,33 +12,45 @@ class StepBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(1),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Texto "Paso 1 de 3"
-          Text('Paso $currentStep de $fullStep',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-          SizedBox(height: 8),
-          ClipRRect( // Esto redondea las esquinas de la barra
-            borderRadius: BorderRadius.circular(8),
-            child: TweenAnimationBuilder<double>(
-              duration: Duration(milliseconds: 300), // Mismo tiempo que el PageView
-              // tween: de dónde a dónde va la animación
-              // begin: 0 = barra vacía. end: calculamos el % de progreso
-              tween: Tween(begin: 0, end: currentStep / fullStep),
-              // builder se ejecuta en cada frame de la animación
-              // value va de 0 a 0.33, luego a 0.66, luego a 1.0
-              builder: (context, value, _) => LinearProgressIndicator(
-                value: value, // LinearProgressIndicator usa 0.0 a 1.0 para el % de llenado
-                minHeight: 8, // Grosor de la barra
-                backgroundColor: Colors.grey[300], // Color de la parte "vacía"
-              ),
-            ),
+    return Column(
+      spacing: 8,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+    
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              UIText(title: 'Paso ${currentStep+1} de $fullStep',bold: true, size: 16, color: Colors.black87,),
+            ],
           ),
-        ],
-      ),
+        ),
+    
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+          child: Row(
+            children: List.generate(3, (index) {
+              final isActive = currentStep >= index;
+    
+              return Expanded(
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  margin: const EdgeInsets.only(right: 4),
+                  height: 6,
+                  decoration: BoxDecoration(
+                    color: isActive
+                        ? AppConfig.primaryColor
+                        : Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+              );
+            }),
+          ),
+        ),
+    
+      ],
     );
   }
 }
