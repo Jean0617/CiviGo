@@ -10,7 +10,7 @@ import 'data_source.dart';
 import 'table_controller.dart';
 
 class UIDataTable<T> extends ConsumerWidget {
-  
+
   final List<T> data;
   final int totalPages;
   final bool isLoading;
@@ -40,7 +40,7 @@ class UIDataTable<T> extends ConsumerWidget {
       actions: actions,
     );
 
-    // combina laas columnas y agrega columna actions si se manda
+    // combina laas columnas y agrega columna actions si se manda 
     final allColumns = [
       ...columns,
       if (actions != null && actions!.isNotEmpty)
