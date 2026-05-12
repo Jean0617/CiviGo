@@ -8,7 +8,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../config/app_config/app_config.dart';
 import '../../../../config/route_config/route_paths.dart';
-import '../../../shared/services/camera_service.dart';
 import '../../../shared/widgets/buttons/ui_button.dart';
 
 class PhotoPreviewPage extends ConsumerWidget {
@@ -34,13 +33,7 @@ class PhotoPreviewPage extends ConsumerWidget {
                 decoration: BoxDecoration(
                   color: Colors.green,
                   border: Border.all(color: Colors.green),
-                  borderRadius: BorderRadius.circular(15),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 5
-                    )
-                  ]
+                  borderRadius: BorderRadius.circular(16),
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(16),
@@ -76,7 +69,7 @@ class PhotoPreviewPage extends ConsumerWidget {
                   SizedBox(height: 5,),
               
                   UIText(
-                    title: "Confirmar evidencia", 
+                    title: "CONFIRMACIÓN", 
                     size: 25,
                     bold: true,
                     centerText: true,

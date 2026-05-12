@@ -57,8 +57,8 @@ class Step1State extends ConsumerState<Step1> {
                 SizedBox(height: 20,),
             
                 UIText(
-                  title: "Comencemos registrando la incidencia.", 
-                  size: 30,
+                  title: "COMENCEMOS REGISTRANDO LA INCIDENCIA", 
+                  size: 25,
                   bold: true,
                   centerText: true,
                   color: Colors.black,
@@ -68,12 +68,12 @@ class Step1State extends ConsumerState<Step1> {
             
                 UIText(
                   title: "Toma una foto del problema. Nuestra IA lo identificará automáticamente.", 
-                  size: 18,
+                  size: 17,
                   centerText: true,
                   color: Colors.black87,
                 ),
             
-                SizedBox(height: 10,),
+                SizedBox(height: 15,),
             
                 UIButton(
                   background: AppConfig.primaryColor,
@@ -85,7 +85,10 @@ class Step1State extends ConsumerState<Step1> {
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 14),
                   fontSize: 16,
                   icon: Icons.camera_alt_outlined, 
-                  onPressed: () async => takePhotoFlow()
+                  onPressed: () async {
+                    ref.read(step1Provider.notifier).setOpenCamera(true);
+                    takePhotoFlow();
+                  }
                 ),
             
                 SizedBox(height: 50,),
@@ -101,8 +104,6 @@ class Step1State extends ConsumerState<Step1> {
 
   Future<void> takePhotoFlow() async {
     
-    ref.read(step1Provider.notifier).setOpenCamera(true);
-
     final result = await CameraService.instance.takePhoto(context);
 
     if (result == null || !context.mounted) {

@@ -2,6 +2,7 @@ import 'package:civigo/features/shared/widgets/textformfield/ui_text_form_field.
 import 'package:flutter/material.dart';
 import '../../../shared/widgets/dropdown/ui_dropdown_button.dart';
 import '../../../shared/widgets/text/ui_text.dart';
+import '../../domain/constants.dart';
 
 class Step2 extends StatefulWidget {
 
@@ -13,49 +14,7 @@ class Step2 extends StatefulWidget {
 }
 
 class _Step2State extends State<Step2> {
-  final List<Map<String, dynamic>> clasificaciones = [
-    {
-      'id': 1,
-      'name': 'Infraestructura',
-    },
-    {
-      'id': 2,
-      'name': 'Seguridad',
-    },
-    {
-      'id': 3,
-      'name': 'Movilidad',
-    },
-    {
-      'id': 4,
-      'name': 'Servicios públicos',
-    },
-    {
-      'id': 5,
-      'name': 'Medio ambiente',
-    },
-    {
-      'id': 6,
-      'name': 'Comunidad',
-    },
-    {
-      'id': 7,
-      'name': 'Emergencias',
-    },
-    {
-      'id': 8,
-      'name': 'Mascotas y animales',
-    },
-    {
-      'id': 9,
-      'name': 'Espacio urbano',
-    },
-    {
-      'id': 10,
-      'name': 'Otros reportes',
-    },
-  ];
-
+ 
   final List<Map<String, dynamic>> priority = [
     {'id': 1, 'name': 'Baja', 'color': Colors.blue, 'icon': Icons.info_outline},
     {'id': 2, 'name': 'Media', 'color': Colors.orange, 'icon': Icons.warning_amber_rounded},
@@ -63,6 +22,7 @@ class _Step2State extends State<Step2> {
   ];
 
   ValueNotifier<Map<String, dynamic>> selectedPriority = ValueNotifier({});
+  ValueNotifier<String> isNow = ValueNotifier('No');
 
   @override
   void initState() {
@@ -115,8 +75,8 @@ class _Step2State extends State<Step2> {
                 ),
                 subtitle: UIDropdownButton<Map>(
                   hintText: 'Seleccione...',
-                  items: clasificaciones,
-                  value: clasificaciones[0],
+                  items: entidades,
+                  value: entidades[0],
                   itemBuilder: (item) => item['name'] ?? '',
                   onChanged: (value) {},
                 ),
@@ -124,32 +84,37 @@ class _Step2State extends State<Step2> {
 
               SizedBox(height: 20),
 
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.grey.shade300),
-                ),
-                child: Row(
-                  spacing: 15,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-
-                    UIText(title: '¿Ocurre ahora?', bold: true, size: 15, color: const Color(0xFF424242)),
-
-                    Expanded(
-                      child: UIRadioGroup<String>(
-                        items: const ['No','Si'],
-                        value: 'No',
-                        direction: Axis.horizontal,
-                        labelBuilder: (item) => item,
-                        onChanged: (value) {},
-                      ),
+              ValueListenableBuilder(
+                valueListenable: isNow,
+                builder: (context, now, child) {
+                  return Container(
+                    padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.grey.shade300),
                     ),
-                
-                  ],
-                ),
+                    child: Row(
+                      spacing: 15,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                  
+                        UIText(title: '¿Ocurre ahora?', bold: true, size: 15, color: const Color(0xFF424242)),
+                  
+                        Expanded(
+                          child: UIRadioGroup<String>(
+                            items: const ['No','Si'],
+                            value: now,
+                            direction: Axis.horizontal,
+                            labelBuilder: (item) => item,
+                            onChanged: (value) => isNow.value = value!,
+                          ),
+                        ),
+                    
+                      ],
+                    ),
+                  );
+                }
               ),
 
               SizedBox(height: 20),

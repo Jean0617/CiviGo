@@ -2,6 +2,7 @@ import 'package:civigo/features/reports/presentation/providers/new_incident_prov
 import 'package:civigo/features/shared/widgets/text/ui_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:math';
 
@@ -47,7 +48,7 @@ class AnalyzeAiPageState extends ConsumerState<AnalyzeAiPage> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                
@@ -56,29 +57,53 @@ class AnalyzeAiPageState extends ConsumerState<AnalyzeAiPage> {
                     SizedBox(height: 5,),
                 
                     UIText(
-                      title: "Procesando evidencia", 
-                      size: 30,
+                      title: "ANALIZANDO", 
+                      size: 25,
                       bold: true,
-                      centerText: true,
-                      color: Colors.green,
+                      color: Colors.black87,
                     ),
-                
+                    
                     Container(
-                      padding: EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        // color: Colors.orange.withAlpha(30),
-                        // border: Border.all(color: Colors.orange.shade300),
-                        borderRadius: BorderRadius.circular(10),
+                        // color: Colors.orange.withAlpha(20),
+                        // // border: Border.all(color: Colors.blue.shade100),
+                        // borderRadius: BorderRadius.circular(20),
                       ),
                       child: UIText(
-                        title: "Estamos revisando la evidencia capturada para detectar detalles relevantes y ayudarte a completar el reporte correctamente. Esto puede tardar unos segundos.", 
-                        size: 16,
-                        centerText: true,
-                        color: Colors.black87,
+                        title: "Se está procesando la evidencia para identificar detalles relevantes y completar el reporte. Esto puede tardar unos segundos.", 
+                        size: 15,
+                        // bold: true,
+                        // centerText: true,
+                        color: Colors.black54,
+                      ),
+                    ),
+
+                    Container(
+                      margin: EdgeInsets.only(top: 10),
+                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+                      decoration: BoxDecoration(
+                        color: Colors.blue.withAlpha(20),
+                        border: Border.all(color: Colors.blue.shade100),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Row(
+                        spacing: 5,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.info_outline, color: Colors.blue, size: 18),
+                          Flexible(
+                            child: UIText(
+                              title: "Seras redireccionado al siguiente paso una vez se complete el analísis.", 
+                              size: 12,
+                              bold: true,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
               
-                    SizedBox(height: 20,),
+                    SizedBox(height: 10,),
                 
                   ],
                 ),
@@ -177,29 +202,29 @@ class _OrbitAnimationState extends State<OrbitAnimation> with TickerProviderStat
         alignment: Alignment.center,
         children: [
 
-          // /// Órbita externa
-          // Container(
-          //   width: 300,
-          //   height: 300,
-          //   decoration: BoxDecoration(
-          //     shape: BoxShape.circle,
-          //     border: Border.all(
-          //       color: Colors.grey.withAlpha(30),
-          //     ),
-          //   ),
-          // ),
+          /// Órbita externa
+          Container(
+            width: 300,
+            height: 300,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: Colors.grey.withAlpha(30),
+              ),
+            ),
+          ),
 
-          // /// Órbita interna nueva
-          // Container(
-          //   width: 190,
-          //   height: 190,
-          //   decoration: BoxDecoration(
-          //     shape: BoxShape.circle,
-          //     border: Border.all(
-          //       color: Colors.grey.withAlpha(20),
-          //     ),
-          //   ),
-          // ),
+          /// Órbita interna nueva
+          Container(
+            width: 190,
+            height: 190,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: Colors.grey.withAlpha(20),
+              ),
+            ),
+          ),
 
           /// Centro
           AnimatedBuilder(
@@ -222,7 +247,7 @@ class _OrbitAnimationState extends State<OrbitAnimation> with TickerProviderStat
                         height: 100,
                         decoration: const BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.green,
+                          color: Colors.blue,
                         ),
                       ),
                     ),
@@ -238,7 +263,7 @@ class _OrbitAnimationState extends State<OrbitAnimation> with TickerProviderStat
                         height: 100,
                         decoration: const BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.green,
+                          color: Colors.blue,
                         ),
                       ),
                     ),
@@ -250,15 +275,14 @@ class _OrbitAnimationState extends State<OrbitAnimation> with TickerProviderStat
                     height: 80,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Colors.green.withAlpha(30),
+                      color: Colors.blue.withAlpha(30),
                       border: Border.all(
-                        color: Colors.green.withAlpha(50),
+                        color: Colors.blue.withAlpha(50),
                       ),
                     ),
-                    child: const Icon(
-                      Icons.psychology_outlined,
-                      size: 25,
-                      color: Colors.green,
+                    child: SpinKitDancingSquare(
+                      color: Colors.blue,
+                      size: 35.0,
                     ),
                   ),
                 ],
