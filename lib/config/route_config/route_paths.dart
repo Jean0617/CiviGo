@@ -30,6 +30,12 @@ class RoutePaths {
   static const newIncident = 'new_incident';
   static const newIncidentPath = '/new_incident';
 
+  static const photoPreview = 'photo_preview';
+  static const photoPreviewPath = 'photo_preview';
+
+  static const analyzeIa = 'analyze_ia';
+  static const analyzeIaPath = 'analyze_ia';
+
   static const mapIncidents = 'map_incidents';
   static const mapIncidentsPath = '/map_incidents';
 

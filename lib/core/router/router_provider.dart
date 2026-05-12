@@ -1,4 +1,5 @@
 
+import 'package:civigo/features/reports/presentation/pages/preview_photo.dart';
 import 'package:flutter/material.dart';
 
 import 'package:go_router/go_router.dart';
@@ -12,6 +13,7 @@ import '../../features/dashboard/presentation/pages/dashboard_page.dart';
 import '../../features/dashboard/presentation/pages/menu_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/map/presentation/pages/map_page.dart';
+import '../../features/reports/presentation/pages/analyze_ai_page.dart';
 import '../../features/reports/presentation/pages/screens.dart';
 import '../../features/users/presentation/pages/new_user_page.dart';
 import '../../features/users/presentation/pages/users_page.dart';
@@ -88,7 +90,19 @@ GoRouter appRouter(Ref ref) {
       GoRoute(
         name: RoutePaths.newIncident,
         path: RoutePaths.newIncidentPath,
-        builder: (_,__) => NewIncidentPage()
+        pageBuilder: (context, state) => fadePage(NewIncidentPage()),
+        routes: [
+          GoRoute(
+            name: RoutePaths.photoPreview,
+            path: RoutePaths.photoPreviewPath,
+            pageBuilder: (context, state) => fadePage(PhotoPreviewPage())
+          ),
+          GoRoute(
+            name: RoutePaths.analyzeIa,
+            path: RoutePaths.analyzeIaPath,
+            pageBuilder: (context, state) => fadePage(AnalyzeAiPage())
+          ),
+        ]
       ),
     ]
   );

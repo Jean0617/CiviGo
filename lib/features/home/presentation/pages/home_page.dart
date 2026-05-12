@@ -47,7 +47,8 @@ class HomePage extends StatelessWidget {
                     bold: true,
                     background: AppConfig.primaryColor,
                     fontColor: Colors.white,
-                    icon: Icon(Icons.report_gmailerrorred, color: Colors.white, size: 25,),
+                    icon: Icons.report_gmailerrorred, 
+                    iconSize: 25,
                     onPressed: () => context.pushNamed(RoutePaths.report),
                   ),
                     

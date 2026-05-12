@@ -3,14 +3,14 @@
 import 'package:civigo/features/reports/domain/entities/report_entity.dart';
 
 class ReportModel {
- final String id;
- final String clasificacion;
- final String rutaimagen;
- final double latitud;
- final double longitud;
- final String descripcion;
- final String estado;
- final DateTime createdat;
+  final String id;
+  final String clasificacion;
+  final String rutaimagen;
+  final double latitud;
+  final double longitud;
+  final String descripcion;
+  final String estado;
+  final DateTime createdat;
 
   ReportModel({
     required this.id,
@@ -20,21 +20,20 @@ class ReportModel {
     required this.descripcion, 
     required this.estado, 
     required this.createdat, 
-    required this.clasificacion}); 
-
-
+    required this.clasificacion
+  }); 
 
   factory ReportModel.fromjson (Map<String,dynamic> json){
-  return ReportModel(
-  id : json["id"], 
-  rutaimagen : json["rutaimagen"], 
-  latitud: (json["latitud"] as num).toDouble(), 
-  longitud: (json["longitud"] as num).toDouble(), 
-  descripcion: json["descripcion"], 
-  estado: json["estado"], 
-  createdat: DateTime.parse(json["createdat"]), 
-  clasificacion: json ["clasificacion"]
-  );
+    return ReportModel(
+      id : json["id"], 
+      rutaimagen : json["rutaimagen"], 
+      latitud: (json["latitud"] as num).toDouble(), 
+      longitud: (json["longitud"] as num).toDouble(), 
+      descripcion: json["descripcion"], 
+      estado: json["estado"], 
+      createdat: DateTime.parse(json["createdat"]), 
+      clasificacion: json ["clasificacion"]
+    );
   }
 
   ReportEntity toentity (){
@@ -47,10 +46,10 @@ class ReportModel {
       estado: ReportState.values.firstWhere((estados) => estados.name == estado, orElse: () => ReportState.pentiente), 
       createdat: createdat, 
       clasificacion: clasificacion
-      );
+    );
   }
-  
- Map<String, dynamic> toJson() {
+
+  Map<String, dynamic> toJson() {
     return {
       "id": id,
       "rutaimagen": rutaimagen,
@@ -62,4 +61,4 @@ class ReportModel {
       "clasificacion": clasificacion,
     };
   }
-  }
+}

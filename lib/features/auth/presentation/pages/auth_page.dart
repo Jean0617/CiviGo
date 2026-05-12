@@ -110,7 +110,8 @@ class AuthPage extends StatelessWidget {
                           fontColor: Colors.white,
                           padding: EdgeInsets.symmetric(vertical: 20),
                           iconAlignmentStart: false,
-                          icon: Icon(Icons.login, color: Colors.white, size: 18,),
+                          icon: Icons.login, 
+                          iconSize: 18,
                           onPressed: () => context.go(RoutePaths.dashboardPath),
                         ),
                           
