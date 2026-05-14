@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class UITextFormField extends StatefulWidget {
+
   final String? title;
   final String? label;
   final String? hintText;
@@ -67,7 +68,7 @@ class UITextFormField extends StatefulWidget {
     this.fontSize = 14.0,
     this.titleColor = const Color(0xFF424242),
     this.boldTitle = true,
-    this.focusBorder = Colors.black
+    this.focusBorder = Colors.black,
   });
 
   @override
@@ -75,30 +76,69 @@ class UITextFormField extends StatefulWidget {
 }
 
 class _UITextFormFieldState extends State<UITextFormField> {
+
   late final ValueNotifier<bool> _isPasswordVisible;
+
+  late final FocusNode _focusNode;
+  late final TextEditingController _controller;
 
   @override
   void initState() {
     super.initState();
-    _isPasswordVisible = ValueNotifier(!widget.isPassword);
+
+    _isPasswordVisible =
+        ValueNotifier(!widget.isPassword);
+
+    _focusNode =
+        widget.focusNode ?? FocusNode();
+
+    _controller = widget.controller ??
+      TextEditingController(
+        text: widget.initialValue ?? '',
+      );
+
+    _focusNode.addListener(() {
+
+      if (!_focusNode.hasFocus) {
+
+        widget.onChanged?.call(
+          _controller.text,
+        );
+      }
+    });
   }
 
   @override
   void dispose() {
+
+    if (widget.focusNode == null) {
+      _focusNode.dispose();
+    }
+
+    if (widget.controller == null) {
+      _controller.dispose();
+    }
+
     _isPasswordVisible.dispose();
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+
     return ValueListenableBuilder<bool>(
       valueListenable: _isPasswordVisible,
       builder: (context, isVisible, child) {
+
         return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment:
+              CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
+
             _buildTitle(),
+
             _buildTextFormField(isVisible),
           ],
         );
@@ -107,169 +147,357 @@ class _UITextFormFieldState extends State<UITextFormField> {
   }
 
   Widget _buildTitle() {
-    if (widget.title == null) return const SizedBox.shrink();
-    
+
+    if (widget.title == null) {
+      return const SizedBox.shrink();
+    }
+
     return Padding(
-      padding: const EdgeInsets.only(left: 5,bottom: 0.0),
+      padding: const EdgeInsets.only(
+        left: 5,
+        bottom: 0,
+      ),
       child: Text(
         widget.title!,
         style: TextStyle(
           fontSize: 14,
           color: widget.titleColor,
-          fontWeight: widget.boldTitle ? FontWeight.w600 : FontWeight.normal,
+          fontWeight: widget.boldTitle
+              ? FontWeight.w600
+              : FontWeight.normal,
         ),
       ),
     );
   }
 
-  Widget _buildTextFormField(bool isPasswordVisible) {
+  Widget _buildTextFormField(
+    bool isPasswordVisible,
+  ) {
+
     return TextFormField(
-      key: ValueKey(widget.controller?.hashCode ?? widget.initialValue),
-      controller: widget.controller,
-      initialValue: widget.initialValue,
-      focusNode: widget.focusNode,
-      cursorColor: widget.textColor ?? Colors.black,
-      style: TextStyle(color: widget.textColor, fontSize: widget.fontSize),
-      maxLines: widget.isPassword ? 1 : widget.maxLines ?? 1,
+
+      // key: ValueKey(
+      //   widget.controller?.hashCode ??
+      //   widget.initialValue,
+      // ),
+
+      controller: _controller,
+
+      // initialValue: widget.initialValue,
+
+      focusNode: _focusNode,
+
+      cursorColor:
+          widget.textColor ?? Colors.black,
+
+      style: TextStyle(
+        color: widget.textColor,
+        fontSize: widget.fontSize,
+      ),
+
+      maxLines: widget.isPassword
+          ? 1
+          : widget.maxLines ?? 1,
+
       readOnly: widget.readOnly,
-      obscureText: widget.isPassword && !isPasswordVisible,
+
+      obscureText:
+          widget.isPassword &&
+          !isPasswordVisible,
+
       onTap: widget.onTap,
-      onChanged: widget.onChanged,
-      onFieldSubmitted: widget.onFieldSubmitted,
-      autovalidateMode: widget.autoValidate 
-          ? AutovalidateMode.onUserInteraction 
+
+      /// Evita disparar en cada letra
+      onChanged: (_) {},
+
+      /// Cuando presiona DONE / ENTER
+      onFieldSubmitted: (value) {
+
+        widget.onChanged?.call(value);
+
+        widget.onFieldSubmitted?.call(value);
+
+        FocusScope.of(context).unfocus();
+      },
+
+      /// Cuando toca afuera
+      onTapOutside: (_) {
+        FocusScope.of(context).unfocus();
+      },
+
+      autovalidateMode: widget.autoValidate
+          ? AutovalidateMode.onUserInteraction
           : AutovalidateMode.disabled,
-      inputFormatters: _buildInputFormatters(),
-      decoration: _buildInputDecoration(isPasswordVisible),
-      validator: widget.autoValidate ? _validator : null,
+
+      inputFormatters:
+          _buildInputFormatters(),
+
+      decoration:
+          _buildInputDecoration(
+            isPasswordVisible,
+          ),
+
+      validator:
+          widget.autoValidate
+              ? _validator
+              : null,
     );
   }
 
   List<TextInputFormatter>? _buildInputFormatters() {
-    if (widget.isNumeric != true) return null;
-    
+
+    if (widget.isNumeric != true) {
+      return null;
+    }
+
     return [
-      FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,4}')),
+      FilteringTextInputFormatter.allow(
+        RegExp(r'^\d*\.?\d{0,4}'),
+      ),
     ];
   }
 
-  InputDecoration _buildInputDecoration(bool isPasswordVisible) {
-    final borderRadius = BorderRadius.circular(widget.borderRadius ?? 10);
-    final borderSide = widget.showBorder 
-        ? const BorderSide(color: Color(0xFFDEDEDE), width: 1)
+  InputDecoration _buildInputDecoration(
+    bool isPasswordVisible,
+  ) {
+
+    final borderRadius =
+        BorderRadius.circular(
+          widget.borderRadius ?? 10,
+        );
+
+    final borderSide = widget.showBorder
+        ? const BorderSide(
+            color: Color(0xFFDEDEDE),
+            width: 1,
+          )
         : BorderSide.none;
 
     return InputDecoration(
-      suffixIconConstraints: const BoxConstraints(
-        minHeight: 30,
-        minWidth: 30,
-      ),
-      // isDense: true, 
-      contentPadding: widget.contentPadding ?? 
-          EdgeInsets.symmetric(horizontal: 12, vertical: widget.maxLines != null ? 12 : 8),
+
+      suffixIconConstraints:
+          const BoxConstraints(
+            minHeight: 30,
+            minWidth: 30,
+          ),
+
+      contentPadding:
+          widget.contentPadding ??
+          EdgeInsets.symmetric(
+            horizontal: 12,
+            vertical:
+                widget.maxLines != null
+                    ? 12
+                    : 8,
+          ),
+
       hintText: widget.hintText,
+
       hintStyle: TextStyle(
         color: const Color(0xFF8B8B8B),
         fontSize: widget.fontSize,
       ),
-      label: widget.label != null 
-          ? Text(widget.label!, style: const TextStyle(fontSize: 16))
+
+      label: widget.label != null
+          ? Text(
+              widget.label!,
+              style: const TextStyle(
+                fontSize: 16,
+              ),
+            )
           : null,
-      floatingLabelBehavior: FloatingLabelBehavior.always,
+
+      floatingLabelBehavior:
+          FloatingLabelBehavior.always,
+
       prefixIcon: widget.prefixIcon,
-      suffixIcon: _buildSuffixIcon(isPasswordVisible),
-      fillColor: widget.fillColor ?? Colors.white,
+
+      suffixIcon:
+          _buildSuffixIcon(
+            isPasswordVisible,
+          ),
+
+      fillColor:
+          widget.fillColor ?? Colors.white,
+
       filled: widget.isFilled,
-      errorStyle: widget.showErrorStyle 
-          ? const TextStyle(color: Colors.red, fontSize: 12)
-          : const TextStyle(fontSize: 0, height: 0),
-      
-      // Bordes optimizados
+
+      errorStyle: widget.showErrorStyle
+          ? const TextStyle(
+              color: Colors.red,
+              fontSize: 12,
+            )
+          : const TextStyle(
+              fontSize: 0,
+              height: 0,
+            ),
+
       enabledBorder: OutlineInputBorder(
         borderRadius: borderRadius,
         borderSide: borderSide,
       ),
+
       focusedBorder: OutlineInputBorder(
         borderRadius: borderRadius,
-        borderSide: BorderSide(color: widget.focusBorder, width: 1),
+        borderSide: BorderSide(
+          color: widget.focusBorder,
+          width: 1,
+        ),
       ),
+
       errorBorder: OutlineInputBorder(
         borderRadius: borderRadius,
-        borderSide: const BorderSide(color: Colors.red),
+        borderSide:
+            const BorderSide(
+              color: Colors.red,
+            ),
       ),
-      focusedErrorBorder: OutlineInputBorder(
-        borderRadius: borderRadius,
-        borderSide: const BorderSide(color: Colors.red, width: 1),
-      ),
+
+      focusedErrorBorder:
+          OutlineInputBorder(
+            borderRadius: borderRadius,
+            borderSide:
+                const BorderSide(
+                  color: Colors.red,
+                  width: 1,
+                ),
+          ),
     );
   }
 
-  Widget? _buildSuffixIcon(bool isPasswordVisible) {
+  Widget? _buildSuffixIcon(
+    bool isPasswordVisible,
+  ) {
+
     if (widget.isPassword) {
+
       return IconButton(
+
         style: ButtonStyle(
-          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          visualDensity: VisualDensity.compact,
-          padding: WidgetStatePropertyAll(EdgeInsets.zero),
+          tapTargetSize:
+              MaterialTapTargetSize
+                  .shrinkWrap,
+
+          visualDensity:
+              VisualDensity.compact,
+
+          padding:
+              const WidgetStatePropertyAll(
+                EdgeInsets.zero,
+              ),
         ),
-        onPressed: _togglePasswordVisibility,
+
+        onPressed:
+            _togglePasswordVisibility,
+
         icon: Icon(
           size: 18,
-          isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-          color: isPasswordVisible ? Colors.grey : Colors.blueGrey,
+          isPasswordVisible
+              ? Icons.visibility
+              : Icons.visibility_off,
+          color: isPasswordVisible
+              ? Colors.grey
+              : Colors.blueGrey,
         ),
-        tooltip: 'Toggle password visibility',
+
+        tooltip:
+            'Toggle password visibility',
       );
     }
+
     return widget.suffixIcon;
   }
 
   void _togglePasswordVisibility() {
+
     if (widget.isPassword) {
-      _isPasswordVisible.value = !_isPasswordVisible.value;
+
+      _isPasswordVisible.value =
+          !_isPasswordVisible.value;
     }
   }
 
   String? _validator(String? value) {
+
     if (value?.isEmpty ?? true) {
       return 'Campo requerido';
     }
 
     final text = value!;
-    
-    // Validaciones específicas
-    if (widget.validateEmail && !EmailValidator.validate(text)) {
+
+    if (
+      widget.validateEmail &&
+      !EmailValidator.validate(text)
+    ) {
       return 'Correo inválido';
     }
-    
-    if (widget.validateNoSpaces && text.contains(' ')) {
+
+    if (
+      widget.validateNoSpaces &&
+      text.contains(' ')
+    ) {
       return 'No puede contener espacios';
     }
-    
-    if (widget.minLength != null && text.length < widget.minLength!) {
+
+    if (
+      widget.minLength != null &&
+      text.length < widget.minLength!
+    ) {
       return 'Mínimo ${widget.minLength} caracteres';
     }
 
-    if (widget.validatePasswordStrength && !_isStrongPassword(text)) {
+    if (
+      widget.validatePasswordStrength &&
+      !_isStrongPassword(text)
+    ) {
       return _getPasswordError(text);
     }
 
     return null;
   }
 
-  bool _isStrongPassword(String password) {
+  bool _isStrongPassword(
+    String password,
+  ) {
+
     return password.length >= 8 &&
-           RegExp(r'[0-9]').hasMatch(password) &&
-           RegExp(r'[A-Z]').hasMatch(password) &&
-           RegExp(r'[a-z]').hasMatch(password) &&
-           RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(password);
+        RegExp(r'[0-9]').hasMatch(password) &&
+        RegExp(r'[A-Z]').hasMatch(password) &&
+        RegExp(r'[a-z]').hasMatch(password) &&
+        RegExp(
+          r'[!@#$%^&*(),.?":{}|<>]',
+        ).hasMatch(password);
   }
 
-  String _getPasswordError(String password) {
-    if (password.length < 8) return 'Mínimo 8 caracteres';
-    if (!RegExp(r'[0-9]').hasMatch(password)) return 'Requiere número';
-    if (!RegExp(r'[A-Z]').hasMatch(password)) return 'Requiere mayúscula';
-    if (!RegExp(r'[a-z]').hasMatch(password)) return 'Requiere minúscula';
+  String _getPasswordError(
+    String password,
+  ) {
+
+    if (password.length < 8) {
+      return 'Mínimo 8 caracteres';
+    }
+
+    if (
+      !RegExp(r'[0-9]')
+          .hasMatch(password)
+    ) {
+      return 'Requiere número';
+    }
+
+    if (
+      !RegExp(r'[A-Z]')
+          .hasMatch(password)
+    ) {
+      return 'Requiere mayúscula';
+    }
+
+    if (
+      !RegExp(r'[a-z]')
+          .hasMatch(password)
+    ) {
+      return 'Requiere minúscula';
+    }
+
     return 'Requiere carácter especial';
   }
 }

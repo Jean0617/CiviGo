@@ -6,7 +6,7 @@ class UIButton extends StatelessWidget {
   final String title;
   final bool expand;
   final Color background;
-  final Color colorIcon;
+  final Color? colorIcon;
   final Color fontColor;
   final double fontSize;
   final double iconSize;
@@ -15,8 +15,9 @@ class UIButton extends StatelessWidget {
   final double borderRadius;
   final double elevation;
   final EdgeInsets padding;
-  final Widget? icon;
+  final IconData? icon;
   final bool iconAlignmentStart;
+  final bool isLoading;
   final List<dynamic>? textRich;
   final Function()? onPressed;
 
@@ -25,7 +26,7 @@ class UIButton extends StatelessWidget {
     this.title = '',
     this.expand = false,
     this.background = Colors.white,
-    this.colorIcon = Colors.black,
+    this.colorIcon,
     this.fontColor = Colors.black,
     this.fontSize = 15,
     this.iconSize = 20,
@@ -37,7 +38,8 @@ class UIButton extends StatelessWidget {
     this.onPressed,
     this.icon,
     this.iconAlignmentStart = true,
-    this.textRich
+    this.textRich,
+    this.isLoading = false
   });
 
   @override
@@ -69,7 +71,11 @@ class UIButton extends StatelessWidget {
         backgroundColor: WidgetStatePropertyAll(background)
       ),
       iconAlignment: iconAlignmentStart? IconAlignment.start : IconAlignment.end,
-      icon: icon,
+      icon: isLoading? 
+        CircularProgressIndicator.adaptive(backgroundColor: colorIcon ?? fontColor)
+      : icon != null?
+        Icon(icon, size: iconSize, color: colorIcon ?? fontColor)
+      : null,
       label: UIText(
         textRich: textRich,
         title: title,
@@ -77,7 +83,7 @@ class UIButton extends StatelessWidget {
         color: fontColor,
         size: fontSize,
       ),
-      onPressed: onPressed, 
+      onPressed: isLoading? null : onPressed, 
     );
   }
 }

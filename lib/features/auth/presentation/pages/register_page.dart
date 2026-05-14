@@ -99,7 +99,9 @@ class RegisterPage extends StatelessWidget {
                   fontColor: Colors.white,
                   padding: EdgeInsets.symmetric(vertical: 20),
                   iconAlignmentStart: false,
-                  icon: Icon(Icons.person_add_alt, color: Colors.white, size: 18,),
+                  icon: Icons.person_add_alt, 
+                  colorIcon: Colors.white, 
+                  iconSize: 18,
                 ),
       
                 UIButton(

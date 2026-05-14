@@ -19,16 +19,17 @@ class DashboardPage extends ConsumerWidget {
 
     final location = GoRouterState.of(context).uri.toString();
     final currentIndex = getIndexFromLocation(location);
+    ValueNotifier<bool> animated = ValueNotifier(false);
 
     return Scaffold(
       backgroundColor: AppConfig.primaryColor,
-      appBar: buildAppBar(context),
-      body: buildBody(),
+      appBar: buildAppBar(context, animated),
+      body: buildBody(animated),
       bottomNavigationBar: buildBottonNavigationBar(currentIndex, context),
     );
   }
 
-  AppBar buildAppBar(BuildContext context) {
+  AppBar buildAppBar(BuildContext context, ValueNotifier animated) {
     return AppBar(
       backgroundColor: Colors.transparent,
       title: ListTile(
@@ -37,6 +38,7 @@ class DashboardPage extends ConsumerWidget {
         visualDensity: VisualDensity.compact,
         horizontalTitleGap: 8,
         contentPadding: EdgeInsets.all(0),
+        // leading: IconButton(onPressed: ()=> animated.value = !animated.value, icon: Icon(Icons.analytics)),
         leading: Icon(Icons.security_outlined, size: 30, color: Colors.white,),
         title: UIText(title: AppConfig.appName, bold: true, color: Colors.white, size: 23,),
         subtitle: UIText(title: AppConfig.appLema, size: 12, color: Colors.white,),
@@ -58,32 +60,63 @@ class DashboardPage extends ConsumerWidget {
     );
   }
 
-  SafeArea buildBody() {
+  SafeArea buildBody(ValueNotifier animated) {
     return SafeArea(
-      child: Container(
-        margin: EdgeInsets.only(top: 5),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30),
-            topRight: Radius.circular(30)
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black12,
-              spreadRadius: 1,
-              blurRadius: 5,
-              offset: Offset(0, 1)
+      child: Stack(
+        children: [
+
+          Container(
+            // margin: EdgeInsets.only(top: 5),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              // borderRadius: BorderRadius.only(
+              //   topLeft: Radius.circular(30),
+              //   topRight: Radius.circular(30)
+              // ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  spreadRadius: 1,
+                  blurRadius: 5,
+                  offset: Offset(0, 1)
+                )
+              ]
+            ),
+            child: ClipRRect(
+              // borderRadius: BorderRadius.only(
+              //   topLeft: Radius.circular(30),
+              //   topRight: Radius.circular(30)
+              // ),
+              child: child
             )
-          ]
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30),
-            topRight: Radius.circular(30)
           ),
-          child: child
-        )
+
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: ValueListenableBuilder(
+              valueListenable: animated,
+              builder: (context, animar, child) {
+                return AnimatedContainer(
+                  duration: Duration(milliseconds: 300),
+                  curve: Curves.easeInCirc,
+                  width: double.infinity,
+                  height: animar? 35 : 0,
+                  color: Colors.black,
+                  child: Row(
+                    spacing: 5,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.info_outline, color: Colors.white, size: 15,),
+                      Flexible(child: UIText(title: 'Alerta..', color: Colors.white,)),
+                    ],
+                  )
+                );
+              }
+            )
+          ),
+        ],
       )
     );
   }

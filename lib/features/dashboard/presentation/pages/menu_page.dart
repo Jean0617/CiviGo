@@ -194,7 +194,8 @@ class MenuPage extends StatelessWidget {
         fontColor: Colors.white,
         padding: EdgeInsets.symmetric(vertical: 15),
         iconAlignmentStart: false,
-        icon: Icon(Icons.logout, color: Colors.white, size: 15,),
+        icon: Icons.logout, 
+        iconSize: 15,
         onPressed: () => context.go(RoutePaths.homePath),
       ),
     );

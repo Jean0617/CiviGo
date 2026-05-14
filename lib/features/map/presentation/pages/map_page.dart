@@ -3,7 +3,12 @@ import 'package:civigo/features/shared/widgets/textformfield/ui_text_form_field.
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-// import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import '../../../reports/domain/constants.dart';
+import '../../../reports/presentation/providers/incidents_provider.dart';
 
 class MapIncidents extends StatefulWidget {
   
@@ -24,13 +29,15 @@ class MapIncidentsState extends State<MapIncidents> {
     {'title': 'Otros', 'selected': false},
   ];
 
+  ValueNotifier<bool> showIncident = ValueNotifier(false);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
 
-          // UIMap(),
+          UIMap(showIncident: showIncident),
 
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 15),
@@ -74,44 +81,49 @@ class MapIncidentsState extends State<MapIncidents> {
             ),
           ),
 
-          Positioned(
-            bottom: 30,
-            left: 20,
-            right: 20,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(15),
-                border: Border.all(
-                  color: Colors.black26
-                )
-              ),
-              child: ListTile(
-                // contentPadding: EdgeInsets.zero,
-                leading: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+          ValueListenableBuilder(
+            valueListenable: showIncident,
+            builder: (context, show, child) {
+              return !show? SizedBox.shrink() : Positioned(
+                bottom: 30,
+                left: 20,
+                right: 20,
+                child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.orange.withAlpha(30),
-                    borderRadius: BorderRadius.circular(5)
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border.all(
+                      color: Colors.blueGrey
+                    )
                   ),
-                  child: Icon(Icons.whatshot_rounded, size: 30, color: Colors.orange,)
-                ),
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    UIText(title: 'Fuga de gas inflamable', bold: true, size: 13, color: Colors.black87,),
-                    UIText(
-                      textRich: [
-                        {'text': 'Hace', 'color': Colors.black54, 'size': 10.0, },
-                        {'text': '\n25 Min', 'color': Colors.black54, 'bold': true, 'size': 10.0},
+                  child: ListTile(
+                    // contentPadding: EdgeInsets.zero,
+                    leading: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+                      decoration: BoxDecoration(
+                        color: Colors.blueGrey.withAlpha(30),
+                        borderRadius: BorderRadius.circular(5)
+                      ),
+                      child: Icon(Icons.business, size: 30, color: Colors.blueGrey,)
+                    ),
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        UIText(title: 'Daño en infraestructura', bold: true, size: 13, color: Colors.black87,),
+                        UIText(
+                          textRich: [
+                            {'text': 'Hace', 'color': Colors.black54, 'size': 10.0, },
+                            {'text': '\nJusto ahora', 'color': Colors.black54, 'bold': true, 'size': 10.0},
+                          ],
+                        ),
                       ],
                     ),
-                  ],
-                ),
-                subtitle: UIText(title: 'San Victorino, C 12 - 24', size: 11,),
-              ),
-            )
+                    subtitle: UIText(title: 'Diogenes A. Arrieta, Calle 18', size: 11,),
+                  ),
+                )
+              );
+            }
           ),
 
         ],
@@ -120,74 +132,169 @@ class MapIncidentsState extends State<MapIncidents> {
   }
 }
 
-// class UIMap extends StatefulWidget {
-//   const UIMap({super.key});
+class UIMap extends ConsumerStatefulWidget {
+  
+  final ValueNotifier<bool>? showIncident;
 
-//   @override
-//   State<UIMap> createState() => _UIMapState();
-// }
+  const UIMap({super.key, this.showIncident});
 
-// class _UIMapState extends State<UIMap> {
-//   late GoogleMapController mapController;
+  @override
+  UIMapState createState() => UIMapState();
+}
 
-//   // Definimos un conjunto de polígonos
-//   Set<Polygon> polygons = {};
+class UIMapState extends ConsumerState<UIMap> {
+  late GoogleMapController mapController;
 
-//   @override
-//   void initState() {
-//     super.initState();
-//     _setPolygons();
-//   }
+  // Definimos un conjunto de polígonos
+  Set<Polygon> polygons = {};
 
-//   @override
-//   void dispose() {
-//     mapController.dispose();
-//     super.dispose();
-//   }
+  @override
+  void initState() {
+    super.initState();
+    
+    _setPolygons();
 
-//   void _setPolygons() {
-//     polygons.add(
-//       Polygon(
-//         polygonId: PolygonId('incidente_1'),
-//         points: [
-//           LatLng(19.4326, -99.1332),
-//           LatLng(19.4426, -99.1332),
-//           LatLng(19.4426, -99.1432),
-//           LatLng(19.4326, -99.1432),
-//         ],
-//         strokeWidth: 2,
-//         strokeColor: Colors.red,
-//         fillColor: Colors.red.withOpacity(0.15),
-//         consumeTapEvents: true,
-//         onTap: () {
-//           // Aquí manejas la información del incidente
-//           print("Incidente detectado en esta zona");
-//         },
-//       ),
-//     );
-//   }
+    Future.microtask((){
+      ref.read(incidentsProvider.notifier).getIncidents();
+    });
+  }
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return GoogleMap(
-//       initialCameraPosition: CameraPosition(
-//         target: LatLng(9.950801634752155, -75.08395675441042), // Ciudad de México
-//         zoom: 12,
-//       ),
-//       polygons: polygons,
-//       onMapCreated: (GoogleMapController controller) {
-//         mapController = controller;
-//       },
-//       // Habilita controles similares a los de tu imagen
-//       myLocationEnabled: true,
-//       myLocationButtonEnabled: false,
-//       zoomControlsEnabled: true, 
-//       gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
-//         Factory<OneSequenceGestureRecognizer>(
-//           () => EagerGestureRecognizer(),
-//         ),
-//       },
-//       liteModeEnabled: false,
-//     );
-//   }
-// }
+  @override
+  void dispose() {
+    mapController.dispose();
+    super.dispose();
+  }
+
+  void _setPolygons() {
+    polygons.add(
+      Polygon(
+        polygonId: PolygonId('incidente_1'),
+        points: [
+          LatLng(19.4326, -99.1332),
+          LatLng(19.4426, -99.1332),
+          LatLng(19.4426, -99.1432),
+          LatLng(19.4326, -99.1432),
+        ],
+        strokeWidth: 2,
+        strokeColor: Colors.red,
+        fillColor: Colors.red.withOpacity(0.15),
+        consumeTapEvents: true,
+        onTap: () {
+          // Aquí manejas la información del incidente
+          print("Incidente detectado en esta zona");
+        },
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    
+    final incidents = ref.watch(incidentsProvider).map((e) => IncidentModel.fromJson(e)).toList();
+
+    final markers = incidents.map((incident) {
+
+      return Marker(
+
+        markerId: MarkerId(
+          incident.id.toString(),
+        ),
+
+        position: LatLng(
+          incident.latitude,
+          incident.longitude,
+        ),
+
+        // infoWindow: InfoWindow(
+        //   title: entidades.firstWhere((e) => e['id'] == incident.entityId)['name'],
+        //   snippet: incident.description,
+        // ),
+        onTap: () => widget.showIncident?.value = true,
+
+        icon: BitmapDescriptor.defaultMarkerWithHue(
+
+          incident.priority == 3
+              ? BitmapDescriptor.hueRed
+
+          : incident.priority == 2
+              ? BitmapDescriptor.hueOrange
+
+          : BitmapDescriptor.hueGreen,
+        ),
+      );
+
+    }).toSet();
+
+    return GoogleMap(
+      initialCameraPosition: CameraPosition(
+        target: LatLng(9.950801634752155, -75.08395675441042),
+        zoom: 14,
+      ),
+      polygons: polygons,
+      markers: markers,
+      onMapCreated: (GoogleMapController controller) {
+        mapController = controller;
+        controller.setMapStyle('''
+          [
+
+            {
+              "featureType": "poi",
+              "stylers": [
+                { "visibility": "off" }
+              ]
+            },
+            {
+              "featureType": "transit",
+              "stylers": [
+                { "visibility": "off" }
+              ]
+            }
+          ]
+          ''');
+      },
+      myLocationEnabled: true,
+      myLocationButtonEnabled: false,
+      zoomControlsEnabled: true, 
+      gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+        Factory<OneSequenceGestureRecognizer>(
+          () => EagerGestureRecognizer(),
+        ),
+      },
+      liteModeEnabled: false,
+    );
+  }
+}
+
+class IncidentModel {
+  final int id;
+  final double latitude;
+  final double longitude;
+  final String description;
+  final int clasification;
+  final int entityId;
+  final int priority;
+
+  IncidentModel({
+    required this.id,
+    required this.latitude,
+    required this.longitude,
+    required this.description,
+    required this.clasification,
+    required this.priority,
+    required this.entityId
+  });
+
+  factory IncidentModel.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    return IncidentModel(
+      id: json['id'],
+      latitude: json['latitude'],
+      longitude: json['longitude'],
+      description: json['description'],
+      clasification: json['clasification_id'],
+      priority: json['priority'],
+      entityId: json['designated_entity_id']
+    );
+  }
+}
