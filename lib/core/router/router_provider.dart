@@ -1,5 +1,11 @@
 
+
 import 'package:civigo/features/reports/presentation/pages/preview_photo.dart';
+
+import 'package:civigo/features/entities/presentation/pages/entities.dart';
+import 'package:civigo/features/reports2/presentation/pages/home_page.dart';
+import 'package:civigo/features/reports2/presentation/pages/reports.dart';
+
 import 'package:flutter/material.dart';
 
 import 'package:go_router/go_router.dart';
@@ -69,7 +75,7 @@ GoRouter appRouter(Ref ref) {
 
           GoRoute(
             path: RoutePaths.profilePath,
-            pageBuilder: (context, state) => fadePage(MenuPage())
+            pageBuilder: (context, state) => fadePage(MenuPage()),
           ),
 
           GoRoute(
@@ -84,6 +90,15 @@ GoRouter appRouter(Ref ref) {
             ]
           ),
           
+          GoRoute(
+            path: RoutePaths.reportsPath,
+            pageBuilder: (context, state) => fadePage(ReportPage()),
+          ),
+
+          GoRoute(
+            path: RoutePaths.entitiesPath,
+            pageBuilder: (context, state) => fadePage(EntitiesPage()),
+          ),
         ],
       ),
 

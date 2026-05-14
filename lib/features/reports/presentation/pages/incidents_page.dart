@@ -126,7 +126,7 @@ class _UsersPageState extends ConsumerState<IncidentsPage> {
       child: Scaffold(
         backgroundColor: Colors.white,
         body: Padding(
-          padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 20),
+          padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 10),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
