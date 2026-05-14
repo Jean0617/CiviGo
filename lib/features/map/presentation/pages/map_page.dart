@@ -3,7 +3,7 @@ import 'package:civigo/features/shared/widgets/textformfield/ui_text_form_field.
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+// import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapIncidents extends StatefulWidget {
   
@@ -30,7 +30,7 @@ class MapIncidentsState extends State<MapIncidents> {
       body: Stack(
         children: [
 
-          UIMap(),
+          // UIMap(),
 
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 15),
@@ -120,74 +120,74 @@ class MapIncidentsState extends State<MapIncidents> {
   }
 }
 
-class UIMap extends StatefulWidget {
-  const UIMap({super.key});
+// class UIMap extends StatefulWidget {
+//   const UIMap({super.key});
 
-  @override
-  State<UIMap> createState() => _UIMapState();
-}
+//   @override
+//   State<UIMap> createState() => _UIMapState();
+// }
 
-class _UIMapState extends State<UIMap> {
-  late GoogleMapController mapController;
+// class _UIMapState extends State<UIMap> {
+//   late GoogleMapController mapController;
 
-  // Definimos un conjunto de polígonos
-  Set<Polygon> polygons = {};
+//   // Definimos un conjunto de polígonos
+//   Set<Polygon> polygons = {};
 
-  @override
-  void initState() {
-    super.initState();
-    _setPolygons();
-  }
+//   @override
+//   void initState() {
+//     super.initState();
+//     _setPolygons();
+//   }
 
-  @override
-  void dispose() {
-    mapController.dispose();
-    super.dispose();
-  }
+//   @override
+//   void dispose() {
+//     mapController.dispose();
+//     super.dispose();
+//   }
 
-  void _setPolygons() {
-    polygons.add(
-      Polygon(
-        polygonId: PolygonId('incidente_1'),
-        points: [
-          LatLng(19.4326, -99.1332),
-          LatLng(19.4426, -99.1332),
-          LatLng(19.4426, -99.1432),
-          LatLng(19.4326, -99.1432),
-        ],
-        strokeWidth: 2,
-        strokeColor: Colors.red,
-        fillColor: Colors.red.withOpacity(0.15),
-        consumeTapEvents: true,
-        onTap: () {
-          // Aquí manejas la información del incidente
-          print("Incidente detectado en esta zona");
-        },
-      ),
-    );
-  }
+//   void _setPolygons() {
+//     polygons.add(
+//       Polygon(
+//         polygonId: PolygonId('incidente_1'),
+//         points: [
+//           LatLng(19.4326, -99.1332),
+//           LatLng(19.4426, -99.1332),
+//           LatLng(19.4426, -99.1432),
+//           LatLng(19.4326, -99.1432),
+//         ],
+//         strokeWidth: 2,
+//         strokeColor: Colors.red,
+//         fillColor: Colors.red.withOpacity(0.15),
+//         consumeTapEvents: true,
+//         onTap: () {
+//           // Aquí manejas la información del incidente
+//           print("Incidente detectado en esta zona");
+//         },
+//       ),
+//     );
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    return GoogleMap(
-      initialCameraPosition: CameraPosition(
-        target: LatLng(9.950801634752155, -75.08395675441042), // Ciudad de México
-        zoom: 12,
-      ),
-      polygons: polygons,
-      onMapCreated: (GoogleMapController controller) {
-        mapController = controller;
-      },
-      // Habilita controles similares a los de tu imagen
-      myLocationEnabled: true,
-      myLocationButtonEnabled: false,
-      zoomControlsEnabled: true, 
-      gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
-        Factory<OneSequenceGestureRecognizer>(
-          () => EagerGestureRecognizer(),
-        ),
-      },
-      liteModeEnabled: false,
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return GoogleMap(
+//       initialCameraPosition: CameraPosition(
+//         target: LatLng(9.950801634752155, -75.08395675441042), // Ciudad de México
+//         zoom: 12,
+//       ),
+//       polygons: polygons,
+//       onMapCreated: (GoogleMapController controller) {
+//         mapController = controller;
+//       },
+//       // Habilita controles similares a los de tu imagen
+//       myLocationEnabled: true,
+//       myLocationButtonEnabled: false,
+//       zoomControlsEnabled: true, 
+//       gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+//         Factory<OneSequenceGestureRecognizer>(
+//           () => EagerGestureRecognizer(),
+//         ),
+//       },
+//       liteModeEnabled: false,
+//     );
+//   }
+// }
