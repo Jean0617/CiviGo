@@ -11,7 +11,7 @@ import '../../../../config/route_config/route_paths.dart';
 import '../../../shared/widgets/buttons/ui_button.dart';
 
 class PhotoPreviewPage extends ConsumerWidget {
-
+  
   const PhotoPreviewPage({
     super.key,
   });

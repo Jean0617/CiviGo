@@ -1,10 +1,5 @@
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-
-import '../../../shared/widgets/buttons/ui_button.dart';
-import '../../../shared/widgets/text/ui_text.dart';
-import '../widgets/widgets.dart';
 
 class Step3 extends StatelessWidget {
    

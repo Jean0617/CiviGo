@@ -1,93 +1,93 @@
+import 'dart:io';
+
+import 'package:civigo/features/reports/presentation/providers/new_incident_provider.dart';
 import 'package:civigo/features/shared/widgets/textformfield/ui_text_form_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../shared/widgets/dropdown/ui_dropdown_button.dart';
+import '../../../shared/widgets/radiogroups/ui_radiogroup.dart';
 import '../../../shared/widgets/text/ui_text.dart';
 import '../../domain/constants.dart';
 
-class Step2 extends StatefulWidget {
+class Step2 extends ConsumerStatefulWidget {
 
-
-  Step2({super.key});
+  const Step2({super.key});
 
   @override
-  State<Step2> createState() => _Step2State();
+  Step2State createState() => Step2State();
 }
 
-class _Step2State extends State<Step2> {
- 
-  final List<Map<String, dynamic>> priority = [
-    {'id': 1, 'name': 'Baja', 'color': Colors.blue, 'icon': Icons.info_outline},
-    {'id': 2, 'name': 'Media', 'color': Colors.orange, 'icon': Icons.warning_amber_rounded},
-    {'id': 3, 'name': 'Crítica', 'color': Colors.red, 'icon': Icons.system_security_update_warning_outlined},
-  ];
-
-  ValueNotifier<Map<String, dynamic>> selectedPriority = ValueNotifier({});
-  ValueNotifier<String> isNow = ValueNotifier('No');
-
-  @override
-  void initState() {
-    super.initState();
-    selectedPriority.value = priority[0];
-  }
+class Step2State extends ConsumerState<Step2> {
 
   @override
   Widget build(BuildContext context) {
+    
+    final newIncidentState = ref.watch(newIncidentProvider);
+
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-
-              SizedBox(height: 20,),
-          
-              UIText(
-                title: "Vamos a clasificar el reporte.", 
-                size: 30,
-                bold: true,
-                color: Colors.black,
-              ),
-                
-              SizedBox(height: 20),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Form(
+              key: keyForm,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
               
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                title: Padding(
-                  padding: const EdgeInsets.only(bottom: 5.0),
-                  child: UIText(title: 'Clasificación', bold: true, size: 15, color: const Color(0xFF424242), isRequired: true,),
-                ),
-                subtitle: UIDropdownButton<Map>(
-                  hintText: 'Seleccione...',
-                  items: clasificaciones,
-                  value: clasificaciones[0],
-                  itemBuilder: (item) => item['name'] ?? '',
-                  onChanged: (value) {},
-                ),
-              ),
-
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                title: Padding(
-                  padding: const EdgeInsets.only(bottom: 5.0),
-                  child: UIText(title: 'Entidad encargada', bold: true, size: 15, color: const Color(0xFF424242), isRequired: true,),
-                ),
-                subtitle: UIDropdownButton<Map>(
-                  hintText: 'Seleccione...',
-                  items: entidades,
-                  value: entidades[0],
-                  itemBuilder: (item) => item['name'] ?? '',
-                  onChanged: (value) {},
-                ),
-              ),
-
-              SizedBox(height: 20),
-
-              ValueListenableBuilder(
-                valueListenable: isNow,
-                builder: (context, now, child) {
-                  return Container(
+                  SizedBox(height: 20,),
+              
+                  UIText(
+                    title: "VAMOS A CLASIFICAR EL REPORTE ", 
+                    size: 25,
+                    bold: true,
+                    color: Colors.black,
+                  ),
+                    
+                  SizedBox(height: 20),
+                  
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Padding(
+                      padding: const EdgeInsets.only(bottom: 5.0),
+                      child: UIText(title: 'Clasificación', bold: true, size: 15, color: const Color(0xFF424242), isRequired: true,),
+                    ),
+                    subtitle: UIDropdownButton<Map>(
+                      hintText: 'Seleccione...',
+                      items: clasificaciones,
+                      value: newIncidentState.clasification == null
+                        ? clasificaciones[0]
+                        : clasificaciones.firstWhere(
+                        (e) => e['id'] == newIncidentState.clasification,
+                      ),
+                      itemBuilder: (item) => item['name'] ?? '',
+                      onChanged: (value) => ref.read(newIncidentProvider.notifier).setClasification(value?['id'],)
+                    ),
+                  ),
+              
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Padding(
+                      padding: const EdgeInsets.only(bottom: 5.0),
+                      child: UIText(title: 'Entidad encargada', bold: true, size: 15, color: const Color(0xFF424242), isRequired: true,),
+                    ),
+                    subtitle: UIDropdownButton<Map>(
+                      hintText: 'Seleccione...',
+                      items: entidades,
+                      value: newIncidentState.designatedEntity == null
+                        ? entidades[0]
+                        : entidades.firstWhere(
+                            (e) => e['id'] == newIncidentState.designatedEntity
+                          ),
+                      itemBuilder: (item) => item['name'] ?? '',
+                      onChanged: (value) => ref.read(newIncidentProvider.notifier).setDesignatedEntity(value?['id'])
+                    ),
+                  ),
+              
+                  SizedBox(height: 20),
+              
+                  Container(
                     padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
                     decoration: BoxDecoration(
                       color: Colors.grey.shade100,
@@ -104,36 +104,31 @@ class _Step2State extends State<Step2> {
                         Expanded(
                           child: UIRadioGroup<String>(
                             items: const ['No','Si'],
-                            value: now,
+                            value: newIncidentState.happensNow,
                             direction: Axis.horizontal,
                             labelBuilder: (item) => item,
-                            onChanged: (value) => isNow.value = value!,
+                            onChanged: (value) => ref.read(newIncidentProvider.notifier).setHappensNow(value!)
                           ),
                         ),
                     
                       ],
                     ),
-                  );
-                }
-              ),
-
-              SizedBox(height: 20),
-
-              UIText(title: 'Prioridad del reporte', bold: true, size: 15, color: const Color(0xFF424242),),
-              SizedBox(height: 5),
-
-              ValueListenableBuilder(
-                valueListenable: selectedPriority,
-                builder: (context, value, child) {
-                  return Row(
+                  ),
+              
+                  SizedBox(height: 20),
+              
+                  UIText(title: 'Prioridad del reporte', bold: true, size: 15, color: const Color(0xFF424242),),
+                  SizedBox(height: 5),
+              
+                  Row(
                     spacing: 10,
                     children: List.generate(priority.length, (i){
                       
                       final Map<String, dynamic> item = priority[i];
-                      final bool isSelected = value.isNotEmpty && value['id'] == item['id'];
+                      final bool isSelected = newIncidentState.priority == item['id'];
                   
                       return GestureDetector(
-                        onTap: () => selectedPriority.value = item,
+                        onTap: () => ref.read(newIncidentProvider.notifier).setPriority(item['id']),
                         child: Container(
                           padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
                           decoration: BoxDecoration(
@@ -152,23 +147,54 @@ class _Step2State extends State<Step2> {
                         ),
                       );
                     })
-                  );
-                }
+                  ),
+              
+                  SizedBox(height: 20),
+              
+                  UIText(title: 'Descripción', isRequired: true, bold: true, size: 15, color: const Color(0xFF424242),),
+                  SizedBox(height: 5),
+              
+                  UITextFormField(
+                    maxLines: 7,
+                    hintText: 'Descripción',
+                    initialValue: newIncidentState.description,
+                    onChanged: (value) => ref.read(newIncidentProvider.notifier).setDescription(value),
+                  ),
+
+                  SizedBox(height: 20,),
+
+                  UIText(title: 'EVIDENCIA:', isRequired: true, bold: true, size: 15, color: const Color(0xFF424242),),
+                  SizedBox(height: 10),
+
+                  newIncidentState.incidentImagePath.isNotEmpty ?
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.white,width: 3),
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 5
+                          )
+                        ]
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.file(
+                          File(newIncidentState.incidentImagePath),
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                        ),
+                      ),
+                    ) 
+                  : 
+                    Center(
+                      child: UIText(title: 'No se pudo cargar la imagen, intentalo nuevamente.',),
+                    ),
+                  SizedBox(height: 30,)
+                ],
               ),
-
-              SizedBox(height: 20),
-
-              UIText(title: 'Descripción', bold: true, size: 15, color: const Color(0xFF424242),),
-              SizedBox(height: 5),
-
-              UITextFormField(
-                initialValue: 'Se evidencia una situación que afecta el estado y funcionamiento adecuado del entorno comunitario.'
-                ' El incidente reportado requiere atención para prevenir posibles riesgos, afectaciones a la movilidad o inconvenientes'
-                ' para los habitantes del sector. Se adjunta evidencia fotográfica para facilitar la verificación y gestión correspondiente.',
-                hintText: 'Descripción',
-                maxLines: 7,
-              )
-            ],
+            ),
           ),
         )
       )
@@ -177,235 +203,5 @@ class _Step2State extends State<Step2> {
   }
 }
 
-class UICheckboxGroup<T> extends StatelessWidget {
 
-  final List<T> items;
-
-  /// Lista de seleccionados
-  final List<T> values;
-
-  /// Retorna la nueva lista seleccionada
-  final ValueChanged<List<T>> onChanged;
-
-  /// Texto a mostrar
-  final String Function(T item) labelBuilder;
-
-  final Axis direction;
-
-  final WrapAlignment alignment;
-
-  final double spacing;
-
-  final double runSpacing;
-
-  final EdgeInsetsGeometry itemPadding;
-
-  final bool enabled;
-
-  const UICheckboxGroup({
-    super.key,
-    required this.items,
-    required this.values,
-    required this.onChanged,
-    required this.labelBuilder,
-    this.direction = Axis.vertical,
-    this.alignment = WrapAlignment.start,
-    this.spacing = 10,
-    this.runSpacing = 5,
-    this.itemPadding = const EdgeInsets.only(right: 10),
-    this.enabled = true,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-
-    return direction == Axis.horizontal
-    ? Wrap(
-        alignment: alignment,
-        spacing: spacing,
-        runSpacing: runSpacing,
-        children: items.map(_buildItem).toList(),
-      )
-    : Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: items.map(_buildItem).toList(),
-      );
-  }
-
-  Widget _buildItem(T item) {
-
-    final isSelected = values.contains(item);
-
-    return InkWell(
-      borderRadius: BorderRadius.circular(12),
-      onTap: enabled
-          ? () {
-            final updatedValues = [...values];
-            if (isSelected) {
-              updatedValues.remove(item);
-            } else {
-              updatedValues.add(item);
-            }
-            onChanged(updatedValues);
-          }
-        : null,
-
-      child: Padding(
-        padding: itemPadding,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-
-            Checkbox(
-              side: BorderSide(),
-              value: isSelected,
-              activeColor: Colors.blueGrey,
-              visualDensity: VisualDensity.compact,
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              onChanged: enabled
-                  ? (_) {
-
-                      final updatedValues = [...values];
-
-                      if (isSelected) {
-                        updatedValues.remove(item);
-                      } else {
-                        updatedValues.add(item);
-                      }
-
-                      onChanged(updatedValues);
-                    }
-                  : null,
-            ),
-
-            Flexible(
-              child: Text(
-                labelBuilder(item),
-
-                style: TextStyle(
-                  fontSize: 14,
-
-                  fontWeight: isSelected
-                      ? FontWeight.w600
-                      : FontWeight.normal,
-
-                  color: enabled
-                      ? Colors.black87
-                      : Colors.grey,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class UIRadioGroup<T> extends StatelessWidget {
-
-  final List<T> items;
-
-  final T? value;
-
-  final ValueChanged<T?> onChanged;
-
-  final String Function(T item) labelBuilder;
-
-  final Axis direction;
-
-  final WrapAlignment alignment;
-
-  final double spacing;
-
-  final double runSpacing;
-
-  final EdgeInsetsGeometry itemPadding;
-
-  final bool enabled;
-
-  const UIRadioGroup({
-    super.key,
-    required this.items,
-    required this.value,
-    required this.onChanged,
-    required this.labelBuilder,
-    this.direction = Axis.vertical,
-    this.alignment = WrapAlignment.start,
-    this.spacing = 10,
-    this.runSpacing = 5,
-    this.itemPadding = const EdgeInsets.only(right: 10),
-    this.enabled = true,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-
-    return RadioGroup<T>(
-      groupValue: value,
-      onChanged: enabled
-          ? onChanged
-          : (_) {},
-      child: direction == Axis.horizontal
-          ? Wrap(
-              alignment: alignment,
-              spacing: spacing,
-              runSpacing: runSpacing,
-              children: items.map(_buildItem).toList(),
-            )
-          : Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: items.map(_buildItem).toList(),
-            ),
-    );
-  }
-
-  Widget _buildItem(T item) {
-
-    final isSelected = item == value;
-
-    return InkWell(
-      borderRadius: BorderRadius.circular(12),
-
-      onTap: enabled
-          ? () => onChanged(item)
-          : null,
-
-      child: Padding(
-        padding: itemPadding,
-
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-
-            Radio<T>(
-              value: item,
-              activeColor: Colors.blueGrey,
-              visualDensity: VisualDensity.compact,
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            ),
-
-            Flexible(
-              child: Text(
-                labelBuilder(item),
-
-                style: TextStyle(
-                  fontSize: 14,
-
-                  fontWeight: isSelected
-                      ? FontWeight.w600
-                      : FontWeight.normal,
-
-                  color: enabled
-                      ? Colors.black87
-                      : Colors.grey,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
       

@@ -40,7 +40,7 @@ final class Step1Provider extends $NotifierProvider<Step1, Step1State> {
   }
 }
 
-String _$step1Hash() => r'5f53cfbdbb36f9ff2e1ab1d8087b63cfb827b2c1';
+String _$step1Hash() => r'2cd55ea5774a983f1e51180adaf506ad464338d2';
 
 abstract class _$Step1 extends $Notifier<Step1State> {
   Step1State build();

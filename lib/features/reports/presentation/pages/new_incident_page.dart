@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../config/app_config/app_config.dart';
 import '../../../shared/widgets/buttons/ui_button.dart';
 import '../../../shared/widgets/text/ui_text.dart';
+import '../../domain/constants.dart';
 import '../widgets/widgets.dart';
 import 'screens.dart';
 
@@ -56,7 +57,7 @@ class _FlujoCrearReporteState extends ConsumerState<NewIncidentPage> {
           onPressed: () => context.pop(),
         ),
         actions: [
-          
+          if((incidentState.currentStep+1) != incidentState.fullStep)
           Container(
             decoration: BoxDecoration(
               color: AppConfig.primaryColor.withAlpha(30),
@@ -97,11 +98,11 @@ class _FlujoCrearReporteState extends ConsumerState<NewIncidentPage> {
               ],
             ),
           ),
-
-          StepBar(
-            currentStep: incidentState.currentStep, 
-            fullStep: incidentState.fullStep
-          ),
+          if((incidentState.currentStep+1) != incidentState.fullStep)
+            StepBar(
+              currentStep: incidentState.currentStep, 
+              fullStep: incidentState.fullStep
+            ),
 
         ],
       ),
@@ -136,7 +137,7 @@ class _FlujoCrearReporteState extends ConsumerState<NewIncidentPage> {
               if((incidentState.currentStep+1) != incidentState.fullStep)
                 Expanded(
                   child: UIButton(
-                    title: (incidentState.currentStep+1) == incidentState.fullStep? "Finalizar" : "siguiente",
+                    title: (incidentState.currentStep+1) == 2? "Finalizar" : "siguiente",
                     expand: true,
                     padding: EdgeInsets.symmetric(vertical: 17),
                     background: incidentState.currentStep == 0? Colors.grey.shade100 : AppConfig.primaryColor,
@@ -144,13 +145,19 @@ class _FlujoCrearReporteState extends ConsumerState<NewIncidentPage> {
                     fontSize: 18,
                     borderRadius: 25,
                     iconAlignmentStart: false,
+                    isLoading: incidentState.isSaving,
                     icon: Icons.arrow_forward_ios_rounded,
                     fontColor: incidentState.currentStep == 0? Colors.grey : Colors.white,
                     onPressed: incidentState.currentStep == 0? null : () {
+                      
+                      if((incidentState.currentStep+1) == 2 && !(keyForm.currentState?.validate() ?? false)){
+                        return;
+                      }
+
                       if((incidentState.currentStep+1) == incidentState.fullStep){
                         context.pop();
                       }else{
-                        ref.read(newIncidentProvider.notifier).nextStep();
+                        ref.read(newIncidentProvider.notifier).saveIncident(DateTime.now());
                       }
                     },
                   )
@@ -170,7 +177,9 @@ class _FlujoCrearReporteState extends ConsumerState<NewIncidentPage> {
                       borderRadius: 25,
                       border: BorderSide(color: Colors.grey.shade300),
                       fontColor: Colors.black54,
-                      onPressed: () => context.pop(true)
+                      onPressed: () {
+                        context.pop(true);
+                      }
                     ),
                   ),
                 )

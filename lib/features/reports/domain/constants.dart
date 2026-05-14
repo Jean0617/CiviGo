@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 final List<Map<String, dynamic>> entidades = [
   {'id': 1, 'name': 'Afinia', 'service': 'Energía eléctrica'},
   {'id': 2, 'name': 'Aguas de Cartagena', 'service': 'Acueducto y alcantarillado'},
@@ -33,5 +35,13 @@ final List<Map<String, dynamic>> clasificaciones = [
   {'id': 8, 'name': 'Mascotas y animales'},
   {'id': 9, 'name': 'Espacio urbano'},
   {'id': 10, 'name': 'Otros reportes'},
-
 ];
+
+final List<Map<String, dynamic>> priority = [
+  {'id': 1, 'name': 'Baja', 'color': Colors.blue, 'icon': Icons.info_outline},
+  {'id': 2, 'name': 'Media', 'color': Colors.orange, 'icon': Icons.warning_amber_rounded},
+  {'id': 3, 'name': 'Crítica', 'color': Colors.red, 'icon': Icons.system_security_update_warning_outlined},
+];
+
+//key para validar form step 2
+final keyForm = GlobalKey<FormState>();

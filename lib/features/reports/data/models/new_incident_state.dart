@@ -6,39 +6,42 @@ class NewIncidentState {
   final int fullStep;
   final String state;
   final LatLng? position;
-  final String priority;
-  final bool happensNow;
+  final int priority;
+  final String? happensNow;
   final DateTime? createdAt;
   final String description;
   final String incidentImagePath;
-  final Map<String, dynamic> clasification;
-  final Map<String, dynamic> designatedEntity;
+  final int? clasification;
+  final int? designatedEntity;
+  final bool isSaving;
 
   NewIncidentState({
     this.currentStep = 0,
     this.fullStep = 3,
-    this.state = '',
+    this.state = 'pendiente',
     this.position,
-    this.priority = '',
-    this.happensNow = false,
+    this.priority = 3,
+    this.happensNow = 'Si',
     this.createdAt,
     this.description = '',
     this.incidentImagePath = '',
-    this.clasification = const {},
-    this.designatedEntity = const {},
+    this.clasification,
+    this.designatedEntity,
+    this.isSaving = false
   }); 
 
   NewIncidentState copyWith ({
     int? currentStep,
     String? state,
     LatLng? position,
-    String? priority,
-    bool? happensNow,
+    int? priority,
+    String? happensNow,
     DateTime? createdAt,
     String? description,
     String? incidentImagePath,
-    Map<String, dynamic>? clasification,
-    Map<String, dynamic>? designatedEntity,
+    int? clasification,
+    int? designatedEntity,
+    bool? isSaving
   }){
     return NewIncidentState(
       currentStep: currentStep ?? this.currentStep,
@@ -51,20 +54,22 @@ class NewIncidentState {
       incidentImagePath: incidentImagePath ?? this.incidentImagePath,
       clasification: clasification ?? this.clasification,
       designatedEntity: designatedEntity ?? this.designatedEntity,
+      isSaving: isSaving ?? this.isSaving
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson({required String imageUrl, DateTime? createdAt}) {
     return {
       "state": state,
-      "position": position,
+      "latitude": position?.latitude ?? 0.0,
+      "longitude": position?.longitude ?? 0.0,
       "priority": priority,
-      "happensNow": happensNow,
-      "createdAt": createdAt,
+      "happens_now": happensNow == 'Si',
+      "created_at": createdAt?.toIso8601String(),
       "description": description,
-      "incidentImagePath": incidentImagePath,
-      "clasification": clasification,
-      "designatedEntity": designatedEntity,
+      "incident_image_url": imageUrl,
+      "clasification_id": clasification,
+      "designated_entity_id": designatedEntity,
     };
   }
 }

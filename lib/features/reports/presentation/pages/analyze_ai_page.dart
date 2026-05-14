@@ -29,7 +29,13 @@ class AnalyzeAiPageState extends ConsumerState<AnalyzeAiPage> {
       () {
         if(!mounted)return;
         context.pop(false);
-        ref.read(newIncidentProvider.notifier).nextStep();
+        ref.read(newIncidentProvider.notifier)
+          ..setDescription(
+            'Se identifica un poste de energía con fractura estructural y evidente inclinación sobre la vía pública, representando riesgo de colapso. '
+            'También se observan cables reventados y expuestos que podrían generar accidentes eléctricos o afectar el servicio en la zona. Se recomienda '
+            'atención inmediata por parte de la empresa de energía y organismos de emergencia.',  
+          )
+          ..nextStep();
       },
     );
   }

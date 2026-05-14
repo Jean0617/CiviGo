@@ -131,7 +131,7 @@ class UIDataTable<T> extends ConsumerWidget {
             verticalScrollPhysics: ScrollPhysics(),
             shrinkWrapRows: true,
             isScrollbarAlwaysShown: true,
-            rowHeight: 43,
+            rowHeight: 50,
             headerRowHeight: 50,
             columns: allColumns.map((col) {
               return GridColumn(
@@ -139,7 +139,7 @@ class UIDataTable<T> extends ConsumerWidget {
                 width: col.width ?? double.nan,
                 label: Container(
                   alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.only(left: 4,right: 10, top: 10, bottom: 10),
                   color: AppConfig.primaryColor,
                   child: Text(
                     col.label,
