@@ -1,9 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:civigo/features/reports/data/models/new_incident_state.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import 'ai_repository_provider.dart';
 import 'incident_repository_provider.dart';
 
 part 'new_incident_provider.g.dart';
@@ -60,11 +62,12 @@ class NewIncident extends _$NewIncident {
       state = state.copyWith(isSaving: true);
 
       final repo = ref.read(incidentRepositoryProvider); 
-      final imageUrl = await repo.uploadImage(File(state.incidentImagePath));
+      // final imageUrl = await repo.uploadImage(File(state.incidentImagePath));
 
-      await repo.createIncident(state.toJson(createdAt: date, imageUrl: imageUrl));
+      await repo.createIncident(state.toJson(createdAt: date, imageUrl: state.incidentImageUrl));
 
       state = state.copyWith(isSaving: false);
+
       nextStep();
 
       return true;
@@ -72,6 +75,48 @@ class NewIncident extends _$NewIncident {
     } catch (e) {
       state = state.copyWith(isSaving: false); 
       return false;
+    }
+  }
+
+  Future<void> analyzeIncident() async {
+    
+    state = state.copyWith( isSaving: true );
+
+    try {
+
+      final repo = ref.read( incidentRepositoryProvider );
+      final aiRepo = ref.read( aiRepositoryProvider );
+
+      final imageUrl = await repo.uploadImage(
+        File(
+          state.incidentImagePath,
+        ),
+      );
+
+      final result = await aiRepo.analyzeImage(
+        imageUrl,
+      );
+
+      final aiResponse = jsonDecode(
+        result['response'],
+      );
+
+      state = state.copyWith(
+        incidentImageUrl: imageUrl,
+        aiCategory: aiResponse['categoria'],
+        aiEntity: aiResponse['entidad'],
+        priority: aiResponse['riesgo'],
+        description: aiResponse['descripcion'],
+        isSaving: false,
+      );
+
+    } catch (e) {
+
+      state = state.copyWith(
+        isSaving: false,
+      );
+
+      rethrow;
     }
   }
 

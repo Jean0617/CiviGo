@@ -42,7 +42,7 @@ class _UsersPageState extends ConsumerState<IncidentsPage> {
       width: 120,
       name: 'id',
       label: 'Responsable',
-      builder: (i) => Text( entidades.firstWhere((e) => e['id'] == i['designated_entity_id'])['name'] ),
+      builder: (i) => Text( entidades.firstWhere((e) => e['id'] == i['designated_entity_id'],orElse: () => {'name':'N/A'},)['name']),
     ),
 
     ColumnConfig<Map<String, dynamic>>(

@@ -10,6 +10,8 @@ class IncidentRepository {
   Future<String> uploadImage(File file) async {
     try {
 
+      print(await file.length());
+
       final fileName =
         '${DateTime.now().millisecondsSinceEpoch}.jpg';
 

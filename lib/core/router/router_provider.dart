@@ -21,7 +21,7 @@ import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/map/presentation/pages/map_page.dart';
 import '../../features/reports/presentation/pages/analyze_ai_page.dart';
 import '../../features/reports/presentation/pages/screens.dart';
-import '../../features/users/presentation/pages/new_user_page.dart';
+import '../../features/users/presentation/pages/new_user_page.dart' hide Step2;
 import '../../features/users/presentation/pages/users_page.dart';
 part 'router_provider.g.dart';
 

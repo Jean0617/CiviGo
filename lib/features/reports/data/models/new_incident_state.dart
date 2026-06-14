@@ -11,9 +11,13 @@ class NewIncidentState {
   final DateTime? createdAt;
   final String description;
   final String incidentImagePath;
+  final String incidentImageUrl;
   final int? clasification;
   final int? designatedEntity;
   final bool isSaving;
+
+  final String aiCategory;
+  final String aiEntity;
 
   NewIncidentState({
     this.currentStep = 0,
@@ -25,9 +29,13 @@ class NewIncidentState {
     this.createdAt,
     this.description = '',
     this.incidentImagePath = '',
+    this.incidentImageUrl = '',
     this.clasification,
     this.designatedEntity,
-    this.isSaving = false
+    this.isSaving = false,
+
+    this.aiCategory='',
+    this.aiEntity='',
   }); 
 
   NewIncidentState copyWith ({
@@ -39,9 +47,13 @@ class NewIncidentState {
     DateTime? createdAt,
     String? description,
     String? incidentImagePath,
+    String? incidentImageUrl,
     int? clasification,
     int? designatedEntity,
-    bool? isSaving
+    bool? isSaving,
+
+    String? aiCategory,
+    String? aiEntity,
   }){
     return NewIncidentState(
       currentStep: currentStep ?? this.currentStep,
@@ -52,9 +64,13 @@ class NewIncidentState {
       createdAt: createdAt ?? this.createdAt,
       description: description ?? this.description,
       incidentImagePath: incidentImagePath ?? this.incidentImagePath,
+      incidentImageUrl: incidentImageUrl ?? this.incidentImageUrl,
       clasification: clasification ?? this.clasification,
       designatedEntity: designatedEntity ?? this.designatedEntity,
-      isSaving: isSaving ?? this.isSaving
+      isSaving: isSaving ?? this.isSaving,
+
+      aiCategory: aiCategory ?? this.aiCategory,
+      aiEntity: aiEntity ?? this.aiEntity,
     );
   }
 

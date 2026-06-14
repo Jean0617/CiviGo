@@ -276,7 +276,7 @@ class _UIDropdownButtonState<T> extends State<UIDropdownButton<T>> {
   }
 
   String? _validator(T? value) {
-    if (value == null) {
+    if (value == null || (value is Map && value['id'] != null && (value['id'] is num && value['id'] == -1))) {
       return 'Campo requerido';
     }
     return null;

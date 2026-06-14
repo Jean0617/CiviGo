@@ -53,16 +53,46 @@ class Step2State extends ConsumerState<Step2> {
                       padding: const EdgeInsets.only(bottom: 5.0),
                       child: UIText(title: 'Clasificación', bold: true, size: 15, color: const Color(0xFF424242), isRequired: true,),
                     ),
-                    subtitle: UIDropdownButton<Map>(
-                      hintText: 'Seleccione...',
-                      items: clasificaciones,
-                      value: newIncidentState.clasification == null
-                        ? clasificaciones[0]
-                        : clasificaciones.firstWhere(
-                        (e) => e['id'] == newIncidentState.clasification,
-                      ),
-                      itemBuilder: (item) => item['name'] ?? '',
-                      onChanged: (value) => ref.read(newIncidentProvider.notifier).setClasification(value?['id'],)
+                    subtitle: Column(
+                      spacing: 5,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        UIDropdownButton<Map>(
+                          hintText: 'Seleccione...',
+                          items: clasificaciones,
+                          autoValidate: true,
+                          value: newIncidentState.clasification == null
+                            ? clasificaciones[0]
+                            : clasificaciones.firstWhere(
+                            (e) => e['id'] == newIncidentState.clasification,
+                          ),
+                          itemBuilder: (item) => item['name'] ?? '',
+                          onChanged: (value) => ref.read(newIncidentProvider.notifier).setClasification(value?['id'],)
+                        ),
+
+                        if(newIncidentState.aiCategory.isNotEmpty)
+                          Container(
+                            padding: EdgeInsets.symmetric(vertical: 7, horizontal: 10),
+                            decoration: BoxDecoration(
+                              color: Colors.green.withAlpha(30),
+                              borderRadius: BorderRadius.circular(5)
+                            ),
+                            child: Row(
+                              spacing: 5,
+                              children: [
+                                Icon(Icons.auto_awesome, size: 15, color: Colors.green,),
+                                Flexible(
+                                  child: UIText(
+                                    textRich: [
+                                      {'text': 'Recomendación(IA): ', 'color': Colors.black87, 'size': 13.0},
+                                      {'text': newIncidentState.aiCategory, 'color': Colors.black, 'bold': true, 'size': 13.0},
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            )
+                          ),
+                      ],
                     ),
                   ),
               
@@ -72,16 +102,47 @@ class Step2State extends ConsumerState<Step2> {
                       padding: const EdgeInsets.only(bottom: 5.0),
                       child: UIText(title: 'Entidad encargada', bold: true, size: 15, color: const Color(0xFF424242), isRequired: true,),
                     ),
-                    subtitle: UIDropdownButton<Map>(
-                      hintText: 'Seleccione...',
-                      items: entidades,
-                      value: newIncidentState.designatedEntity == null
-                        ? entidades[0]
-                        : entidades.firstWhere(
-                            (e) => e['id'] == newIncidentState.designatedEntity
+                    subtitle: Column(
+                      spacing: 5,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+
+                        UIDropdownButton<Map>(
+                          hintText: 'Seleccione...',
+                          items: entidades,
+                          autoValidate: true,
+                          value: newIncidentState.designatedEntity == null
+                            ? entidades[0]
+                            : entidades.firstWhere(
+                                (e) => e['id'] == newIncidentState.designatedEntity
+                              ),
+                          itemBuilder: (item) => item['name'] ?? '',
+                          onChanged: (value) => ref.read(newIncidentProvider.notifier).setDesignatedEntity(value?['id'])
+                        ),
+
+                        if(newIncidentState.aiEntity.isNotEmpty)
+                          Container(
+                            padding: EdgeInsets.symmetric(vertical: 7, horizontal: 10),
+                            decoration: BoxDecoration(
+                              color: Colors.green.withAlpha(30),
+                              borderRadius: BorderRadius.circular(5)
+                            ),
+                            child: Row(
+                              spacing: 5,
+                              children: [
+                                Icon(Icons.auto_awesome, size: 15, color: Colors.green,),
+                                Flexible(
+                                  child: UIText(
+                                    textRich: [
+                                      {'text': 'Recomendación(IA): ', 'color': Colors.black87, 'size': 13.0},
+                                      {'text': newIncidentState.aiEntity, 'color': Colors.black, 'bold': true, 'size': 13.0},
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            )
                           ),
-                      itemBuilder: (item) => item['name'] ?? '',
-                      onChanged: (value) => ref.read(newIncidentProvider.notifier).setDesignatedEntity(value?['id'])
+                      ],
                     ),
                   ),
               

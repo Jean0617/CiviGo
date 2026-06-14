@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 final List<Map<String, dynamic>> entidades = [
+  {'id': -1, 'name': '- Ninguna -'},
   {'id': 1, 'name': 'Afinia', 'service': 'Energía eléctrica'},
   {'id': 2, 'name': 'Aguas de Cartagena', 'service': 'Acueducto y alcantarillado'},
   {'id': 3, 'name': 'Veolia', 'service': 'Recolección de basuras'},
@@ -25,6 +26,7 @@ final List<Map<String, dynamic>> entidades = [
 ];
 
 final List<Map<String, dynamic>> clasificaciones = [
+  {'id': -1, 'name': '- Ninguna -'},
   {'id': 1, 'name': 'Infraestructura'},
   {'id': 2, 'name': 'Seguridad'},
   {'id': 3, 'name': 'Movilidad'},
