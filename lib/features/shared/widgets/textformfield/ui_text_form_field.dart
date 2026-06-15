@@ -35,6 +35,7 @@ class UITextFormField extends StatefulWidget {
   final Color titleColor;
   final bool boldTitle;
   final Color focusBorder;
+  final TextEditingController? validEqualsText;
 
   const UITextFormField({
     super.key,
@@ -68,7 +69,7 @@ class UITextFormField extends StatefulWidget {
     this.fontSize = 14.0,
     this.titleColor = const Color(0xFF424242),
     this.boldTitle = true,
-    this.focusBorder = Colors.black,
+    this.focusBorder = Colors.black,this.validEqualsText
   });
 
   @override
@@ -451,9 +452,30 @@ class _UITextFormFieldState extends State<UITextFormField> {
       !_isStrongPassword(text)
     ) {
       return _getPasswordError(text);
+    } 
+    
+    if(widget.validEqualsText != null && validPass(widget.validEqualsText!.text).isEmpty && widget.validEqualsText!.text != value){
+      
+      return 'Los campos deben ser iguales.';
+      
     }
 
     return null;
+  }
+
+  String validPass(String value){
+    if (value.length < 8) {
+      return 'La contraseña debe contener minimo 8 caracteres.';
+    }else if (!RegExp(r'[0-9]').hasMatch(value)) {
+      return 'La contraseña debe contener al menos un número.';
+    }else if (!RegExp(r'[A-Z]').hasMatch(value)) {
+      return 'La contraseña debe contener al menos una letra mayúscula.';
+    }else if (!RegExp(r'[a-z]').hasMatch(value)) {
+      return 'La contraseña debe contener al menos una letra minúscula.';
+    } else if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(value)) {
+      return 'La contraseña debe contener al menos un carácter especial.';
+    }
+    return '';
   }
 
   bool _isStrongPassword(

@@ -25,6 +25,7 @@ dependencies:
   salomon_bottom_bar: ^3.3.2
   supabase_flutter: ^2.12.4
   syncfusion_flutter_datagrid: ^33.2.4
+  top_snackbar_flutter: ^3.3.0
 
 dev_dependencies:
   build_runner: ^2.7.1

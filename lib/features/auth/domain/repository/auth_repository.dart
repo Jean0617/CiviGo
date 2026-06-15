@@ -1,13 +1,13 @@
+import 'package:supabase_flutter/supabase_flutter.dart';
+
 abstract class AuthRepository {
   
-  Future<List> fetchAll(String query);
+  Future<AuthResponse> signUp(Map data);
 
-  Future<Map> fetchById(int id);
+  Future<AuthResponse> signIn(Map data);
 
-  Future<bool> create(Map data);
-  
-  Future<bool> update(Map data);
+  Future<void> signOut();
 
-  Future<bool> delete(int id);
+  User? get currentUser;
 
 }

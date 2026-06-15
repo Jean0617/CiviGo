@@ -1,20 +1,26 @@
+import 'package:civigo/features/shared/domain/app_error.dart';
+
 class AuthState {
 
-  final List data;
+  final bool isLogin;
   final bool isSearching; 
+  final AppError? error;
 
   AuthState({
-    this.data = const [],
     this.isSearching = false,
+    this.error,
+    this.isLogin = false
   });
 
   AuthState copyWith({
-    List? data,
+    bool? isLogin,
     bool? isSearching,
+    Function()? error
   }) {
     return AuthState(
-      data: data ?? this.data,
+      isLogin: isLogin ?? this.isLogin,
       isSearching: isSearching ?? this.isSearching,
+      error: error != null? error() : this.error
     );
   }
 

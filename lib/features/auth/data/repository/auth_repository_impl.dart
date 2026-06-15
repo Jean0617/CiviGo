@@ -1,45 +1,50 @@
-import 'package:dio/dio.dart';
+import 'package:civigo/features/dashboard/presentation/models/menu_item_model.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../../shared/domain/failures/dio_failure_mapper.dart';
 import '../../domain/repository/auth_repository.dart';
-import '../remote/auth_data_source.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
 
-  final AuthRemoteDataSource remote;
+  final SupabaseClient _supabase;
 
-  AuthRepositoryImpl(this.remote);
-
-  @override
-  Future<List> fetchAll(String query) async {
-    try{
-      
-      final response = await remote.fetchAll(query);
-      return response;
-
-    } on DioException catch (e) {
-      throw mapDioError(e);
-    } 
-  }
-
-  @override
-  Future<Map> fetchById(int id) async {
-    return Future.value({});
-  }
-
-  @override
-  Future<bool> create(Map data) async {
-    return Future.value(true);
-  }
+  AuthRepositoryImpl(this._supabase);
   
   @override
-  Future<bool> update(Map data) async {
-    return Future.value(true);
+  Future<AuthResponse> signUp(Map data) async {
+
+    final response = await _supabase.auth.signUp(
+      email: data['email'],
+      password: data['password'],
+    );
+
+    final userId = response.user!.id;
+    
+    await _supabase.from('users').insert({
+      'id': userId,
+      'name': data['name'],
+      'email': data['email'],
+      'role': UserRole.citizen.name
+    });
+
+    return response;
   }
 
   @override
-  Future<bool> delete(int id) async {
-    return Future.value(true);
+  Future<AuthResponse> signIn(Map data) async {
+    return await _supabase.auth.signInWithPassword(
+      email: data['email'],
+      password: data['password'],
+    );
+  }
+
+  @override
+  Future<void> signOut() async {
+    await _supabase.auth.signOut();
+  }
+
+  @override
+  User? get currentUser {
+    return _supabase.auth.currentUser;
   }
 
 }

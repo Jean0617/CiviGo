@@ -1,12 +1,13 @@
 
 
+import 'package:civigo/features/auth/presentation/providers/auth_provider.dart';
 import 'package:civigo/features/reports/presentation/pages/preview_photo.dart';
 
 import 'package:civigo/features/entities/presentation/pages/entities.dart';
-import 'package:civigo/features/reports2/presentation/pages/home_page.dart';
 import 'package:civigo/features/reports2/presentation/pages/reports.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -25,12 +26,45 @@ import '../../features/users/presentation/pages/new_user_page.dart' hide Step2;
 import '../../features/users/presentation/pages/users_page.dart';
 part 'router_provider.g.dart';
 
+final publicRoutes = [
+  RoutePaths.homePath,
+  RoutePaths.loginPath,
+  RoutePaths.registerPath,
+];
+
 @riverpod
 GoRouter appRouter(Ref ref) {
+  
+  final isLogin = ref.watch(
+    authProvider.select((s) => s.isLogin),
+  );
 
   return GoRouter(
-    initialLocation: RoutePaths.dashboardPath,
+    initialLocation: RoutePaths.homePath,
     redirect: (context, state) {
+
+      final location = state.matchedLocation;
+
+      // Usuario NO autenticado
+      if (!isLogin) {
+        print('entro condicoo');
+        // Permitir navegar a rutas públicas
+        if (publicRoutes.contains(location)) {
+          return null;
+        }
+
+        // Cualquier otra ruta requiere login
+        return RoutePaths.homePath;
+      }
+
+      // Usuario autenticado
+      if (location == RoutePaths.homePath || 
+          location == RoutePaths.loginPath ||
+          location == RoutePaths.registerPath
+      ) {
+        return RoutePaths.dashboardPath;
+      }
+
       return null;
     },
     routes: [

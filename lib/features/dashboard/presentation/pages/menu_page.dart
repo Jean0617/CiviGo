@@ -1,25 +1,27 @@
+import 'package:civigo/features/auth/presentation/providers/auth_provider.dart';
 import 'package:civigo/features/dashboard/presentation/config/menu_items.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../config/route_config/route_paths.dart';
 import '../../../shared/widgets/buttons/ui_button.dart';
 import '../../../shared/widgets/text/ui_text.dart';
 import '../utils/icon_mapper.dart';
 
-class MenuPage extends StatelessWidget {
+class MenuPage extends ConsumerWidget {
 
   const MenuPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
       
-          buildHeaderUser(context),
+          buildHeaderUser(context, ref),
 
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),
@@ -41,7 +43,7 @@ class MenuPage extends StatelessWidget {
   }
 
 
-  Widget buildHeaderUser(BuildContext context) {
+  Widget buildHeaderUser(BuildContext context, WidgetRef ref) {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -123,7 +125,7 @@ class MenuPage extends StatelessWidget {
               
                   Expanded(
                     child: GestureDetector(
-                      onTap: () => context.go(RoutePaths.homePath),
+                      onTap: () => ref.read(authProvider.notifier).logOut(),
                       child: Container(
                         margin: EdgeInsets.only(top: 10),
                         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 10),
@@ -182,7 +184,7 @@ class MenuPage extends StatelessWidget {
     );
   }
 
-  Padding buttonLogout(BuildContext context) {
+  Padding buttonLogout(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
       child: UIButton(
@@ -196,7 +198,7 @@ class MenuPage extends StatelessWidget {
         iconAlignmentStart: false,
         icon: Icons.logout, 
         iconSize: 15,
-        onPressed: () => context.go(RoutePaths.homePath),
+        onPressed: () => ref.read(authProvider.notifier).logOut(),
       ),
     );
   }

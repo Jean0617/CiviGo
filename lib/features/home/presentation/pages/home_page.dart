@@ -42,23 +42,24 @@ class HomePage extends StatelessWidget {
                   ),
                     
                   UIButton(
-                    title: 'Reportar caso',
+                    title: 'Iniciar Sesión',
                     expand: true,
                     bold: true,
                     background: AppConfig.primaryColor,
                     fontColor: Colors.white,
-                    icon: Icons.report_gmailerrorred, 
+                    icon: Icons.login, 
                     iconSize: 25,
-                    onPressed: () => context.pushNamed(RoutePaths.report),
+                    iconAlignmentStart: false,
+                    onPressed: () => context.pushNamed(RoutePaths.login),
                   ),
                     
                   UIButton(
-                    title: 'Iniciar Sesión',
+                    title: 'Registrarse',
                     expand: true,
                     bold: true,
                     background: Colors.transparent,
                     fontColor: Colors.black54,
-                    onPressed: () => context.pushNamed(RoutePaths.login),
+                    onPressed: () => context.pushNamed(RoutePaths.register),
                   )
               
                 ],
