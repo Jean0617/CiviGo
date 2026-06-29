@@ -194,6 +194,7 @@ class RegisterPageState extends ConsumerState<RegisterPage> {
                     iconAlignmentStart: false,
                     icon: Icons.person_add_alt, 
                     colorIcon: Colors.white, 
+                    isLoading: state.isSearching,
                     iconSize: 18,
                     onPressed: () async {
                       

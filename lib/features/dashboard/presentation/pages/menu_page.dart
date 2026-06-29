@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../auth/data/models/auth_state.dart';
 import '../../../shared/widgets/buttons/ui_button.dart';
 import '../../../shared/widgets/text/ui_text.dart';
 import '../utils/icon_mapper.dart';
@@ -15,13 +16,15 @@ class MenuPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     
+    final state = ref.watch(authProvider);
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
       
-          buildHeaderUser(context, ref),
+          buildHeaderUser(context, ref, state),
 
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),
@@ -43,7 +46,7 @@ class MenuPage extends ConsumerWidget {
   }
 
 
-  Widget buildHeaderUser(BuildContext context, WidgetRef ref) {
+  Widget buildHeaderUser(BuildContext context, WidgetRef ref, AuthState state) {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -65,15 +68,15 @@ class MenuPage extends ConsumerWidget {
                     
             const SizedBox(height: 10),
                     
-            const UIText(
-              title: "Jean Reyes",
+            UIText(
+              title: state.user?.identities?[0].identityData?['name'] ?? "Usuaurio",
               color: Colors.black,
               size: 20,
               bold: true,
             ),
         
-            const UIText(
-              title: "jcreyes@example.com",
+            UIText(
+              title: state.user?.identities?[0].identityData?['email'] ?? "",
               color: Colors.black45,
               size: 12,
             ),
@@ -89,7 +92,7 @@ class MenuPage extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 spacing: 5,
                 children: [
-                  UIText(title: true? 'Administrador' : 'Ciudadano', size: 10, color: Colors.green, bold: true,),
+                  UIText(title: state.user?.identities?[0].identityData?['role'] == "citizen"? 'Ciudadano' : 'Administrador', size: 10, color: Colors.green, bold: true,),
                   Icon(Icons.verified_outlined, color: Colors.green, size: 15,),
                 ],
               ),
@@ -103,25 +106,25 @@ class MenuPage extends ConsumerWidget {
                 spacing: 10,
                 children: [
               
-                  Expanded(
-                    child: Container(
-                      margin: EdgeInsets.only(top: 10),
-                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-                      decoration: BoxDecoration(
-                        color: Colors.blueGrey.withAlpha(30),
-                        borderRadius: BorderRadius.circular(10)
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        spacing: 5,
-                        children: [
-                          UIText(title: 'Editar perfil', size: 13, color: Colors.black54, bold: true,),
-                          Icon(Icons.manage_accounts_outlined, color: Colors.black54, size: 18,),
-                        ],
-                      ),
-                    ),
-                  ),
+                  // Expanded(
+                  //   child: Container(
+                  //     margin: EdgeInsets.only(top: 10),
+                  //     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+                  //     decoration: BoxDecoration(
+                  //       color: Colors.blueGrey.withAlpha(30),
+                  //       borderRadius: BorderRadius.circular(10)
+                  //     ),
+                  //     child: Row(
+                  //       mainAxisSize: MainAxisSize.min,
+                  //       mainAxisAlignment: MainAxisAlignment.center,
+                  //       spacing: 5,
+                  //       children: [
+                  //         UIText(title: 'Editar perfil', size: 13, color: Colors.black54, bold: true,),
+                  //         Icon(Icons.manage_accounts_outlined, color: Colors.black54, size: 18,),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
               
                   Expanded(
                     child: GestureDetector(

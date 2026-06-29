@@ -19,6 +19,11 @@ class Auth extends _$Auth {
   Future<void> signIn(Map data) async {
     try {
 
+      state = state.copyWith(
+        isSearching: true,
+        error: () => null,
+      );
+
       final response = await _repository.signIn(data);
 
       state = state.copyWith(
@@ -38,12 +43,18 @@ class Auth extends _$Auth {
   Future<bool> signUp(Map data) async {
     try {
 
+      state = state.copyWith(
+        error: () => null, 
+        isSearching: true,
+      );
+
       await _repository.signUp(data);
 
       state = state.copyWith(
         error: () => null, 
         succesRegister: true, 
-        isLogin: false
+        isLogin: false,
+        isSearching: false
       );
 
       return true;
@@ -53,6 +64,7 @@ class Auth extends _$Auth {
       state = state.copyWith(
         isLogin: false,
         succesRegister: false, 
+        isSearching: false,
         error: () => mapAuthError(e),
       );
       

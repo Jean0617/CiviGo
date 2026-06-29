@@ -44,24 +44,6 @@ const menuDashboardItems = [
     allowedRoles: [UserRole.admin]
   ),
   MenuItemModel(
-    label: "Incidentes",
-    iconKey: 'incidents',
-    route: RoutePaths.incidentsPath,
-    allowedRoles: [UserRole.citizen, UserRole.admin]
-  ),
-  MenuItemModel(
-    label: "Mapa incidentes",
-    iconKey: 'map_incidents',
-    route: RoutePaths.mapIncidentsPath,
-    allowedRoles: [UserRole.citizen, UserRole.admin]
-  ),
-  MenuItemModel(
-    label: "Modelos IA",
-    iconKey: 'models_ia',
-    route: RoutePaths.modelsIaPath,
-    allowedRoles: [UserRole.admin]
-  ),
-  MenuItemModel(
     label: "Reportes",
     iconKey: 'reports',
     route: RoutePaths.reportsPath,

@@ -24,8 +24,8 @@ class AuthPageState extends ConsumerState<AuthPage> {
 
   final ValueNotifier<bool> valueToggle = ValueNotifier(false);
 
-  final emailC = TextEditingController();
-  final passwordC = TextEditingController();
+  final emailC = TextEditingController(text: 'nuevo5@gmail.com');
+  final passwordC = TextEditingController(text: 'Under@009');
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -159,6 +159,7 @@ class AuthPageState extends ConsumerState<AuthPage> {
                             padding: EdgeInsets.symmetric(vertical: 20),
                             iconAlignmentStart: false,
                             icon: Icons.login, 
+                            isLoading: state.isSearching,
                             iconSize: 18,
                             onPressed: () {
                               
