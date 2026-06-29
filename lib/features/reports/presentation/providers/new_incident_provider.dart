@@ -78,7 +78,7 @@ class NewIncident extends _$NewIncident {
     }
   }
 
-  Future<void> analyzeIncident() async {
+  Future<bool> analyzeIncident() async {
     
     state = state.copyWith( isSaving: true );
 
@@ -108,15 +108,16 @@ class NewIncident extends _$NewIncident {
         priority: aiResponse['riesgo'],
         description: aiResponse['descripcion'],
         isSaving: false,
+        isIncident: aiResponse['is_incident'] ?? false
       );
+
+      return aiResponse['is_incident'] ?? false;
 
     } catch (e) {
 
-      state = state.copyWith(
-        isSaving: false,
-      );
-
-      rethrow;
+      state = state.copyWith( isSaving: false );
+      return false;
+      
     }
   }
 

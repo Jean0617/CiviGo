@@ -1,5 +1,6 @@
 import 'package:civigo/features/shared/widgets/text/ui_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class UIButton extends StatelessWidget {
 
@@ -72,7 +73,7 @@ class UIButton extends StatelessWidget {
       ),
       iconAlignment: iconAlignmentStart? IconAlignment.start : IconAlignment.end,
       icon: isLoading? 
-        CircularProgressIndicator.adaptive(backgroundColor: colorIcon ?? fontColor)
+        SpinKitFadingCircle(color: colorIcon ?? fontColor, size: 20,)
       : icon != null?
         Icon(icon, size: iconSize, color: colorIcon ?? fontColor)
       : null,

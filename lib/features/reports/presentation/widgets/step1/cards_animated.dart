@@ -14,33 +14,33 @@ class CardsAnimated extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: 420,
+      height: 370,
       child: Stack(
         alignment: Alignment.center,
         children: [
     
           AnimatedIncidentCard(
             animate: animate,
-            leftAnimated: 40,
+            leftAnimated: 30,
             leftInitial: -250,
             angle: -0.25,
             duration: 700,
             curve: Curves.easeOutBack,
             width: 250,
-            height: 300,
+            height: 230,
             image: 'assets/1.png',
             showContent: false,
           ),
     
           AnimatedIncidentCard(
             animate: animate,
-            leftAnimated: 120,
+            leftAnimated: 90,
             leftInitial: 250,
             angle: 0.25,
             duration: 900,
             curve: Curves.easeOutBack,
             width: 250,
-            height: 300,
+            height: 230,
             image: 'assets/3.png',
             showContent: false,
           ),
@@ -53,7 +53,7 @@ class CardsAnimated extends StatelessWidget {
             duration: 900,
             curve: Curves.easeInSine,
             width: 250,
-            height: 370,
+            height: 330,
             image: 'assets/2.png',
             showContent: true,
           ),

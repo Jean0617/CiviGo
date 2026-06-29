@@ -98,11 +98,11 @@ class _FlujoCrearReporteState extends ConsumerState<NewIncidentPage> {
               ],
             ),
           ),
-          if((incidentState.currentStep+1) != incidentState.fullStep)
-            StepBar(
-              currentStep: incidentState.currentStep, 
-              fullStep: incidentState.fullStep
-            ),
+          // if((incidentState.currentStep+1) != incidentState.fullStep)
+          //   StepBar(
+          //     currentStep: incidentState.currentStep, 
+          //     fullStep: incidentState.fullStep
+          //   ),
 
         ],
       ),

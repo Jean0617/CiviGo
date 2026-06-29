@@ -1,8 +1,10 @@
+import 'package:civigo/config/app_config/app_config.dart';
 import 'package:civigo/config/route_config/route_paths.dart';
 import 'package:civigo/features/reports/presentation/providers/incidents_provider.dart';
 import 'package:civigo/features/shared/widgets/text/ui_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../shared/utils/utils.dart';
@@ -10,7 +12,6 @@ import '../../../shared/widgets/container/form_no_data.dart';
 import '../../../shared/widgets/data_table/action_button.dart';
 import '../../../shared/widgets/data_table/column_config.dart';
 import '../../../shared/widgets/data_table/ui_data_table.dart';
-import '../../../shared/widgets/popup/ui_popup.dart';
 import '../../../shared/widgets/text/ui_title_action.dart';
 import '../../../shared/widgets/textformfield/ui_text_form_field.dart';
 import 'package:intl/intl.dart';
@@ -113,7 +114,7 @@ class _UsersPageState extends ConsumerState<IncidentsPage> {
   @override
   Widget build(BuildContext context) {
     
-    final incidents = ref.watch(incidentsProvider);
+    final state = ref.watch(incidentsProvider);
 
     return UnFocusKeyboard(
       child: Scaffold(
@@ -147,33 +148,40 @@ class _UsersPageState extends ConsumerState<IncidentsPage> {
                         focusBorder: Colors.grey.shade400,
                         suffixIcon: IconButton(
                           icon: Icon(Icons.search),
-                          onPressed: (){}, 
+                          onPressed: () => ref.read(incidentsProvider.notifier).getIncidents(), 
                         ),
                       ),
-                    ),
-
-                    IconButton(
-                      style: ButtonStyle(
-                        shape: WidgetStatePropertyAll(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadiusGeometry.circular(10)
-                          )
-                        ),
-                        padding: WidgetStatePropertyAll(EdgeInsets.all(13)),
-                        backgroundColor: WidgetStatePropertyAll(Colors.black.withAlpha(20))
-                      ),
-                      tooltip: 'Filtros',
-                      icon: Icon(Icons.filter_alt_outlined, color: Colors.black54, size: 22,),
-                      onPressed: () => uIDialog(context, title: 'Filtros', message: 'Seleciione los filtros para realizar las busquedas mas precisas.'),
                     ),
                   ],
                 ),
 
                 SizedBox(height: 20),
-                incidents.isEmpty?
-                FormNoData()
+
+                state.isLoading?
+
+                  Column(
+                    spacing: 5,
+                    children: [
+                      
+                      SpinKitFadingCircle(
+                        color: AppConfig.primaryColor,
+                        size: 40,
+                      ),
+
+                      UIText(
+                        title: 'Cargando...',
+                        size: 13,
+                      )
+
+                    ],
+                  )
+
+                :state.incidents.isEmpty?
+
+                  FormNoData()
+
                 :
-                buildDataTable(incidents),
+                  buildDataTable(state.incidents),
       
                 SizedBox(height: 40),
               ],

@@ -15,6 +15,7 @@ class NewIncidentState {
   final int? clasification;
   final int? designatedEntity;
   final bool isSaving;
+  final bool isIncident;
 
   final String aiCategory;
   final String aiEntity;
@@ -33,6 +34,7 @@ class NewIncidentState {
     this.clasification,
     this.designatedEntity,
     this.isSaving = false,
+    this.isIncident = true,
 
     this.aiCategory='',
     this.aiEntity='',
@@ -51,6 +53,7 @@ class NewIncidentState {
     int? clasification,
     int? designatedEntity,
     bool? isSaving,
+    bool? isIncident,
 
     String? aiCategory,
     String? aiEntity,
@@ -68,6 +71,7 @@ class NewIncidentState {
       clasification: clasification ?? this.clasification,
       designatedEntity: designatedEntity ?? this.designatedEntity,
       isSaving: isSaving ?? this.isSaving,
+      isIncident: isIncident ?? this.isIncident,
 
       aiCategory: aiCategory ?? this.aiCategory,
       aiEntity: aiEntity ?? this.aiEntity,
@@ -86,6 +90,7 @@ class NewIncidentState {
       "incident_image_url": imageUrl,
       "clasification_id": clasification,
       "designated_entity_id": designatedEntity,
+      "isIncident": isIncident
     };
   }
 }

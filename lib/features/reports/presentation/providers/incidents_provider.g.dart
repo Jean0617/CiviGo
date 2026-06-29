@@ -13,7 +13,7 @@ part of 'incidents_provider.dart';
 final incidentsProvider = IncidentsProvider._();
 
 final class IncidentsProvider
-    extends $NotifierProvider<Incidents, List<Map<String, dynamic>>> {
+    extends $NotifierProvider<Incidents, IncidentsState> {
   IncidentsProvider._()
     : super(
         from: null,
@@ -33,32 +33,27 @@ final class IncidentsProvider
   Incidents create() => Incidents();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(List<Map<String, dynamic>> value) {
+  Override overrideWithValue(IncidentsState value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<List<Map<String, dynamic>>>(value),
+      providerOverride: $SyncValueProvider<IncidentsState>(value),
     );
   }
 }
 
-String _$incidentsHash() => r'876f8209d579aba3700203e57424855805eb1ba8';
+String _$incidentsHash() => r'4879305e8fc338fa7d096d0a327f3c00083b38c1';
 
-abstract class _$Incidents extends $Notifier<List<Map<String, dynamic>>> {
-  List<Map<String, dynamic>> build();
+abstract class _$Incidents extends $Notifier<IncidentsState> {
+  IncidentsState build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref =
-        this.ref
-            as $Ref<List<Map<String, dynamic>>, List<Map<String, dynamic>>>;
+    final ref = this.ref as $Ref<IncidentsState, IncidentsState>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<
-                List<Map<String, dynamic>>,
-                List<Map<String, dynamic>>
-              >,
-              List<Map<String, dynamic>>,
+              AnyNotifier<IncidentsState, IncidentsState>,
+              IncidentsState,
               Object?,
               Object?
             >;

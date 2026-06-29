@@ -190,7 +190,7 @@ class UIMapState extends ConsumerState<UIMap> {
   @override
   Widget build(BuildContext context) {
     
-    final incidents = ref.watch(incidentsProvider).map((e) => IncidentModel.fromJson(e)).toList();
+    final incidents = ref.watch(incidentsProvider).incidents.map((e) => IncidentModel.fromJson(e)).toList();
 
     final markers = incidents.map((incident) {
 

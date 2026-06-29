@@ -26,9 +26,9 @@ class AnalyzeAiPageState extends ConsumerState<AnalyzeAiPage> {
 
     Future.microtask(() async {
 
-        await  ref.read(newIncidentProvider.notifier).analyzeIncident();
+        final next = await ref.read(newIncidentProvider.notifier).analyzeIncident();
         
-        if(!mounted)return;
+        if(!mounted || !next)return;
 
         context.pop(false);
         
@@ -41,7 +41,8 @@ class AnalyzeAiPageState extends ConsumerState<AnalyzeAiPage> {
   @override
   Widget build(BuildContext context) {
     
-    final newIncidentState = ref.watch(newIncidentProvider);
+    final state = ref.watch(newIncidentProvider);
+    final isIncident = state.isIncident;
 
     return Scaffold(
       body: SafeArea(
@@ -56,56 +57,61 @@ class AnalyzeAiPageState extends ConsumerState<AnalyzeAiPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                
-                    OrbitAnimation(),
+                    OrbitAnimation(animated: isIncident),
               
                     SizedBox(height: 5,),
                 
                     UIText(
-                      title: "ANALIZANDO", 
+                      title: isIncident? "Analizando imagen" : "No se detectó una incidencia", 
                       size: 25,
                       bold: true,
-                      color: Colors.black87,
+                      color: isIncident? Colors.black87 : Colors.orange,
                     ),
                     
                     Container(
+                      padding: EdgeInsets.all(isIncident? 0 : 10),
                       decoration: BoxDecoration(
-                        // color: Colors.orange.withAlpha(20),
-                        // // border: Border.all(color: Colors.blue.shade100),
-                        // borderRadius: BorderRadius.circular(20),
+                        color: isIncident? null : Colors.orange.withAlpha(20),
+                        border:  isIncident? null : Border.all(color: Colors.orange.shade100),
+                        borderRadius: isIncident? null : BorderRadius.circular(20),
                       ),
                       child: UIText(
-                        title: "Se está procesando la evidencia para identificar detalles relevantes y completar el reporte. Esto puede tardar unos segundos.", 
+                        title:  isIncident?
+                        "Se está procesando la evidencia para identificar detalles relevantes y completar el reporte. Esto puede tardar unos segundos."
+                        : 
+                        "La imagen no muestra una incidencia que pueda ser reportada. Toma una fotografía donde el incidente sea visible y vuelve a intentarlo.",
                         size: 15,
                         // bold: true,
                         // centerText: true,
                         color: Colors.black54,
                       ),
                     ),
-
-                    Container(
-                      margin: EdgeInsets.only(top: 10),
-                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                      decoration: BoxDecoration(
-                        color: Colors.blue.withAlpha(20),
-                        border: Border.all(color: Colors.blue.shade100),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Row(
-                        spacing: 5,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.info_outline, color: Colors.blue, size: 18),
-                          Flexible(
-                            child: UIText(
-                              title: "Seras redireccionado al siguiente paso una vez se complete el analísis.", 
-                              size: 12,
-                              bold: true,
-                              color: Colors.black87,
+                    
+                    if(isIncident)
+                      Container(
+                        margin: EdgeInsets.only(top: 10),
+                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+                        decoration: BoxDecoration(
+                          color: Colors.blue.withAlpha(20),
+                          border: Border.all(color: Colors.blue.shade100),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Row(
+                          spacing: 5,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.info_outline, color: Colors.blue, size: 18),
+                            Flexible(
+                              child: UIText(
+                                title: "Seras redireccionado al siguiente paso una vez se complete el analísis.", 
+                                size: 12,
+                                bold: true,
+                                color: Colors.black87,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
               
                     SizedBox(height: 10,),
                 
@@ -117,7 +123,7 @@ class AnalyzeAiPageState extends ConsumerState<AnalyzeAiPage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),
               child: UIButton(
-                title: "Cancelar",
+                title:  isIncident? "Cancelar" : "Finalizar",
                 expand: true,
                 padding: EdgeInsets.symmetric(vertical: 17),
                 background: Colors.transparent,
@@ -126,7 +132,10 @@ class AnalyzeAiPageState extends ConsumerState<AnalyzeAiPage> {
                 borderRadius: 25,
                 border: BorderSide(color: Colors.grey.shade300),
                 fontColor: Colors.black54,
-                onPressed: () => context.pop(true)
+                onPressed: () {
+                  context.pop(true);
+                  Navigator.pop(context);
+                }
               ),
             )
           ],
@@ -137,8 +146,10 @@ class AnalyzeAiPageState extends ConsumerState<AnalyzeAiPage> {
 }
 
 class OrbitAnimation extends StatefulWidget {
+  final bool animated;
 
   const OrbitAnimation({
+    this.animated = true,
     super.key,
   });
 
@@ -164,6 +175,24 @@ class _OrbitAnimationState extends State<OrbitAnimation> with TickerProviderStat
       vsync: this,
       duration: const Duration(seconds: 15),
     )..repeat();
+  }
+
+  @override
+  void didUpdateWidget(covariant OrbitAnimation oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.animated) {
+      if (!controller.isAnimating) {
+        controller.repeat();
+      }
+
+      if (!waveController.isAnimating) {
+        waveController.repeat();
+      }
+    } else {
+      controller.stop();
+      waveController.stop();
+    }
   }
 
   @override
