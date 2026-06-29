@@ -174,7 +174,7 @@ class DashboardBody extends StatelessWidget {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
-              child: SizedBox.shrink() //UIMap()
+              child: UIMap()
             )
           )
         ],

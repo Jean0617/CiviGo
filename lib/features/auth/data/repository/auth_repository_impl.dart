@@ -15,16 +15,11 @@ class AuthRepositoryImpl implements AuthRepository {
     final response = await _supabase.auth.signUp(
       email: data['email'],
       password: data['password'],
+      data: {
+        'name': data['name'],
+        'role': UserRole.citizen.name
+      }
     );
-
-    final userId = response.user!.id;
-    
-    await _supabase.from('users').insert({
-      'id': userId,
-      'name': data['name'],
-      'email': data['email'],
-      'role': UserRole.citizen.name
-    });
 
     return response;
   }

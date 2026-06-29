@@ -1,9 +1,5 @@
-import 'package:civigo/features/shared/domain/app_error.dart';
-import 'package:civigo/features/shared/presentation/providers/ui_alerts_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:supabase_flutter/supabase_flutter.dart' hide AuthState;
 
-import '../../../shared/domain/failures/app_failure.dart';
 import '../../../shared/presentation/failure_mapper_sb.dart';
 import '../../data/models/auth_state.dart';
 import '../../domain/repository/auth_repository.dart';
@@ -25,7 +21,11 @@ class Auth extends _$Auth {
 
       final response = await _repository.signIn(data);
 
-      state = state.copyWith(error: () => null, isLogin: true);
+      state = state.copyWith(
+        user: () => response.user,
+        error: () => null, 
+        isLogin: true
+      );
 
     } catch (e) {
       state = state.copyWith(
@@ -35,18 +35,29 @@ class Auth extends _$Auth {
     }
   }
 
-  Future<void> signUp(Map data) async {
+  Future<bool> signUp(Map data) async {
     try {
 
-      final response = await _repository.signUp(data);
-  
-      state = state.copyWith(error: () => null, isLogin: true);
+      await _repository.signUp(data);
+
+      state = state.copyWith(
+        error: () => null, 
+        succesRegister: true, 
+        isLogin: false
+      );
+
+      return true;
 
     } catch (e) {
+
       state = state.copyWith(
         isLogin: false,
+        succesRegister: false, 
         error: () => mapAuthError(e),
       );
+      
+      return false;
+
     }
   }
 
@@ -57,7 +68,8 @@ class Auth extends _$Auth {
   
       state = state.copyWith(
         error: () => null, 
-        isLogin: false
+        isLogin: false,
+        user: () => null,
       );
 
     } catch (_) {
@@ -68,7 +80,7 @@ class Auth extends _$Auth {
 
 
   void clearError(){
-    state = state.copyWith(error: () => null);
+    state = state.copyWith(error: () => null, succesRegister: false);
   }
 
 }

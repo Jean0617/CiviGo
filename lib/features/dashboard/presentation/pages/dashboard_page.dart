@@ -121,6 +121,7 @@ class DashboardPage extends ConsumerWidget {
 
   Container buildBottonNavigationBar(int currentIndex, BuildContext context) {
     return Container(
+      padding: EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(

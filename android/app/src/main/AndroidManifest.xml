@@ -1,14 +1,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Permisos para la ubicación -->
+     <!-- Permisos para la ubicación -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
     <uses-permission android:name="android.permission.CAMERA"/>
 
     <application
         android:label="civigo"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+
+        <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyCnn_OikmA511ktzut27p7HOyDAj2AVnFQ"/>
+               
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -22,13 +28,11 @@
                  the Android process has started. This theme is visible to the user
                  while the Flutter UI initializes. After that, this theme continues
                  to determine the Window background behind the Flutter UI. -->
+                 
             <meta-data
               android:name="io.flutter.embedding.android.NormalTheme"
               android:resource="@style/NormalTheme"
               />
-            
-            <meta-data android:name="com.google.android.geo.API_KEY"
-               android:value="AIzaSyCnn_OikmA511ktzut27p7HOyDAj2AVnFQ"/>
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

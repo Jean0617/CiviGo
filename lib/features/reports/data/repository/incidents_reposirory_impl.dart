@@ -10,10 +10,7 @@ class IncidentRepository {
   Future<String> uploadImage(File file) async {
     try {
 
-      print(await file.length());
-
-      final fileName =
-        '${DateTime.now().millisecondsSinceEpoch}.jpg';
+      final fileName = '${DateTime.now().millisecondsSinceEpoch}.jpg';
 
       await _supabase.storage
           .from('incidencias')
@@ -39,7 +36,18 @@ class IncidentRepository {
   Future<void> createIncident(Map<String, dynamic> data) async {
     try {
       
-      await _supabase.from('incidencias').insert(data);
+      final user = _supabase.auth.currentUser;
+
+      if (user == null) {
+        throw Exception('Usuario no autenticado');
+      }
+
+      await _supabase.from('incidencias').insert(
+        {
+          ...data,
+          'user_id': user.id,
+        }
+      );
 
     } catch (e) {
       throw Exception(

@@ -32,10 +32,10 @@ class _UsersPageState extends ConsumerState<IncidentsPage> {
   List<ColumnConfig<Map<String, dynamic>>> incidentsColumns = [
     
     ColumnConfig<Map<String, dynamic>>(
-      width: 120,
-      name: 'id',
-      label: 'ID',
-      builder: (i) => Text('Reporte ${i['id']?.toString() ?? ''}'),
+      width: 180,
+      name: 'creacion',
+      label: 'Creación',
+      builder: (i) => Text(DateFormat('dd MMM yyyy hh:mm a',).format(DateTime.parse(i['created_at']))),
     ),
 
     ColumnConfig<Map<String, dynamic>>(
@@ -89,13 +89,6 @@ class _UsersPageState extends ConsumerState<IncidentsPage> {
           ),
         ),
       ),
-    ),
-
-    ColumnConfig<Map<String, dynamic>>(
-      width: 180,
-      name: 'creacion',
-      label: 'Creación',
-      builder: (i) => Text(DateFormat('dd-MM-yyyy hh:mm a',).format(DateTime.parse(i['created_at']))),
     ),
 
   ];

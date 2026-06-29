@@ -31,6 +31,15 @@ class RegisterPageState extends ConsumerState<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
 
   @override
+  void initState() {
+    super.initState();
+
+    Future.microtask((){
+      ref.read(authProvider.notifier).clearError();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
 
     final state = ref.watch(authProvider);
@@ -73,6 +82,7 @@ class RegisterPageState extends ConsumerState<RegisterPage> {
                     focusBorder: Colors.black12,
                     prefixIcon: const Icon(Icons.person_outline, color: Colors.black),
                     controller: nameC,
+                    autoValidate: !state.succesRegister,
                   ),
                     
                   const SizedBox(height: 15),
@@ -82,9 +92,11 @@ class RegisterPageState extends ConsumerState<RegisterPage> {
                     fillColor: Colors.black.withAlpha(15),
                     hintText: 'Correo',
                     showBorder: false,
+                    validateEmail: true,
                     focusBorder: Colors.black12,
                     prefixIcon: const Icon(Icons.email_outlined, color: Colors.black),
                     controller: emailC,
+                    autoValidate: !state.succesRegister,
                   ),
                     
                   const SizedBox(height: 15),
@@ -100,6 +112,7 @@ class RegisterPageState extends ConsumerState<RegisterPage> {
                     validatePasswordStrength: true,
                     controller: passwordC,
                     validEqualsText: repeatPasswordC,
+                    autoValidate: !state.succesRegister,
                   ),
                     
                   const SizedBox(height: 15),
@@ -115,6 +128,7 @@ class RegisterPageState extends ConsumerState<RegisterPage> {
                     validatePasswordStrength: true,
                     controller: repeatPasswordC,
                     validEqualsText: passwordC,
+                    autoValidate: !state.succesRegister,
                   ),
                     
 
@@ -131,7 +145,39 @@ class RegisterPageState extends ConsumerState<RegisterPage> {
                         spacing: 5,
                         children: [
                           Icon(Icons.info_outline, color: Colors.red, size: 15,),
-                          Flexible(child: UIText(title: state.error?.message ?? 'Error mensaje....', size: 13, color: Colors.red,)),
+                          Flexible(child: UIText(title: state.error?.message ?? 'Error al registrar el usuario.', size: 13, color: Colors.red,)),
+                        ],
+                      ),
+                    ),
+
+                  if(state.succesRegister)
+                    Container(
+                      margin: EdgeInsets.only(top: 5),
+                      width: double.infinity,
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.green.withAlpha(30),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: Row(
+                        spacing: 5,
+                        children: [
+                          
+
+                          Flexible(
+                            child: UIText(
+                              textRich: [
+                                {'text': '¡Registro exitoso!', 'bold': true, 'color': Colors.green},
+                                {'text': '\nTu cuenta ha sido creada correctamente. Ya puedes iniciar sesión', 'color': Colors.green, 'size': 13.0},
+                              ],
+                            )
+                          ),
+
+                          CircleAvatar(
+                            backgroundColor: Colors.green.withAlpha(30),
+                            child: Icon(Icons.check, color: Colors.green, size: 20,)
+                          ),
+
                         ],
                       ),
                     ),
@@ -149,15 +195,23 @@ class RegisterPageState extends ConsumerState<RegisterPage> {
                     icon: Icons.person_add_alt, 
                     colorIcon: Colors.white, 
                     iconSize: 18,
-                    onPressed: () {
+                    onPressed: () async {
                       
                       if(!(_formKey.currentState?.validate()??false))return;
 
-                      ref.read(authProvider.notifier).signUp({
+                      final saving = await ref.read(authProvider.notifier).signUp({
                         'name': nameC.text,
                         'email': emailC.text,
                         'password': passwordC.text
                       });
+
+                      if(saving){
+                        nameC.clear();
+                        emailC.clear();
+                        passwordC.clear();
+                        repeatPasswordC.clear();
+                      }
+
                     },
                   ),
                     

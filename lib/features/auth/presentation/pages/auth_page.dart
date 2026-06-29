@@ -29,6 +29,15 @@ class AuthPageState extends ConsumerState<AuthPage> {
   final _formKey = GlobalKey<FormState>();
 
   @override
+  void initState() {
+    super.initState();
+
+    Future.microtask((){
+      ref.read(authProvider.notifier).clearError();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     
     final state = ref.watch(authProvider);
@@ -75,6 +84,7 @@ class AuthPageState extends ConsumerState<AuthPage> {
                             hintText: 'Usuario',
                             textColor: Colors.black,
                             showBorder: false,
+                            validateEmail: true,
                             focusBorder: Colors.black12,
                             prefixIcon: const Icon(Icons.person_outline, color: Colors.black),
                             controller: emailC,
@@ -180,7 +190,11 @@ class AuthPageState extends ConsumerState<AuthPage> {
                           GestureDetector(
                             onTap: () => context.pop(),
                             child: Container(
-                              color: Colors.grey.withAlpha(0),
+                              margin: EdgeInsets.only(bottom: 20),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.withAlpha(20),
+                                borderRadius: BorderRadius.circular(10)
+                              ),
                               padding: EdgeInsets.symmetric(horizontal: 50, vertical: 10),
                               child: UIText(
                                 title: 'Regresar',
