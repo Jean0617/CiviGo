@@ -80,13 +80,13 @@ class _UsersPageState extends ConsumerState<IncidentsPage> {
       builder: (i) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
-          color: i['state'] == 'pendiente' ? Colors.grey.withOpacity(0.2) : Colors.green.withOpacity(0.2),
+          color: i['state'] == 'pending' ? Colors.grey.withOpacity(0.2) : Colors.green.withOpacity(0.2),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(
-          i['state'] ?? 'Pendiente',
+          i['state'] == 'pending'? 'Pendiente' : i['state'] == 'in_progress'? 'En gestión' : 'Resuelta',
           style: TextStyle(
-            color: i['state'] == 'pendiente' ? Colors.black54 : Colors.green,
+            color: i['state'] == 'pending' ? Colors.black54 : Colors.green,
           ),
         ),
       ),
@@ -205,8 +205,8 @@ class _UsersPageState extends ConsumerState<IncidentsPage> {
         ActionButton<Map<String, dynamic>>(
           icon: Icons.remove_red_eye_outlined,
           color: Colors.blueGrey,
-          tooltip: 'Editar',
-          onPressed: (user) {},
+          tooltip: 'Ver incidencia',
+          onPressed: (incident) => context.pushNamed(RoutePaths.incidentDetail, pathParameters: {'id': '${incident['id']}'}),
         ),
       ],
     );

@@ -23,7 +23,7 @@ class NewIncidentState {
   NewIncidentState({
     this.currentStep = 0,
     this.fullStep = 3,
-    this.state = 'pendiente',
+    this.state = 'pending',
     this.position,
     this.priority = 3,
     this.happensNow = 'Si',

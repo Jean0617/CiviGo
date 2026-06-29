@@ -19,8 +19,21 @@ class Incidents extends _$Incidents {
       final repo = ref.read(incidentRepositoryProvider); 
       final response = await repo.getIncidents();
 
+      final pendingCount = response.where(
+        (e) => e['state'] == 'pending',
+      ).length;
+
+      final inProgressCount = response.where(
+        (e) => e['state'] == 'in_progress',
+      ).length;
+
+      final total = response.length;
+
       state = state.copyWith(
         isLoading: false,
+        amount: total,
+        inProgress: inProgressCount,
+        pending: pendingCount,
         incidents: response
       );
 

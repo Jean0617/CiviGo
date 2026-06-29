@@ -27,6 +27,9 @@ class RoutePaths {
   static const incidents = 'incidents';
   static const incidentsPath = '/incidents';
 
+  static const incidentDetail = 'incident_detail';
+  static const incidentDetailPath = '/incident_detail/:id';
+
   static const newIncident = 'new_incident';
   static const newIncidentPath = '/new_incident';
 

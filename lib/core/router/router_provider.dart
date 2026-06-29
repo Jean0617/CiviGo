@@ -21,6 +21,7 @@ import '../../features/dashboard/presentation/pages/menu_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/map/presentation/pages/map_page.dart';
 import '../../features/reports/presentation/pages/analyze_ai_page.dart';
+import '../../features/reports/presentation/pages/incident_detail.dart';
 import '../../features/reports/presentation/pages/screens.dart';
 import '../../features/users/presentation/pages/new_user_page.dart' hide Step2;
 import '../../features/users/presentation/pages/users_page.dart';
@@ -100,6 +101,15 @@ GoRouter appRouter(Ref ref) {
             name: RoutePaths.incidents,
             path: RoutePaths.incidentsPath,
             pageBuilder: (context, state) => fadePage(IncidentsPage()),
+          ),
+
+          GoRoute(
+            name: RoutePaths.incidentDetail,
+            path: RoutePaths.incidentDetailPath,
+            pageBuilder: (context, state) { 
+              final id = state.pathParameters['id'];
+              return fadePage(IncidentDetailPage(id: int.parse( id ?? '-1' )));
+            }
           ),
 
           GoRoute(

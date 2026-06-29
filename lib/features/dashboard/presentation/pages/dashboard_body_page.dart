@@ -1,17 +1,28 @@
 
 
 import 'package:civigo/config/app_config/app_config.dart';
+import 'package:civigo/features/auth/presentation/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../config/route_config/route_paths.dart';
 import '../../../map/presentation/pages/map_page.dart';
+import '../../../reports/domain/constants.dart';
+import '../../../reports/presentation/providers/incidents_provider.dart';
+import '../../../shared/utils/date_utils.dart';
 import '../../../shared/widgets/text/ui_text.dart';
 import '../widgets/card_activities.dart';
 
-class DashboardBody extends StatelessWidget {
+class DashboardBody extends ConsumerStatefulWidget {
   
-  DashboardBody({super.key});
+  const DashboardBody({super.key});
 
+  @override
+  DashboardBodyState createState() => DashboardBodyState();
+}
+
+class DashboardBodyState extends ConsumerState<DashboardBody> {
   final List<Map> recentlyActivities = [
     {'title': 'Tuberia de agua reventada', 'subtitle': 'Calle la paz, #45-87', 'icon': Icons.water_drop_outlined, 'createdAt': '2 Días', 'color': Colors.blue},
     {'title': 'Luminaria fundida', 'subtitle': 'Barrio chile, C 16 - 45', 'icon': Icons.lightbulb, 'createdAt': '1 Hora', 'color': Colors.yellow},
@@ -21,17 +32,22 @@ class DashboardBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
+    final state = ref.watch(incidentsProvider);
+    final user = ref.watch(authProvider).user;
+
     return Scaffold(
       body: ListView(
         padding: EdgeInsets.symmetric(horizontal: 13),
         children: [
 
-          buildWelcome(),
+          buildWelcome(user),
 
           CardActivities(
             title: 'MIS REPORTES',
-            amount: 1,
-            pending: 1,
+            amount: state.amount,
+            pending: state.pending,
+            inProgress: state.inProgress,
           ),
 
           SizedBox(height: 20),
@@ -55,6 +71,30 @@ class DashboardBody extends StatelessWidget {
             ],
           ),
 
+          if(state.incidents.isEmpty)
+            Container(
+              margin: EdgeInsets.only(top: 10),
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.blueGrey.shade100),
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.blueGrey.withAlpha(30)
+              ),
+              child: Row(
+                spacing: 5,
+                children: [
+                  Icon(Icons.campaign_outlined, color: Colors.blueGrey,),
+                  Flexible(
+                    child: UIText(
+                      title: 'Aún no has realizado ningún reporte. Cuando lo hagas, podrás ver la información desde esta sección.',
+                      size: 13,
+                      color: Colors.blueGrey,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
           Container(
             margin: EdgeInsets.only(top: 10),
             decoration: BoxDecoration(
@@ -62,35 +102,35 @@ class DashboardBody extends StatelessWidget {
               borderRadius: BorderRadius.circular(10)
             ),
             child: Column(
-              children: List.generate(recentlyActivities.length, (index) {
+              children: List.generate(state.incidents.length, (index) {
                   
-                  final Map item = recentlyActivities[index];
+                  final Map item = state.incidents[index];
+                  
+                  final classification = clasificaciones.firstWhere((e) => e['id'] == item['clasification_id']);
+                  
+                  final priority = item['priority'] == 1? Colors.blue : item['priority'] == 2? Colors.orange : Colors.red;
+                  
+                  final description = item['description'].toString().length > 60? item['description'].toString().substring(0, 60) : item['description'].toString();
 
                   return ListTile(
                     // contentPadding: EdgeInsets.zero,
                     leading: Container(
                       padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
                       decoration: BoxDecoration(
-                        color: item['color'].withAlpha(30),
+                        color: priority.withAlpha(50),
                         borderRadius: BorderRadius.circular(5)
                       ),
-                      child: Icon(item['icon'], size: 30, color: item['color'],)
+                      child: Icon(Icons.campaign_outlined, size: 30, color: priority,)
                     ),
-                    title: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        UIText(title: '${item['title']}', bold: true, size: 13, color: Colors.black87,),
-                        UIText(
-                          textRich: [
-                            {'text': 'Hace', 'color': Colors.black54, 'size': 10.0, },
-                            {'text': '\n${item['createdAt']}', 'color': Colors.black54, 'bold': true, 'size': 10.0},
-                          ],
-                        ),
+                    title: UIText(title: '${classification['name']}', bold: true, size: 13, color: Colors.black87,),
+                    subtitle: UIText(title: '$description...', size: 11,),
+                    trailing:  UIText(
+                      textRich: [
+                        {'text': 'Hace', 'color': Colors.black54, 'size': 10.0, },
+                        {'text': '\n${DateUtilsApp.timeAgo(item['created_at'])}', 'color': Colors.black54, 'bold': true, 'size': 10.0},
                       ],
                     ),
-                    subtitle: UIText(title: '${item['subtitle']}', size: 11,),
-                    shape: index == 4? null : Border(
+                    shape: (index+1) == state.incidents.length? null : Border(
                       bottom: BorderSide(color: Colors.black12)
                     )
                   );
@@ -113,14 +153,13 @@ class DashboardBody extends StatelessWidget {
     );
   }
 
-
-  Widget buildWelcome() {
+  Widget buildWelcome(User? user) {
     return Padding(
       padding: const EdgeInsets.only(top: 20.0),
       child: UIText(
         textRich: [
           {'text': '${getGreeting()},', 'color': Colors.black87, 'bold': true, 'size': 22.0, },
-          {'text': 'Jean 👋', 'color': AppConfig.primaryColor, 'bold': true, 'size': 22.0},
+          {'text': '${user?.identities?[0].identityData?['name'] ?? 'Usuario'} 👋', 'color': AppConfig.primaryColor, 'bold': true, 'size': 22.0},
           {'text': '\nAquí tienes un resumen de tu actividad hoy.', 'color': Colors.black87,'size': 13.0},
         ],
         size: 30,
@@ -181,7 +220,6 @@ class DashboardBody extends StatelessWidget {
       ),
     );
   }
-
 }
 
 

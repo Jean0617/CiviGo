@@ -6,10 +6,13 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'config/app_config/theme/theme.dart';
 import 'core/router/router_provider.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
+
+  await initializeDateFormatting('es_CO');
 
   await Supabase.initialize(
     url: 'https://granzlvazcoimkwpzalf.supabase.co',
