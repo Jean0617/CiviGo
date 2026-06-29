@@ -90,7 +90,7 @@ class NewIncidentState {
       "incident_image_url": imageUrl,
       "clasification_id": clasification,
       "designated_entity_id": designatedEntity,
-      "isIncident": isIncident
+      // "isIncident": isIncident
     };
   }
 }

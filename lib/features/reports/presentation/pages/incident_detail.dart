@@ -301,7 +301,10 @@ class IncidentDetailPageState extends ConsumerState<IncidentDetailPage> {
                             }
 
                             return Center(
-                              child: SpinKitFadingCircle(color: Colors.green),
+                              child: Padding(
+                                padding: const EdgeInsets.all(15.0),
+                                child: SpinKitFadingCircle(color: Colors.green),
+                              ),
                             );
                           },
 
