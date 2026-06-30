@@ -213,7 +213,7 @@ class DashboardBodyState extends ConsumerState<DashboardBody> {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
-              child: UIMap()
+              child: UIMap(incident: null)
             )
           )
         ],
