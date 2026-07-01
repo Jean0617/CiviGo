@@ -24,8 +24,8 @@ class AuthPageState extends ConsumerState<AuthPage> {
 
   final ValueNotifier<bool> valueToggle = ValueNotifier(false);
 
-  final emailC = TextEditingController(text: 'nuevo5@gmail.com');
-  final passwordC = TextEditingController(text: 'Under@009');
+  final emailC = TextEditingController(text: '');
+  final passwordC = TextEditingController(text: '');
   final _formKey = GlobalKey<FormState>();
 
   @override
