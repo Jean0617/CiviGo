@@ -102,7 +102,7 @@ class DashboardBodyState extends ConsumerState<DashboardBody> {
               borderRadius: BorderRadius.circular(10)
             ),
             child: Column(
-              children: List.generate(state.incidents.length, (index) {
+              children: List.generate(state.incidents.length >= 5 ? 5 : state.incidents.length, (index) {
                   
                   final Map item = state.incidents[index];
                   

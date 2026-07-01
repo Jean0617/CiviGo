@@ -71,8 +71,8 @@ class CardActivities extends StatelessWidget {
                   child: Row(
                     spacing: 5,
                     children: [
-                      const Icon(Icons.circle, color: Colors.green, size: 15,),
-                      UIText(title: '$inProgress En progreso', color: Colors.black87, size: 11.0, bold: true),
+                      const Icon(Icons.circle, color: Colors.orange, size: 15,),
+                      UIText(title: '$inProgress En gestión', color: Colors.black87, size: 11.0, bold: true),
                     ],
                   )
                 ),

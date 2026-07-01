@@ -2,9 +2,13 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:civigo/features/reports/data/models/new_incident_state.dart';
+import 'package:civigo/features/reports/presentation/providers/incidents_provider.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../shared/domain/app_error.dart';
+import '../../../shared/domain/app_error_entity.dart';
+import '../../../shared/presentation/providers/ui_alerts_provider.dart';
 import 'ai_repository_provider.dart';
 import 'incident_repository_provider.dart';
 
@@ -76,6 +80,25 @@ class NewIncident extends _$NewIncident {
       state = state.copyWith(isSaving: false); 
       return false;
     }
+  }
+
+  Future<void> updateStatus(
+    int incidentId,
+    String status,
+  ) async {
+
+    final success = await ref.read(incidentRepositoryProvider) .updateIncidentStatus(
+      incidentId: incidentId,
+      status: status,
+    );
+
+    if (success && ref.mounted) {
+      ref.read(uiAlertsProvider.notifier).show(
+        AppErrorEntity(type: AppErrorType.success, message: 'Incidencia actualizada correctamente.')
+      );
+
+    }
+
   }
 
   Future<bool> analyzeIncident() async {

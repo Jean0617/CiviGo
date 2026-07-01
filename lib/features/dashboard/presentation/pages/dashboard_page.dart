@@ -1,4 +1,5 @@
-import 'package:civigo/features/auth/presentation/providers/auth_provider.dart';
+
+import 'package:civigo/features/shared/presentation/providers/ui_alerts_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -6,7 +7,8 @@ import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 import '../../../../config/app_config/app_config.dart';
 import '../../../../config/route_config/route_paths.dart';
-import '../../../auth/data/models/auth_state.dart';
+import '../../../shared/domain/app_error.dart';
+import '../../../shared/domain/app_error_entity.dart';
 import '../../../shared/widgets/text/ui_text.dart';
 import '../config/menu_items.dart';
 import '../utils/icon_mapper.dart';
@@ -22,7 +24,7 @@ class DashboardPage extends ConsumerWidget {
     final location = GoRouterState.of(context).uri.toString();
     final currentIndex = getIndexFromLocation(location);
 
-    final auth = ref.watch(authProvider);
+    final auth = ref.watch(uiAlertsProvider);
 
     return Scaffold(
       backgroundColor: AppConfig.primaryColor,
@@ -63,7 +65,7 @@ class DashboardPage extends ConsumerWidget {
     );
   }
 
-  SafeArea buildBody(AuthState state) {
+  SafeArea buildBody(AppErrorEntity? state) {
     return SafeArea(
       child: Stack(
         children: [
@@ -98,18 +100,18 @@ class DashboardPage extends ConsumerWidget {
             top: 0,
             left: 0,
             right: 0,
-            child: AnimatedContainer(
+            child:  state == null? SizedBox.shrink() : AnimatedContainer(
               duration: Duration(milliseconds: 300),
               curve: Curves.easeInCirc,
               width: double.infinity,
-              height: state.error != null? 35 : 0,
-              color: Colors.black,
+              height: 35,
+              color: state.type == AppErrorType.warning? Colors.orange : state.type == AppErrorType.success? Colors.green : Colors.black,
               child: Row(
                 spacing: 5,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.info_outline, color: Colors.white, size: 15,),
-                  Flexible(child: UIText(title: state.error != null? state.error?.message ?? '' : '', color: Colors.white,)),
+                  Flexible(child: UIText(title: state.message, color: Colors.white, bold: true,)),
                 ],
               )
             )

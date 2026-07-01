@@ -38,9 +38,9 @@ class MapIncidentsState extends State<MapIncidents> {
     return Scaffold(
       body: Stack(
         children: [
-
+      
           UIMap(showIncident: showIncident, incident: incident),
-
+      
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 15),
             child: UITextFormField(
@@ -49,7 +49,7 @@ class MapIncidentsState extends State<MapIncidents> {
               focusBorder: Colors.grey.shade400,
             ),
           ),
-
+      
           Positioned(
             top: 70,
             left: 20,
@@ -61,7 +61,7 @@ class MapIncidentsState extends State<MapIncidents> {
                 children: List.generate(typesIncidents.length, (index){
                   
                   final Map item = typesIncidents[index];
-
+      
                   return Container(
                     padding: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
                     decoration: BoxDecoration(
@@ -82,7 +82,7 @@ class MapIncidentsState extends State<MapIncidents> {
               ),
             ),
           ),
-
+      
           ValueListenableBuilder(
             valueListenable: showIncident,
             builder: (context, show, child) {
@@ -90,216 +90,231 @@ class MapIncidentsState extends State<MapIncidents> {
                 bottom: 0,
                 left: 0,
                 right: 0,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(15),
-                      topRight: Radius.circular(15),
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black12,
-                        spreadRadius: 1, blurRadius: 3
-                      )
-                    ],
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: MediaQuery.of(context).size.height * 0.5,
                   ),
-                  child: Column(
-                    children: [
-                      
-                      Container(
-                        margin: EdgeInsets.symmetric(vertical: 10),
-                        width: 30,
-                        height: 4,
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade300,
-                          borderRadius: BorderRadius.circular(5)
-                        ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(30),
+                        topRight: Radius.circular(30),
                       ),
-
-                      ListTile(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 20),
-                        leading: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            UIText(
-                              title: 'Creación', 
-                              size: 15, 
-                              bold: true,
-                              color: const Color(0xFF424242)
-                            ),
-                            UIText(
-                              title: DateUtilsApp.timeAgo(incident.value!.createdAt), 
-                              size: 12, 
-                              color: const Color(0xFF424242)
-                            ),
-                          ],
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          spreadRadius: 1, blurRadius: 3
+                        )
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        
+                        Container(
+                          margin: EdgeInsets.symmetric(vertical: 10),
+                          width: 30,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: Colors.blueGrey.shade300,
+                            borderRadius: BorderRadius.circular(5)
+                          ),
                         ),
-                        trailing: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            UIText(
-                              title: 'Estado', 
-                              size: 15, 
-                              bold: true,
-                              color: const Color(0xFF424242)
-                            ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: incident.value!.state == 'pending' ? Colors.grey.withAlpha(40) : Colors.green.withAlpha(40),
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: Text(
-                                incident.value!.state == 'pending'? 'Pendiente' : incident.value!.state == 'in_progress'? 'En gestión' : 'Resuelta',
-                                style: TextStyle(
-                                  color: incident.value!.state == 'pending' ? Colors.black87 : Colors.green,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                        child: Row(
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+      
+                        Expanded(
+                          child: SingleChildScrollView(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
                               children: [
-                                UIText(
-                                  title: 'Ubicación', 
-                                  size: 15, 
-                                  bold: true,
-                                  color: const Color(0xFF424242)
-                                ),
-                                UIText(
-                                  title: '${incident.value!.latitude.toStringAsFixed(6)}, ${incident.value!.longitude.toStringAsFixed(6)}', 
-                                  size: 12, 
-                                  color: const Color(0xFF424242)
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      SizedBox(height: 15),
-
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                        
-                            UIText(title: 'Descripción', bold: true, size: 15, color: const Color(0xFF424242),),
-                                          
-                            SizedBox(height: 5),
-                        
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
+                                ListTile(
+                          contentPadding: EdgeInsets.symmetric(horizontal: 20),
+                          leading: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              UIText(
+                                title: 'Creación', 
+                                size: 15, 
+                                bold: true,
+                                color: Colors.blueGrey
                               ),
-                              child: UIText(
-                                title: incident.value!.description,
-                                color: Colors.black87,
+                              UIText(
+                                title: DateUtilsApp.timeAgo(incident.value!.createdAt), 
+                                size: 12, 
+                                color: const Color(0xFF424242)
                               ),
-                            ),
-                        
-                          ],
+                            ],
+                          ),
+                          trailing: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              UIText(
+                                title: 'Estado', 
+                                size: 15, 
+                                bold: true,
+                                color: Colors.blueGrey
+                              ),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: incident.value!.state == 'pending' ? Colors.grey.withAlpha(40) : incident.value!.state == 'process'? Colors.orange.withAlpha(40) : Colors.green.withAlpha(40),
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: Text(
+                                  incident.value!.state == 'pending'? 'Pendiente' : incident.value!.state == 'process'? 'En gestión' : 'Resuelta',
+                                  style: TextStyle(
+                                    color: incident.value!.state == 'pending' ? Colors.black87 : incident.value!.state == 'process'? Colors.orange : Colors.green,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-
-                            UIText(title: 'EVIDENCIA:', bold: true, size: 15, color: const Color(0xFF424242),),
-
-                            SizedBox(height: 10),
-                        
-                            incident.value!.incidentImageUrl.isNotEmpty ?
+                                      
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: Row(
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  UIText(
+                                    title: 'Ubicación', 
+                                    size: 15, 
+                                    bold: true,
+                                    color: Colors.blueGrey
+                                  ),
+                                  UIText(
+                                    title: '${incident.value!.latitude.toStringAsFixed(6)}, ${incident.value!.longitude.toStringAsFixed(6)}', 
+                                    size: 12, 
+                                    color: const Color(0xFF424242)
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                                      
+                        SizedBox(height: 15),
+                                      
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                          
+                              UIText(title: 'Descripción', bold: true, size: 15, color: Colors.blueGrey),
+                                            
+                              SizedBox(height: 5),
+                          
                               Container(
                                 decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.white,width: 3),
-                                  borderRadius: BorderRadius.circular(16),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black26,
-                                      blurRadius: 5
-                                    )
-                                  ]
+                                  color: Colors.white,
                                 ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(12),
-                                  child: Image.network(
-                                    incident.value!.incidentImageUrl,
-                                    width: double.infinity,
-                                    fit: BoxFit.cover,
-                        
-                                    // Loading
-                                    loadingBuilder: (context, child, loadingProgress) {
-                                      if (loadingProgress == null) {
-                                        return child;
-                                      }
-                        
-                                      return Center(
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(15.0),
-                                          child: SpinKitFadingCircle(color: Colors.green),
-                                        ),
-                                      );
-                                    },
-                        
-                                    // Error
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return SizedBox(
-                                        height: 220,
-                                        child: Center(
-                                          child: Column(
-                                            spacing: 8,
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: const [
-                                              
-                                              Icon(
-                                                Icons.broken_image_outlined,
-                                                size: 45,
-                                                color: Colors.grey,
-                                              ),
-                        
-                                              UIText(
-                                                title: 'No fue posible cargar la imagen.',
-                                                color: Colors.grey,
-                                              ),
-                        
-                                            ],
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                )
-                              ) 
-                            : 
-                              Center(
-                                child: UIText(title: 'No se pudo cargar la imagen, intentalo nuevamente.',),
+                                child: UIText(
+                                  title: incident.value!.description,
+                                  color: Colors.black87,
+                                ),
                               ),
-                          ],
+                          
+                            ],
+                          ),
                         ),
-                      ),
-
-                      SizedBox(height: 20),
-
-                    ],
+                                      
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                                      
+                              UIText(title: 'EVIDENCIA:', bold: true, size: 15, color: Colors.blueGrey),
+                                      
+                              SizedBox(height: 10),
+                          
+                              incident.value!.incidentImageUrl.isNotEmpty ?
+                                Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.white,width: 3),
+                                    borderRadius: BorderRadius.circular(16),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black26,
+                                        blurRadius: 5
+                                      )
+                                    ]
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Image.network(
+                                      incident.value!.incidentImageUrl,
+                                      width: double.infinity,
+                                      fit: BoxFit.cover,
+                          
+                                      // Loading
+                                      loadingBuilder: (context, child, loadingProgress) {
+                                        if (loadingProgress == null) {
+                                          return child;
+                                        }
+                          
+                                        return Center(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(15.0),
+                                            child: SpinKitFadingCircle(color: Colors.green),
+                                          ),
+                                        );
+                                      },
+                          
+                                      // Error
+                                      errorBuilder: (context, error, stackTrace) {
+                                        return SizedBox(
+                                          height: 220,
+                                          child: Center(
+                                            child: Column(
+                                              spacing: 8,
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: const [
+                                                
+                                                Icon(
+                                                  Icons.broken_image_outlined,
+                                                  size: 45,
+                                                  color: Colors.grey,
+                                                ),
+                          
+                                                UIText(
+                                                  title: 'No fue posible cargar la imagen.',
+                                                  color: Colors.grey,
+                                                ),
+                          
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  )
+                                ) 
+                              : 
+                                Center(
+                                  child: UIText(title: 'No se pudo cargar la imagen, intentalo nuevamente.',),
+                                ),
+                            ],
+                          ),
+                        ),
+                                      
+                        SizedBox(height: 20),
+                              ],
+                            ),
+                          ),
+                        ),
+                                         
+                      ],
+                    ),
                   ),
                 )
               );
             }
           ),
-
+      
         ],
       )
     );
@@ -336,7 +351,10 @@ class UIMapState extends ConsumerState<UIMap> {
 
   @override
   void dispose() {
-    mapController.dispose();
+    if(mounted){
+      mapController.dispose();
+    }
+      
     super.dispose();
   }
 
@@ -398,16 +416,23 @@ class UIMapState extends ConsumerState<UIMap> {
 
     return GoogleMap(
       initialCameraPosition: CameraPosition(
-        target: LatLng(9.950801634752155, -75.08395675441042),
+        target: incidents.isNotEmpty?  
+          LatLng(incidents[0].latitude, incidents[0].longitude) 
+        : 
+          LatLng(10.398258731876533, -75.47717919512527),
         zoom: 14,
       ),
       polygons: polygons,
       markers: markers,
+      onTap: (m){
+        widget.showIncident?.value = false;
+        widget.incident?.value = null;
+      },
       onMapCreated: (GoogleMapController controller) {
         mapController = controller;
         controller.setMapStyle('''
           [
-
+    
             {
               "featureType": "poi",
               "stylers": [

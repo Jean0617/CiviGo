@@ -1,5 +1,5 @@
 
-enum UserRole { citizen, admin }
+enum UserRole { citizen, admin, entity }
 
 class MenuItemModel {
   final String label;

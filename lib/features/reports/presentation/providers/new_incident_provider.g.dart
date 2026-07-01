@@ -41,7 +41,7 @@ final class NewIncidentProvider
   }
 }
 
-String _$newIncidentHash() => r'08b0a26763fbb741323617c02f4c993cd8154bd9';
+String _$newIncidentHash() => r'07816cc74acdc5543396b12ec16913c4788c0795';
 
 abstract class _$NewIncident extends $Notifier<NewIncidentState> {
   NewIncidentState build();

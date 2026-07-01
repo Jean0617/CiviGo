@@ -29,18 +29,20 @@ class Auth extends _$Auth {
       state = state.copyWith(
         user: () => response.user,
         error: () => null, 
-        isLogin: true
+        isLogin: true,
+        isSearching: false,
       );
 
     } catch (e) {
       state = state.copyWith(
         isLogin: false,
+        isSearching: false,
         error: () => mapAuthError(e),
       );
     }
   }
 
-  Future<bool> signUp(Map data) async {
+  Future<bool> signUp(Map data, {String? role}) async {
     try {
 
       state = state.copyWith(
@@ -48,12 +50,12 @@ class Auth extends _$Auth {
         isSearching: true,
       );
 
-      await _repository.signUp(data);
+      await _repository.signUp(data, role: role);
 
       state = state.copyWith(
         error: () => null, 
         succesRegister: true, 
-        isLogin: false,
+        isLogin: role != null? state.isLogin : false,
         isSearching: false
       );
 
@@ -62,7 +64,7 @@ class Auth extends _$Auth {
     } catch (e) {
 
       state = state.copyWith(
-        isLogin: false,
+        isLogin: role != null? state.isLogin : false,
         succesRegister: false, 
         isSearching: false,
         error: () => mapAuthError(e),

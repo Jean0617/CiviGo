@@ -1,23 +1,38 @@
 import 'package:civigo/config/app_config/app_config.dart';
+import 'package:civigo/features/dashboard/presentation/models/menu_item_model.dart';
+import 'package:civigo/features/reports/domain/constants.dart';
+import 'package:civigo/features/shared/domain/app_error.dart';
+import 'package:civigo/features/shared/domain/app_error_entity.dart';
+import 'package:civigo/features/shared/presentation/providers/ui_alerts_provider.dart';
 import 'package:civigo/features/shared/widgets/dropdown/ui_dropdown_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../auth/presentation/providers/auth_provider.dart';
 import '../../../shared/widgets/buttons/ui_button.dart';
 import '../../../shared/widgets/text/ui_text.dart';
 import '../../../shared/widgets/textformfield/ui_text_form_field.dart';
 
-class NewUserPage extends StatefulWidget {
+class NewUserPage extends ConsumerStatefulWidget {
   const NewUserPage({super.key});
 
   @override
-  State<NewUserPage> createState() => _RegisterStepperPageState();
+  RegisterStepperPageState createState() => RegisterStepperPageState();
 }
 
-class _RegisterStepperPageState extends State<NewUserPage> {
+class RegisterStepperPageState extends ConsumerState<NewUserPage> {
+  
   final PageController _pageController = PageController();
 
   int currentStep = 0;
+  final _formKeyUser = GlobalKey<FormState>();
+  final nameC = TextEditingController();
+  final emailC = TextEditingController();
+  final passwordC = TextEditingController();
+  final repeatPasswordC = TextEditingController();
+  final ValueNotifier<UserRole> role = ValueNotifier(UserRole.citizen);
+  final ValueNotifier<int?> entityId = ValueNotifier(null);
 
   void nextStep() {
     if (currentStep < 2) {
@@ -108,14 +123,17 @@ class _RegisterStepperPageState extends State<NewUserPage> {
 
           /// PAGE VIEW
           Expanded(
-            child: PageView(
-              controller: _pageController,
-              physics: const NeverScrollableScrollPhysics(),
-              children: [
-                Step1(),
-                Step2(),
-                Step3(),
-              ],
+            child: Form(
+              key: _formKeyUser,
+              child: PageView(
+                controller: _pageController,
+                physics: const NeverScrollableScrollPhysics(),
+                children: [
+                  Step1(nameC: nameC, role: role, entityId: entityId),
+                  Step2(emailC: emailC, passwordC: passwordC, repeatPasswordC: repeatPasswordC),
+                  Step3(),
+                ],
+              ),
             ),
           ),
 
@@ -126,11 +144,12 @@ class _RegisterStepperPageState extends State<NewUserPage> {
               children: [
 
                 /// ATRAS
-                if (currentStep > 0 && currentStep != 2)
+                if (currentStep > 0 && currentStep <= 1)
                   Expanded(
-                    child: OutlinedButton(
+                    child: UIButton(
+                      border: BorderSide(color: Colors.grey.shade300, width: 2),
                       onPressed: previousStep,
-                      child: const Text('Atrás'),
+                      title: 'Atrás',
                     ),
                   ),
 
@@ -139,20 +158,46 @@ class _RegisterStepperPageState extends State<NewUserPage> {
 
                 /// SIGUIENTE
                 Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
+                  child: UIButton(
+                    background: AppConfig.primaryColor,
+                    fontColor: Colors.white,
+                    bold: true,
+                    onPressed: () async {
+
                       if (currentStep == 2) {
-                        debugPrint('Formulario completado');
+                        context.pop();
+                      }
+                      
+                      if(!(_formKeyUser.currentState?.validate()??false))return;
+
+                      if (currentStep == 1) {
+
+                        final saving = await ref.read(authProvider.notifier).signUp(
+                          {
+                            'name': nameC.text,
+                            'email': emailC.text,
+                            'password': passwordC.text,
+                            if(entityId.value != null)
+                              'entity_id': entityId.value
+                          }, 
+                          role: role.value.name
+                        );
+
+                        if(saving){
+                          nextStep();
+                        } else {
+                          ref.read(uiAlertsProvider.notifier).show(
+                            AppErrorEntity(type: AppErrorType.warning, message: 'No se pudo crear el usuario')
+                          );
+                        }
+                        
                         return;
                       }
 
                       nextStep();
                     },
-                    child: Text(
-                      currentStep == 2
-                          ? 'Finalizar'
-                          : 'Siguiente',
-                    ),
+                    title: currentStep == 1? 'Finalizar' : currentStep == 2? 'Cerrar' : 'Siguiente',
+                    
                   ),
                 ),
               ],
@@ -167,12 +212,16 @@ class _RegisterStepperPageState extends State<NewUserPage> {
 /// STEP 1
 class Step1 extends StatelessWidget {
 
-  final tipos = [
-    {'id': 'CC', 'name': 'Cedula de ciudadania'},
-    {'id': 'TI', 'name': 'Tarjeta de identidad'},
-  ];
+  final TextEditingController nameC;
+  final ValueNotifier<UserRole> role;
+  final ValueNotifier<int?> entityId;
 
-  Step1({super.key});
+  const Step1({
+    super.key,
+    required this.nameC,
+    required this.role,
+    required this.entityId
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -194,34 +243,56 @@ class Step1 extends StatelessWidget {
 
           const SizedBox(height: 20),
 
-          ListTile(
-            contentPadding: EdgeInsets.zero,
-            title: Padding(
-              padding: const EdgeInsets.only(bottom: 5.0),
-              child: UIText(title: 'Tipo identificación', bold: true, size: 13, color: const Color(0xFF424242)),
-            ),
-            subtitle: UIDropdownButton<Map>(
-              hintText: 'Seleccione...',
-              items: tipos,
-              value: tipos[0],
-              itemBuilder: (item) => item['name'] ?? '',
-              onChanged: (value) {},
-            ),
-          ),
-        
-          UITextFormField(
-            title: 'Numero identificación',
-            hintText: 'Ej: 12345...',
-            borderRadius: 10,
-            focusBorder: Colors.grey.shade400,
-          ),
-        
           UITextFormField(
             title: 'Nombre completo',
             hintText: 'Ej: Juan andres perez...',
             borderRadius: 15,
             focusBorder: Colors.grey.shade400,
+            controller: nameC,
+            autoValidate: true,
           ),
+
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Padding(
+              padding: const EdgeInsets.only(bottom: 5.0),
+              child: UIText(title: 'Rol', bold: true, size: 13, color: const Color(0xFF424242)),
+            ),
+            subtitle: UIDropdownButton<UserRole>(
+              hintText: 'Seleccione...',
+              items: UserRole.values,
+              value: role.value,
+              itemBuilder: (item) => item.name,
+              onChanged: (value) {
+                role.value = value!;
+                entityId.value = null;
+              },
+            ),
+          ),
+
+
+          ValueListenableBuilder(
+            valueListenable: role,
+            builder: (context, value, child) {
+              return value.name != UserRole.entity.name? SizedBox.shrink() : ListTile(
+                contentPadding: EdgeInsets.zero,
+                title: Padding(
+                  padding: const EdgeInsets.only(bottom: 5.0),
+                  child: UIText(title: 'Entidad encargada', bold: true, size: 13, color: const Color(0xFF424242)),
+                ),
+                subtitle: UIDropdownButton<Map>(
+                  hintText: 'Seleccione...',
+                  items: entidades,
+                  value: entityId.value == null ? null : entidades.where((e) => e['id'] == entityId.value).firstOrNull,
+                  itemBuilder: (item) => item['name'],
+                  onChanged: (value) {
+                    entityId.value = value?['id']!;
+                  },
+                ),
+              );
+            }
+          ),
+        
         ],
       ),
     );
@@ -230,13 +301,24 @@ class Step1 extends StatelessWidget {
 
 /// STEP 2
 class Step2 extends StatelessWidget {
-  const Step2({super.key});
+  
+  final TextEditingController emailC;
+  final TextEditingController passwordC;
+  final TextEditingController repeatPasswordC;
+
+  const Step2({
+    super.key,
+    required this.emailC,
+    required this.passwordC,
+    required this.repeatPasswordC,
+  });
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
+        spacing: 10,
         children: [
 
           const Align(
@@ -250,7 +332,7 @@ class Step2 extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
 
           UITextFormField(
             title: 'Correo',
@@ -258,6 +340,7 @@ class Step2 extends StatelessWidget {
             borderRadius: 15,
             validateEmail: true,
             focusBorder: Colors.grey.shade400,
+            controller: emailC,
           ),
   
           UITextFormField(
@@ -266,6 +349,8 @@ class Step2 extends StatelessWidget {
             borderRadius: 15,
             focusBorder: Colors.grey.shade400,
             isPassword: true,
+            controller: passwordC,
+            validEqualsText: repeatPasswordC,
           ),
   
           UITextFormField(
@@ -274,6 +359,8 @@ class Step2 extends StatelessWidget {
             borderRadius: 15,
             focusBorder: Colors.grey.shade400,
             isPassword: true,
+            controller:  repeatPasswordC,
+            validEqualsText: passwordC,
           ),
         ],
       ),

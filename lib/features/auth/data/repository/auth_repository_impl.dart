@@ -10,14 +10,16 @@ class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl(this._supabase);
   
   @override
-  Future<AuthResponse> signUp(Map data) async {
+  Future<AuthResponse> signUp(Map data, { String? role}) async {
 
     final response = await _supabase.auth.signUp(
       email: data['email'],
       password: data['password'],
       data: {
         'name': data['name'],
-        'role': UserRole.citizen.name
+        'role': role ?? UserRole.citizen.name,
+        if(data['entity_id'] != null)
+          'entity_id': data['entity_id'],
       }
     );
 

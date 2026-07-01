@@ -1,9 +1,16 @@
+import 'package:civigo/config/app_config/app_config.dart';
+import 'package:civigo/features/auth/presentation/providers/auth_provider.dart';
+import 'package:civigo/features/dashboard/presentation/models/menu_item_model.dart';
+import 'package:civigo/features/reports/presentation/providers/new_incident_provider.dart';
 import 'package:civigo/features/shared/utils/date_utils.dart';
 import 'package:civigo/features/shared/widgets/buttons/ui_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
+import '../../../shared/domain/app_error.dart';
+import '../../../shared/domain/app_error_entity.dart';
+import '../../../shared/presentation/providers/ui_alerts_provider.dart';
 import '../../../shared/widgets/dropdown/ui_dropdown_button.dart';
 import '../../../shared/widgets/radiogroups/ui_radiogroup.dart';
 import '../../../shared/widgets/text/ui_text.dart';
@@ -22,6 +29,8 @@ class IncidentDetailPage extends ConsumerStatefulWidget {
 }
 
 class IncidentDetailPageState extends ConsumerState<IncidentDetailPage> {
+  
+  final ValueNotifier<String?> stateIncidente = ValueNotifier(null);
 
   @override
   void initState() {
@@ -36,10 +45,11 @@ class IncidentDetailPageState extends ConsumerState<IncidentDetailPage> {
   Widget build(BuildContext context) {
     
     final state = ref.watch(incidentDetailProvider);
+    final role = ref.watch(authProvider).user?.identities?[0].identityData?['role'];
 
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 50,
+        toolbarHeight: 60,
         automaticallyImplyLeading: false,
         title: UIButton(
           icon: Icons.arrow_back_ios,
@@ -49,6 +59,39 @@ class IncidentDetailPageState extends ConsumerState<IncidentDetailPage> {
           padding: EdgeInsets.only(right: 10),
           onPressed: () => context.pop(),
         ),
+        actions: [
+
+          if(role == UserRole.entity.name || role == UserRole.admin.name)
+            Padding(
+              padding: const EdgeInsets.only(right: 10.0),
+              child: UIButton(
+                icon: Icons.save,
+                title: 'Actualizar',
+                fontSize: 13,
+                iconSize: 15,
+                iconAlignmentStart: false,
+                borderRadius: 10,
+                fontColor: Colors.white,
+                bold: true,
+                background: AppConfig.primaryColor,
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                onPressed: () async {
+
+                  if(stateIncidente.value == null)return;
+
+                  await ref.read(newIncidentProvider.notifier).updateStatus(
+                    widget.id, stateIncidente.value!
+                  );
+
+                  ref.read(uiAlertsProvider.notifier).show(
+                    AppErrorEntity(type: AppErrorType.success, message: 'Incidencia actualizada correctamente.')
+                  );
+
+                } 
+              ),
+            ),
+
+        ],
       ),
       body: state.isLoading?
         Column(
@@ -107,32 +150,80 @@ class IncidentDetailPageState extends ConsumerState<IncidentDetailPage> {
                         ),
                       ],
                     ),
-                    trailing: Column(
+                    trailing: role == UserRole.entity.name || role == UserRole.admin.name? SizedBox.shrink() : Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+
                         UIText(
                           title: 'Estado', 
                           size: 15, 
                           bold: true,
                           color: const Color(0xFF424242)
                         ),
+
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
-                            color: state.incident['state'] == 'pending' ? Colors.grey.withAlpha(40) : Colors.green.withAlpha(40),
+                            color: state.incident['state'] == 'pending' ? Colors.grey.withAlpha(40) : state.incident['state'] == 'process'? Colors.orange.withAlpha(40) : Colors.green.withAlpha(40),
                             borderRadius: BorderRadius.circular(5),
                           ),
                           child: Text(
-                            state.incident['state'] == 'pending'? 'Pendiente' : state.incident['state'] == 'in_progress'? 'En gestión' : 'Resuelta',
+                            state.incident['state'] == 'pending'? 'Pendiente' : state.incident['state'] == 'process'? 'En gestión' : 'Resuelta',
                             style: TextStyle(
-                              color: state.incident['state'] == 'pending' ? Colors.black87 : Colors.green,
+                              color: state.incident['state'] == 'pending' ? Colors.black87 : state.incident['state'] == 'process'? Colors.orange : Colors.green,
                             ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                  
+
+                  Row(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          UIText(title: 'Coordenadas', bold: true, size: 15, color: const Color(0xFF424242),),
+                          UIText(
+                            title: '${state.incident['latitude'].toStringAsFixed(6)}, ${state.incident['longitude'].toStringAsFixed(6)}', 
+                            size: 14, 
+                            color: const Color(0xFF424242)
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+
+                  SizedBox(height: 5),
+
+                  if(role == UserRole.entity.name || role == UserRole.admin.name)
+                    ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: Padding(
+                        padding: const EdgeInsets.only(bottom: 5.0),
+                        child: UIText(title: 'Estado', bold: true, size: 15, color: const Color(0xFF424242),),
+                      ),
+                      subtitle: Column(
+                        spacing: 5,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+
+                          UIDropdownButton<Map>(
+                            hintText: 'Seleccione...',
+                            items: estados,
+                            autoValidate: true,
+                            value: state.incident['state'] == null
+                              ? null : estados.firstWhere((e) => e['id'] == state.incident['state']),
+                            itemBuilder: (item) => item['name'] ?? '',
+                            onChanged: (value) {
+                              stateIncidente.value = value?['id'];
+                            },
+                          ),
+
+                        ],
+                      ),
+                    ),
+
                   ListTile(
                     contentPadding: EdgeInsets.zero,
                     title: Padding(

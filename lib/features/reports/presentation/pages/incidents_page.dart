@@ -36,7 +36,7 @@ class _UsersPageState extends ConsumerState<IncidentsPage> {
       width: 180,
       name: 'creacion',
       label: 'Creación',
-      builder: (i) => Text(DateFormat('dd MMM yyyy hh:mm a',).format(DateTime.parse(i['created_at']))),
+      builder: (i) => Text(DateFormat('dd MMM yyyy hh:mm a',).format(DateTime.parse(i['created_at']).toLocal())),
     ),
 
     ColumnConfig<Map<String, dynamic>>(
@@ -80,13 +80,13 @@ class _UsersPageState extends ConsumerState<IncidentsPage> {
       builder: (i) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
-          color: i['state'] == 'pending' ? Colors.grey.withOpacity(0.2) : Colors.green.withOpacity(0.2),
+          color: i['state'] == 'pending' ? Colors.grey.withOpacity(0.2) : i['state'] == 'process'? Colors.orange.withOpacity(0.2) : Colors.green.withOpacity(0.2),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(
-          i['state'] == 'pending'? 'Pendiente' : i['state'] == 'in_progress'? 'En gestión' : 'Resuelta',
+          i['state'] == 'pending'? 'Pendiente' : i['state'] == 'process'? 'En gestión' : 'Resuelta',
           style: TextStyle(
-            color: i['state'] == 'pending' ? Colors.black54 : Colors.green,
+            color: i['state'] == 'pending' ? Colors.black54 : i['state'] == 'process'? Colors.orange : Colors.green,
           ),
         ),
       ),

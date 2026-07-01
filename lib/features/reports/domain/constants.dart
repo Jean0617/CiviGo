@@ -45,5 +45,11 @@ final List<Map<String, dynamic>> priority = [
   {'id': 3, 'name': 'Crítica', 'color': Colors.red, 'icon': Icons.system_security_update_warning_outlined},
 ];
 
+final List<Map<String, dynamic>> estados = [
+  {'id': 'pending', 'name': 'Pendiente'},
+  {'id': 'process', 'name': 'En gestión'},
+  {'id': 'resolved', 'name': 'Resuelto'},
+];
+
 //key para validar form step 2
 final keyForm = GlobalKey<FormState>();

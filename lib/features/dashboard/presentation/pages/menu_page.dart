@@ -3,6 +3,7 @@ import 'package:civigo/features/dashboard/presentation/config/menu_items.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' show User;
 
 import '../../../auth/data/models/auth_state.dart';
 import '../../../shared/widgets/buttons/ui_button.dart';
@@ -34,7 +35,7 @@ class MenuPage extends ConsumerWidget {
           Expanded(
             child: SingleChildScrollView(
               child: Column(
-                children: buildMenuItems(context),
+                children: buildMenuItems(context, state.user),
               ),
             ),
           ),
@@ -69,7 +70,7 @@ class MenuPage extends ConsumerWidget {
             const SizedBox(height: 10),
                     
             UIText(
-              title: state.user?.identities?[0].identityData?['name'] ?? "Usuaurio",
+              title: state.user?.identities?[0].identityData?['name'] ?? "Usuario",
               color: Colors.black,
               size: 20,
               bold: true,
@@ -92,7 +93,7 @@ class MenuPage extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 spacing: 5,
                 children: [
-                  UIText(title: state.user?.identities?[0].identityData?['role'] == "citizen"? 'Ciudadano' : 'Administrador', size: 10, color: Colors.green, bold: true,),
+                  UIText(title: state.user?.identities?[0].identityData?['role'] == "citizen"? 'Ciudadano' : state.user?.identities?[0].identityData?['role'] == "admin"? 'Administrador' : 'Entidad', size: 10, color: Colors.green, bold: true,),
                   Icon(Icons.verified_outlined, color: Colors.green, size: 15,),
                 ],
               ),
@@ -159,18 +160,26 @@ class MenuPage extends ConsumerWidget {
     );
   }
 
-  List<Widget> buildMenuItems(BuildContext context) {
-    return [
-      ...menuDashboardItems.map((item) {
-        return _menuItem(
+  List<Widget> buildMenuItems(BuildContext context, User? user) {
+
+  final role = user?.identities?[0].identityData?['role'] ?? '';
+
+  return menuDashboardItems
+      .where(
+        (item) => item.allowedRoles.any(
+          (r) => r.name == role,
+        ),
+      )
+      .map(
+        (item) => _menuItem(
           context,
           item.route,
           icon: iconMap[item.iconKey] ?? Icons.help_outline,
           title: item.label,
-        );
-      }),
-    ];
-  }
+        ),
+      )
+      .toList();
+}
 
   Widget _menuItem(BuildContext context, String route ,{IconData? icon, String title = '', Color color = Colors.black54}) {
     return ListTile(

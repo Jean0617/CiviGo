@@ -41,7 +41,7 @@ final class UiAlertsProvider
   }
 }
 
-String _$uiAlertsHash() => r'6acd0c6439ebf6df2a2ffc94281b46ac1b3f3c9d';
+String _$uiAlertsHash() => r'bbc95205faa3371d67dbecb7cbba1ea9afbf825c';
 
 abstract class _$UiAlerts extends $Notifier<AppErrorEntity?> {
   AppErrorEntity? build();

@@ -85,7 +85,7 @@ class NewIncidentState {
       "longitude": position?.longitude ?? 0.0,
       "priority": priority,
       "happens_now": happensNow == 'Si',
-      "created_at": createdAt?.toIso8601String(),
+      // "created_at": createdAt?.toIso8601String(),
       "description": description,
       "incident_image_url": imageUrl,
       "clasification_id": clasification,

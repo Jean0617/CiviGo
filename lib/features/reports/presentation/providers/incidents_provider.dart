@@ -24,7 +24,7 @@ class Incidents extends _$Incidents {
       ).length;
 
       final inProgressCount = response.where(
-        (e) => e['state'] == 'in_progress',
+        (e) => e['state'] == 'process',
       ).length;
 
       final total = response.length;

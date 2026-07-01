@@ -1,6 +1,8 @@
 import 'package:civigo/config/route_config/route_paths.dart';
+import 'package:civigo/features/dashboard/presentation/models/menu_item_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../config/app_config/app_config.dart';
@@ -10,10 +12,11 @@ import '../../../shared/widgets/container/form_no_data.dart';
 import '../../../shared/widgets/data_table/action_button.dart';
 import '../../../shared/widgets/data_table/column_config.dart';
 import '../../../shared/widgets/data_table/ui_data_table.dart';
-import '../../../shared/widgets/popup/ui_popup.dart';
 import '../../../shared/widgets/text/ui_text.dart';
 import '../../../shared/widgets/textformfield/ui_text_form_field.dart';
+import '../../data/auth_user_model.dart';
 import '../../data/models/user_model.dart';
+import '../providers/users_provider.dart';
 
 class UsersPage extends ConsumerStatefulWidget {
   const UsersPage({super.key});
@@ -25,45 +28,45 @@ class UsersPage extends ConsumerStatefulWidget {
 class _UsersPageState extends ConsumerState<UsersPage> {
 
   List<User> users = [];
-  int totalPages = 5;
+  int totalPages = 1;
   bool isLoading = false;
 
-  List<ColumnConfig<User>> userColumns = [
+  List<ColumnConfig<AuthUserModel>> userColumns = [
     
-    ColumnConfig<User>(
+    ColumnConfig<AuthUserModel>(
       width: 120,
       name: 'name',
       label: 'Nombre',
       builder: (u) => Text(u.name),
     ),
 
-    ColumnConfig<User>(
+    ColumnConfig<AuthUserModel>(
       width: 130,
-      name: 'id',
-      label: 'Identificación',
-      builder: (u) => Text('CC-${u.id*356}'),
+      name: 'role',
+      label: 'Rol',
+      builder: (u) => Text(u.role == UserRole.citizen.name? 'Ciudadano': u.role == UserRole.admin.name? 'Admin': 'Entidad'),
     ),
 
-    ColumnConfig<User>(
+    ColumnConfig<AuthUserModel>(
       width: 150,
       name: 'email',
       label: 'Email',
       builder: (u) => Text(u.email),
     ),
 
-    ColumnConfig<User>(
+    ColumnConfig<AuthUserModel>(
       name: 'state',
       label: 'Estado',
       builder: (u) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
-          color: u.active ? Colors.green.withOpacity(0.2) : Colors.red.withOpacity(0.2),
+          color: true ? Colors.green.withOpacity(0.2) : Colors.red.withOpacity(0.2),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(
-          u.active ? 'Activo' : 'Inactivo',
+          true ? 'Activo' : 'Inactivo',
           style: TextStyle(
-            color: u.active ? Colors.green : Colors.red,
+            color: true ? Colors.green : Colors.red,
           ),
         ),
       ),
@@ -81,34 +84,18 @@ class _UsersPageState extends ConsumerState<UsersPage> {
   @override
   void initState() {
     super.initState();
-    fetch(1);
+    fetch();
   }
 
-  Future<void> fetch(int page) async {
-    setState(() => isLoading = true);
-
-    await Future.delayed(const Duration(milliseconds: 500));
-
-    final newUsers = List.generate(10, (i) {
-      final index = ((page - 1) * 10) + i + 1;
-      return User(
-        id: index,
-        name: 'User $index',
-        email: 'user$index@mail.com',
-        age: 20,
-        phone: '300000000',
-        active: true,
-      );
-    });
-
-    setState(() {
-      users = newUsers;
-      isLoading = false;
-    });
+  Future<void> fetch() async {
+    ref.read(usersProvider.notifier).build();
   }
 
   @override
   Widget build(BuildContext context) {
+    
+    final users = ref.watch(usersProvider);
+
     return UnFocusKeyboard(
       child: Scaffold(
         appBar: AppBar(
@@ -180,36 +167,23 @@ class _UsersPageState extends ConsumerState<UsersPage> {
                         focusBorder: Colors.grey.shade400,
                         suffixIcon: IconButton(
                           icon: Icon(Icons.search),
-                          onPressed: (){}, 
+                          onPressed: () => ref.read(usersProvider.notifier).refresh(), 
                         ),
                       ),
                     ),
 
-                    IconButton(
-                      style: ButtonStyle(
-                        shape: WidgetStatePropertyAll(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadiusGeometry.circular(10)
-                          )
-                        ),
-                        padding: WidgetStatePropertyAll(EdgeInsets.all(13)),
-                        backgroundColor: WidgetStatePropertyAll(Colors.black.withAlpha(20))
-                      ),
-                      tooltip: 'Filtros',
-                      icon: Icon(Icons.filter_alt_outlined, color: Colors.black54, size: 22,),
-                      onPressed: () => uIDialog(context, title: 'Filtros', message: 'Seleciione los filtros para realizar las busquedas mas precisas.'),
-                    ),
                   ],
                 ),
 
                 SizedBox(height: 20),
+
+                users.when(
+                  loading: () => Center(child: SpinKitFadingCircle(color: Colors.blueGrey,)),
+                  error: (e, _) => FormNoData(),
+                  data: (items) => buildDataTableUsers(items)
+                ),
             
-                users.isNotEmpty?
-                  FormNoData()
-                :
-                  buildDataTableUsers(),
-      
-                SizedBox(height: 40),
+                SizedBox(height: 40)
               ],
             ),
           ),
@@ -218,23 +192,23 @@ class _UsersPageState extends ConsumerState<UsersPage> {
     );
   }
 
-  UIDataTable<User> buildDataTableUsers() {
-    return UIDataTable<User>(
-      data: users,
+  UIDataTable<AuthUserModel> buildDataTableUsers(List<AuthUserModel> items) {
+    return UIDataTable<AuthUserModel>(
+      data: items,
       columns: userColumns,
       totalPages: totalPages,
       isLoading: isLoading,
       onPageChange: (page) {
-        fetch(page);
+        fetch();
       },
       actions: [
-        ActionButton<User>(
+        ActionButton<AuthUserModel>(
           icon: Icons.edit,
           color: Colors.blueGrey,
           tooltip: 'Editar',
           onPressed: (user) {},
         ),
-        ActionButton<User>(
+        ActionButton<AuthUserModel>(
           icon: Icons.delete_forever,
           color: Colors.red,
           tooltip: 'Eliminar',

@@ -41,7 +41,7 @@ final class IncidentsProvider
   }
 }
 
-String _$incidentsHash() => r'0b62797b76ac87607a086929a4f933ca868aa5ed';
+String _$incidentsHash() => r'fde07d1e756cbd34a1a5c24f009dd9bf3a757a67';
 
 abstract class _$Incidents extends $Notifier<IncidentsState> {
   IncidentsState build();

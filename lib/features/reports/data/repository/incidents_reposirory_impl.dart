@@ -59,10 +59,10 @@ class IncidentRepository {
   Future<List<Map<String, dynamic>>> getIncidents() async {
     try {
 
-      final response =
-          await _supabase
-              .from('incidencias')
-              .select().order('created_at', ascending: false);
+      final response = await _supabase.rpc('get_incidents');
+          // await _supabase
+          //     .from('incidencias')
+          //     .select().order('created_at', ascending: false);
 
       return List<Map<String, dynamic>>.from(response);
     } catch (e) {
@@ -84,19 +84,20 @@ class IncidentRepository {
     }
   }
 
-  Future<void> updateIncidentState({
-    required int id,
-    required String state,
+  Future<bool> updateIncidentStatus({
+    required int incidentId,
+    required String status,
   }) async {
-    try {
-      await _supabase
-          .from('incidencias')
-          .update({'state': state}).eq('id', id);
 
-    } catch (e) {
-      throw Exception(
-        'No se pudo actualizar el estado',
-      );
-    }
+    final response = await _supabase.rpc(
+      'update_incident_status',
+      params: {
+        'p_incident_id': incidentId,
+        'p_status': status,
+      },
+    );
+
+    return response as bool;
   }
+
 }
