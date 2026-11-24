@@ -2,6 +2,7 @@
 
 import 'package:civigo/features/auth/presentation/providers/auth_provider.dart';
 import 'package:civigo/features/reports/presentation/pages/preview_photo.dart';
+import 'package:civigo/features/shared/utils/responsive.dart';
 
 import 'package:civigo/features/entities/presentation/pages/entities.dart';
 import 'package:civigo/features/reports2/presentation/pages/reports.dart';
@@ -149,17 +150,17 @@ GoRouter appRouter(Ref ref) {
       GoRoute(
         name: RoutePaths.newIncident,
         path: RoutePaths.newIncidentPath,
-        pageBuilder: (context, state) => fadePage(NewIncidentPage()),
+        pageBuilder: (context, state) => fadePage(NarrowPage(child: NewIncidentPage())),
         routes: [
           GoRoute(
             name: RoutePaths.photoPreview,
             path: RoutePaths.photoPreviewPath,
-            pageBuilder: (context, state) => fadePage(PhotoPreviewPage())
+            pageBuilder: (context, state) => fadePage(NarrowPage(child: PhotoPreviewPage()))
           ),
           GoRoute(
             name: RoutePaths.analyzeIa,
             path: RoutePaths.analyzeIaPath,
-            pageBuilder: (context, state) => fadePage(AnalyzeAiPage())
+            pageBuilder: (context, state) => fadePage(NarrowPage(child: AnalyzeAiPage()))
           ),
         ]
       ),

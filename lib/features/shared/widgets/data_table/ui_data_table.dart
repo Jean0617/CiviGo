@@ -52,6 +52,16 @@ class UIDataTable<T> extends ConsumerWidget {
         )
     ];
 
+    return LayoutBuilder(builder: (context, constraints) {
+
+    // Si las columnas fijas no llenan el ancho disponible (web/escritorio), se estiran
+    // proporcionalmente. Si no caben (móvil), se mantienen y hay scroll horizontal.
+    final fixedTotal = allColumns.fold<double>(0, (sum, c) => sum + (c.width ?? 0));
+    final available = constraints.maxWidth;
+    final stretch = (fixedTotal > 0 && available.isFinite && available > fixedTotal)
+        ? available / fixedTotal
+        : 1.0;
+
     return Column(
       children: [
 
@@ -136,7 +146,7 @@ class UIDataTable<T> extends ConsumerWidget {
             columns: allColumns.map((col) {
               return GridColumn(
                 columnName: col.name,
-                width: col.width ?? double.nan,
+                width: col.width != null ? col.width! * stretch : double.nan,
                 label: Container(
                   alignment: Alignment.centerLeft,
                   padding: const EdgeInsets.only(left: 4,right: 10, top: 10, bottom: 10),
@@ -154,5 +164,6 @@ class UIDataTable<T> extends ConsumerWidget {
         
       ],
     );
+    });
   }
 }

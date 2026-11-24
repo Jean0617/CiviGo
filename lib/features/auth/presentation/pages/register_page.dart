@@ -8,6 +8,7 @@ import '../../../../config/app_config/app_config.dart';
 import '../../../../config/route_config/route_paths.dart';
 import '../../../shared/utils/utils.dart';
 import '../../../shared/widgets/buttons/ui_button.dart';
+import '../../../shared/widgets/layout/auth_layout.dart';
 import '../../../shared/widgets/text/ui_text.dart';
 import '../providers/auth_provider.dart';
 
@@ -47,7 +48,8 @@ class RegisterPageState extends ConsumerState<RegisterPage> {
     return UnFocusKeyboard(
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: SafeArea(
+        body: AuthLayout(
+         child: SafeArea(
           child: SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: Form(
@@ -233,6 +235,7 @@ class RegisterPageState extends ConsumerState<RegisterPage> {
               ),
             ),
           ),
+        )
         )
       ),
     );

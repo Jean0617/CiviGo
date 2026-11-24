@@ -9,6 +9,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../config/route_config/route_paths.dart';
 import '../../../map/presentation/pages/map_page.dart';
 import '../../../reports/domain/constants.dart';
+import '../../../reports/data/models/incidents_state.dart';
 import '../../../reports/presentation/providers/incidents_provider.dart';
 import '../../../shared/utils/date_utils.dart';
 import '../../../shared/widgets/text/ui_text.dart';
@@ -36,9 +37,13 @@ class DashboardBodyState extends ConsumerState<DashboardBody> {
     final state = ref.watch(incidentsProvider);
     final user = ref.watch(authProvider).user;
 
+    // Ancho útil del contenido (ya descontada la barra lateral en escritorio)
+    return LayoutBuilder(builder: (context, constraints) {
+    final wide = constraints.maxWidth >= 860;
+
     return Scaffold(
       body: ListView(
-        padding: EdgeInsets.symmetric(horizontal: 13),
+        padding: EdgeInsets.symmetric(horizontal: wide ? 24 : 13),
         children: [
 
           buildWelcome(user),
@@ -52,6 +57,37 @@ class DashboardBodyState extends ConsumerState<DashboardBody> {
 
           SizedBox(height: 20),
 
+          if(wide)
+            // Escritorio: actividad reciente a la izquierda y mapa a la derecha
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(flex: 3, child: Column(children: _recentActivity(context, state))),
+                const SizedBox(width: 24),
+                Expanded(flex: 2, child: buildMapIncidents(context, height: 360, top: 0)),
+              ],
+            )
+          else ...[
+            ..._recentActivity(context, state),
+            buildMapIncidents(context),
+          ],
+          
+          SizedBox(height: 50)
+ 
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.orange,
+        child: Icon(Icons.campaign_outlined, color: Colors.white,),
+        onPressed: (){},
+      ),
+    );
+    });
+  }
+
+
+  List<Widget> _recentActivity(BuildContext context, IncidentsState state) {
+    return [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -138,19 +174,7 @@ class DashboardBodyState extends ConsumerState<DashboardBody> {
               ),
             ),
           ),
-
-          buildMapIncidents(context),
-          
-          SizedBox(height: 50)
- 
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.orange,
-        child: Icon(Icons.campaign_outlined, color: Colors.white,),
-        onPressed: (){},
-      ),
-    );
+    ];
   }
 
   Widget buildWelcome(User? user) {
@@ -177,9 +201,9 @@ class DashboardBodyState extends ConsumerState<DashboardBody> {
     return 'Buenas noches';
   }
 
-  Widget buildMapIncidents(BuildContext context) {
+  Widget buildMapIncidents(BuildContext context, {double height = 200, double top = 40}) {
     return Padding(
-      padding: const EdgeInsets.only(top: 40.0, bottom: 20),
+      padding: EdgeInsets.only(top: top, bottom: 20),
       child: Column(
         children: [
       
@@ -205,7 +229,7 @@ class DashboardBodyState extends ConsumerState<DashboardBody> {
           Container(
             margin: EdgeInsets.symmetric(vertical: 10),
             width: double.infinity,
-            height: 200,
+            height: height,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(10),

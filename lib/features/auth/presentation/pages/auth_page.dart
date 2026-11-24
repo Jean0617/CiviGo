@@ -9,6 +9,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../config/route_config/route_paths.dart';
 import '../../../shared/utils/utils.dart';
 import '../../../shared/widgets/buttons/ui_button.dart';
+import '../../../shared/widgets/layout/auth_layout.dart';
 import '../../../shared/widgets/text/ui_text.dart';
 import '../../../shared/widgets/toggle/ui_switch.dart';
 
@@ -45,7 +46,8 @@ class AuthPageState extends ConsumerState<AuthPage> {
     return UnFocusKeyboard(
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: SafeArea(
+        body: AuthLayout(
+         child: SafeArea(
           child: LayoutBuilder(
             builder: (context, constraints) {
               return SingleChildScrollView(
@@ -213,6 +215,7 @@ class AuthPageState extends ConsumerState<AuthPage> {
               );
             }
           ),
+        )
         )
       ),
     );

@@ -12,6 +12,8 @@ import '../../../shared/domain/app_error_entity.dart';
 import '../../../shared/widgets/text/ui_text.dart';
 import '../config/menu_items.dart';
 import '../utils/icon_mapper.dart';
+import '../../../shared/utils/responsive.dart';
+import '../widgets/side_bar.dart';
 
 class DashboardPage extends ConsumerWidget {
   final Widget child;
@@ -25,6 +27,21 @@ class DashboardPage extends ConsumerWidget {
     final currentIndex = getIndexFromLocation(location);
 
     final auth = ref.watch(uiAlertsProvider);
+
+    // Escritorio: barra lateral + contenido centrado (móvil/tablet angosta: diseño original)
+    if (context.isDesktop) {
+      return Scaffold(
+        backgroundColor: Colors.white,
+        body: Row(
+          children: [
+            SideBar(location: location),
+            Expanded(
+              child: buildBody(auth, content: ContentConstraint(maxWidth: 1800, child: child)),
+            ),
+          ],
+        ),
+      );
+    }
 
     return Scaffold(
       backgroundColor: AppConfig.primaryColor,
@@ -65,7 +82,7 @@ class DashboardPage extends ConsumerWidget {
     );
   }
 
-  SafeArea buildBody(AppErrorEntity? state) {
+  SafeArea buildBody(AppErrorEntity? state, {Widget? content}) {
     return SafeArea(
       child: Stack(
         children: [
@@ -92,7 +109,7 @@ class DashboardPage extends ConsumerWidget {
               //   topLeft: Radius.circular(30),
               //   topRight: Radius.circular(30)
               // ),
-              child: child
+              child: content ?? child
             )
           ),
 
