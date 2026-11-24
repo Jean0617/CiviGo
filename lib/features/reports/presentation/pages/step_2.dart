@@ -1,10 +1,9 @@
-import 'dart:io';
-
 import 'package:civigo/features/reports/presentation/providers/new_incident_provider.dart';
 import 'package:civigo/features/shared/widgets/textformfield/ui_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../shared/widgets/dropdown/ui_dropdown_button.dart';
+import '../../../shared/widgets/image/local_image.dart';
 import '../../../shared/widgets/radiogroups/ui_radiogroup.dart';
 import '../../../shared/widgets/text/ui_text.dart';
 import '../../domain/constants.dart';
@@ -241,8 +240,8 @@ class Step2State extends ConsumerState<Step2> {
                       ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(12),
-                        child: Image.file(
-                          File(newIncidentState.incidentImagePath),
+                        child: LocalImage(
+                          path: newIncidentState.incidentImagePath,
                           fit: BoxFit.cover,
                           width: double.infinity,
                         ),

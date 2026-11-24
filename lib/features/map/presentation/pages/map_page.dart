@@ -333,7 +333,7 @@ class UIMap extends ConsumerStatefulWidget {
 }
 
 class UIMapState extends ConsumerState<UIMap> {
-  late GoogleMapController mapController;
+  GoogleMapController? mapController;
 
   // Definimos un conjunto de polígonos
   Set<Polygon> polygons = {};
@@ -351,10 +351,8 @@ class UIMapState extends ConsumerState<UIMap> {
 
   @override
   void dispose() {
-    if(mounted){
-      mapController.dispose();
-    }
-      
+    // No se llama mapController.dispose(): el widget GoogleMap ya lo hace al
+    // destruirse y un segundo dispose revienta en web ("Maps cannot be retrieved before calling buildView").
     super.dispose();
   }
 
@@ -430,6 +428,7 @@ class UIMapState extends ConsumerState<UIMap> {
       },
       onMapCreated: (GoogleMapController controller) {
         mapController = controller;
+        // ignore: deprecated_member_use
         controller.setMapStyle('''
           [
     
@@ -448,14 +447,18 @@ class UIMapState extends ConsumerState<UIMap> {
           ]
           ''');
       },
-      myLocationEnabled: true,
+      // En web la capa "mi ubicación" no está soportada por el plugin.
+      myLocationEnabled: !kIsWeb,
       myLocationButtonEnabled: false,
-      zoomControlsEnabled: true, 
-      gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
-        Factory<OneSequenceGestureRecognizer>(
-          () => EagerGestureRecognizer(),
-        ),
-      },
+      zoomControlsEnabled: true,
+      // En web los gestos los maneja el navegador; el recognizer solo aplica a móvil.
+      gestureRecognizers: kIsWeb
+        ? const <Factory<OneSequenceGestureRecognizer>>{}
+        : <Factory<OneSequenceGestureRecognizer>>{
+            Factory<OneSequenceGestureRecognizer>(
+              () => EagerGestureRecognizer(),
+            ),
+          },
       liteModeEnabled: false,
     );
   }

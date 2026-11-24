@@ -16,6 +16,7 @@ class NewIncidentState {
   final int? designatedEntity;
   final bool isSaving;
   final bool isIncident;
+  final bool analysisFailed;
 
   final String aiCategory;
   final String aiEntity;
@@ -35,6 +36,7 @@ class NewIncidentState {
     this.designatedEntity,
     this.isSaving = false,
     this.isIncident = true,
+    this.analysisFailed = false,
 
     this.aiCategory='',
     this.aiEntity='',
@@ -54,6 +56,7 @@ class NewIncidentState {
     int? designatedEntity,
     bool? isSaving,
     bool? isIncident,
+    bool? analysisFailed,
 
     String? aiCategory,
     String? aiEntity,
@@ -72,6 +75,7 @@ class NewIncidentState {
       designatedEntity: designatedEntity ?? this.designatedEntity,
       isSaving: isSaving ?? this.isSaving,
       isIncident: isIncident ?? this.isIncident,
+      analysisFailed: analysisFailed ?? this.analysisFailed,
 
       aiCategory: aiCategory ?? this.aiCategory,
       aiEntity: aiEntity ?? this.aiEntity,

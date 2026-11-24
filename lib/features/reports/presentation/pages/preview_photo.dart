@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:civigo/features/reports/presentation/providers/new_incident_provider.dart';
 import 'package:civigo/features/shared/widgets/text/ui_text.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../config/app_config/app_config.dart';
 import '../../../../config/route_config/route_paths.dart';
 import '../../../shared/widgets/buttons/ui_button.dart';
+import '../../../shared/widgets/image/local_image.dart';
 
 class PhotoPreviewPage extends ConsumerWidget {
   
@@ -39,8 +38,8 @@ class PhotoPreviewPage extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(16),
                   child: 
                     newIncidentState.incidentImagePath.isNotEmpty?
-                      Image.file(
-                        File(newIncidentState.incidentImagePath),
+                      LocalImage(
+                        path: newIncidentState.incidentImagePath,
                         height: 250,
                         width: double.infinity,
                         fit: BoxFit.cover,

@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -12,7 +10,7 @@ class CameraService {
   final ImagePicker _picker = ImagePicker();
 
   /// Abrir cámara y retornar imagen
-  Future<File?> takePhoto(BuildContext context) async {
+  Future<XFile?> takePhoto(BuildContext context) async {
 
     try {
 
@@ -27,7 +25,7 @@ class CameraService {
         return null;
       }
 
-      return File(photo.path);
+      return photo;
 
     } catch (e) {
 

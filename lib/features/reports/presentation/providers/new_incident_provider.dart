@@ -1,9 +1,10 @@
 import 'dart:convert';
-import 'dart:io';
+import 'package:flutter/foundation.dart';
 
 import 'package:civigo/features/reports/data/models/new_incident_state.dart';
 import 'package:civigo/features/reports/presentation/providers/incidents_provider.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../shared/domain/app_error.dart';
@@ -103,7 +104,7 @@ class NewIncident extends _$NewIncident {
 
   Future<bool> analyzeIncident() async {
     
-    state = state.copyWith( isSaving: true );
+    state = state.copyWith( isSaving: true, analysisFailed: false, isIncident: true );
 
     try {
 
@@ -111,7 +112,7 @@ class NewIncident extends _$NewIncident {
       final aiRepo = ref.read( aiRepositoryProvider );
 
       final imageUrl = await repo.uploadImage(
-        File(
+        XFile(
           state.incidentImagePath,
         ),
       );
@@ -136,9 +137,10 @@ class NewIncident extends _$NewIncident {
 
       return aiResponse['is_incident'] ?? false;
 
-    } catch (e) {
+    } catch (e, st) {
 
-      state = state.copyWith( isSaving: false );
+      debugPrint('Error analizando incidencia: $e\n$st');
+      state = state.copyWith( isSaving: false, analysisFailed: true );
       return false;
       
     }

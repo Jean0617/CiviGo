@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class IncidentRepository {
@@ -7,16 +7,20 @@ class IncidentRepository {
 
   IncidentRepository(this._supabase);
 
-  Future<String> uploadImage(File file) async {
+  Future<String> uploadImage(XFile file) async {
     try {
 
       final fileName = '${DateTime.now().millisecondsSinceEpoch}.jpg';
 
+      // Bytes en lugar de File: funciona en móvil y en web.
+      final bytes = await file.readAsBytes();
+
       await _supabase.storage
           .from('incidencias')
-          .upload(
+          .uploadBinary(
             fileName,
-            file,
+            bytes,
+            fileOptions: const FileOptions(contentType: 'image/jpeg'),
           );
 
       final publicUrl =

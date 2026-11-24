@@ -6,9 +6,24 @@ import { Buffer } from "node:buffer";
 
 const ai = new GoogleGenAI({
   apiKey: Deno.env.get("GEMINI_API_KEY")!,
+  // El modo JSON (responseMimeType) solo existe en v1beta.
+  apiVersion: "v1beta",
 });
 
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+};
+
 Deno.serve(async (req) => {
+
+  // Preflight del navegador (web)
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: corsHeaders });
+  }
+
   try {
 
     const { imageUrl } = await req.json();
@@ -173,6 +188,7 @@ Deno.serve(async (req) => {
       }),
       {
         headers: {
+          ...corsHeaders,
           "Content-Type": "application/json",
         },
       },
@@ -186,6 +202,10 @@ Deno.serve(async (req) => {
       }),
       {
         status: 500,
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "application/json",
+        },
       },
     );
   }

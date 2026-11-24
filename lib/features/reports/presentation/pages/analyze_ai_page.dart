@@ -42,7 +42,8 @@ class AnalyzeAiPageState extends ConsumerState<AnalyzeAiPage> {
   Widget build(BuildContext context) {
     
     final state = ref.watch(newIncidentProvider);
-    final isIncident = state.isIncident;
+    final failed = state.analysisFailed;
+    final isIncident = state.isIncident && !failed;
 
     return Scaffold(
       body: SafeArea(
@@ -62,7 +63,7 @@ class AnalyzeAiPageState extends ConsumerState<AnalyzeAiPage> {
                     SizedBox(height: 5,),
                 
                     UIText(
-                      title: isIncident? "Analizando imagen" : "No se detectó una incidencia", 
+                      title: isIncident? "Analizando imagen" : failed? "No se pudo analizar la imagen" : "No se detectó una incidencia", 
                       size: 25,
                       bold: true,
                       color: isIncident? Colors.black87 : Colors.orange,
@@ -79,6 +80,9 @@ class AnalyzeAiPageState extends ConsumerState<AnalyzeAiPage> {
                         title:  isIncident?
                         "Se está procesando la evidencia para identificar detalles relevantes y completar el reporte. Esto puede tardar unos segundos."
                         : 
+                        failed?
+                          "Ocurrió un problema al subir o analizar la imagen. Revisa tu conexión e inténtalo nuevamente."
+                        :
                         "La imagen no muestra una incidencia que pueda ser reportada. Toma una fotografía donde el incidente sea visible y vuelve a intentarlo.",
                         size: 15,
                         // bold: true,
